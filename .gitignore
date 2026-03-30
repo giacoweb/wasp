@@ -1,0 +1,20 @@
+# Cartella di compilazione di Maven (MAI caricare)
+target/
+
+# Impostazioni di IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Impostazioni di VS Code / Eclipse 
+.vscode/
+.project
+.classpath
+.settings/
+
+# File spazzatura di Windows e Mac
+.DS_Store
+Thumbs.db
+
+# File con le password del database (Importantissimo per la sicurezza!)
+config.properties
