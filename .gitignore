@@ -6,7 +6,7 @@ target/
 *.iml
 *.iws
 
-# Impostazioni di VS Code / Eclipse 
+# Impostazioni di VS Code / Eclipse
 .vscode/
 .project
 .classpath
