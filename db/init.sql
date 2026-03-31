@@ -10,8 +10,8 @@ CREATE TABLE users (
                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                        name VARCHAR(100),
                        surname VARCHAR(100),
-                       email VARCHAR(255) UNIQUE,
-                       password_hash VARCHAR(255),
+                       email VARCHAR(255) NOT NULL UNIQUE,
+                       password_hash VARCHAR(255) NOT NULL,
                        role user_role NOT NULL DEFAULT 'REGISTERED',
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,7 +30,7 @@ CREATE TABLE transactions (
                               wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
                               amount DECIMAL(12,2) NOT NULL,
                               category VARCHAR(80) NOT NULL,
-                              date DATE NOT NULL,
+                              transaction_date DATE NOT NULL,
                               note TEXT,
                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
