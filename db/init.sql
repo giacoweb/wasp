@@ -1,14 +1,11 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 
--- ENUM
 CREATE TYPE user_role AS ENUM ('REGISTERED', 'GUEST_SESSION');
 CREATE TYPE periodicity_type AS ENUM ('MONTHLY', 'QUARTERLY', 'YEARLY');
 CREATE TYPE forecast_scenario AS ENUM ('OPTIMISTIC', 'CONSERVATIVE', 'STRESS_TEST');
 CREATE TYPE wallet_type AS ENUM ('CASH', 'BANK_ACCOUNT', 'CREDIT_CARD', 'INVESTMENT');
 
-
--- TABLE CREATION
 CREATE TABLE users (
                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                        name VARCHAR(100),
@@ -34,17 +31,19 @@ CREATE TABLE transactions (
                               amount DECIMAL(12,2) NOT NULL,
                               category VARCHAR(80) NOT NULL,
                               date DATE NOT NULL,
-                              note TEXT
+                              note TEXT,
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recurring_expenses (
                                     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                                    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                                    wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
                                     label VARCHAR(120) NOT NULL,
                                     amount DECIMAL(12,2) NOT NULL,
                                     periodicity periodicity_type NOT NULL,
                                     next_due DATE NOT NULL,
-                                    active BOOLEAN DEFAULT TRUE
+                                    active BOOLEAN DEFAULT TRUE,
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pac_plans (
@@ -55,12 +54,12 @@ CREATE TABLE pac_plans (
                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
---(Standalone Guest, senza Foreign Key)
 CREATE TABLE forecasts (
                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                            session_token UUID UNIQUE NOT NULL,
                            report_json JSONB NOT NULL,
-                           expires_at TIMESTAMP NOT NULL
+                           expires_at TIMESTAMP NOT NULL,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE report_sessions (
@@ -70,5 +69,6 @@ CREATE TABLE report_sessions (
                                  monthly_amount DECIMAL(12,2) NOT NULL,
                                  target_amount DECIMAL(14,2) NOT NULL,
                                  start_date DATE NOT NULL,
-                                 active BOOLEAN DEFAULT TRUE
+                                 active BOOLEAN DEFAULT TRUE,
+                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
