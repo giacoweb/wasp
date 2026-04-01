@@ -13,7 +13,7 @@ CREATE TABLE users (
                        email VARCHAR(255) NOT NULL UNIQUE,
                        password_hash VARCHAR(255) NOT NULL,
                        role user_role NOT NULL DEFAULT 'REGISTERED',
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE wallets (
@@ -22,28 +22,28 @@ CREATE TABLE wallets (
                          name VARCHAR(100) NOT NULL,
                          type wallet_type NOT NULL,
                          currency CHAR(3) NOT NULL DEFAULT 'EUR',
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE transactions (
                               id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                               wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
-                              amount DECIMAL(12,2) NOT NULL,
+                              amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
                               category VARCHAR(80) NOT NULL,
                               transaction_date DATE NOT NULL,
                               note TEXT,
-                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recurring_expenses (
                                     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                                     wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
                                     label VARCHAR(120) NOT NULL,
-                                    amount DECIMAL(12,2) NOT NULL,
+                                    amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
                                     periodicity periodicity_type NOT NULL,
                                     next_due DATE NOT NULL,
                                     active BOOLEAN DEFAULT TRUE,
-                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pac_plans (
@@ -51,7 +51,7 @@ CREATE TABLE pac_plans (
                            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                            scenario forecast_scenario NOT NULL,
                            projection_json JSONB NOT NULL,
-                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE forecasts (
@@ -59,16 +59,16 @@ CREATE TABLE forecasts (
                            session_token UUID UNIQUE NOT NULL,
                            report_json JSONB NOT NULL,
                            expires_at TIMESTAMP NOT NULL,
-                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE report_sessions (
                                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                                  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                  asset_name VARCHAR(120) NOT NULL,
-                                 monthly_amount DECIMAL(12,2) NOT NULL,
-                                 target_amount DECIMAL(14,2) NOT NULL,
+                                 monthly_amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
+                                 target_amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
                                  start_date DATE NOT NULL,
                                  active BOOLEAN DEFAULT TRUE,
-                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
