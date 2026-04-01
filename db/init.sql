@@ -30,11 +30,11 @@ CREATE TABLE transactions (
                               id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                               wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
                               type transaction_type NOT NULL,
-                              amount DECIMAL(12,2) NOT NULL,
+                              amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
                               category VARCHAR(80) NOT NULL,
                               transaction_date DATE NOT NULL,
                               note TEXT,
-                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recurring_expenses (
@@ -68,8 +68,8 @@ CREATE TABLE report_sessions (
                                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                                  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                  asset_name VARCHAR(120) NOT NULL,
-                                 monthly_amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
-                                 target_amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
+                                 monthly_amount DECIMAL(12,2) NOT NULL CHECK (monthly_amount > 0),
+                                 target_amount DECIMAL(12,2) NOT NULL CHECK (target_amount > 0),
                                  start_date DATE NOT NULL,
                                  active BOOLEAN DEFAULT TRUE,
                                  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
