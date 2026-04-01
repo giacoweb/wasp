@@ -5,6 +5,7 @@ CREATE TYPE user_role AS ENUM ('REGISTERED', 'GUEST_SESSION');
 CREATE TYPE periodicity_type AS ENUM ('MONTHLY', 'QUARTERLY', 'YEARLY');
 CREATE TYPE forecast_scenario AS ENUM ('OPTIMISTIC', 'CONSERVATIVE', 'STRESS_TEST');
 CREATE TYPE wallet_type AS ENUM ('CASH', 'BANK_ACCOUNT', 'CREDIT_CARD', 'INVESTMENT');
+CREATE TYPE transaction_type AS ENUM ('INCOME', 'EXPENSE');
 
 CREATE TABLE users (
                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -28,11 +29,12 @@ CREATE TABLE wallets (
 CREATE TABLE transactions (
                               id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                               wallet_id UUID NOT NULL REFERENCES wallets(id) ON DELETE CASCADE,
-                              amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
+                              type transaction_type NOT NULL,
+                              amount DECIMAL(12,2) NOT NULL,
                               category VARCHAR(80) NOT NULL,
                               transaction_date DATE NOT NULL,
                               note TEXT,
-                              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recurring_expenses (
