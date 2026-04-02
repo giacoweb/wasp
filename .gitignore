@@ -17,4 +17,4 @@ target/
 Thumbs.db
 
 # File con le password del database (Importantissimo per la sicurezza!)
-config.properties
+src/main/resources/config.properties
