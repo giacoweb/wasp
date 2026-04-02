@@ -51,26 +51,26 @@ CREATE TABLE recurring_expenses (
 CREATE TABLE pac_plans (
                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                           scenario forecast_scenario NOT NULL,
-                           projection_json JSONB NOT NULL,
+                           asset_name VARCHAR(120) NOT NULL,
+                           monthly_amount DECIMAL(12,2) NOT NULL CHECK (monthly_amount > 0),
+                           target_amount DECIMAL(12,2) NOT NULL CHECK (target_amount > 0),
+                           start_date DATE NOT NULL,
+                           active BOOLEAN DEFAULT TRUE,
                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE forecasts (
                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                           session_token UUID UNIQUE NOT NULL,
-                           report_json JSONB NOT NULL,
-                           expires_at TIMESTAMP NOT NULL,
+                           user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                           scenario forecast_scenario NOT NULL,
+                           projection_json JSONB NOT NULL,
                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE report_sessions (
                                  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                                 user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                                 asset_name VARCHAR(120) NOT NULL,
-                                 monthly_amount DECIMAL(12,2) NOT NULL CHECK (monthly_amount > 0),
-                                 target_amount DECIMAL(12,2) NOT NULL CHECK (target_amount > 0),
-                                 start_date DATE NOT NULL,
-                                 active BOOLEAN DEFAULT TRUE,
+                                 session_token UUID UNIQUE NOT NULL,
+                                 report_json JSONB NOT NULL,
+                                 expires_at TIMESTAMP NOT NULL,
                                  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
