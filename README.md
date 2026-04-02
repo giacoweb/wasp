@@ -5,10 +5,17 @@ University Project - HW1.
 FinTrack is a server-side web application for personal finance management and investment portfolio tracking, built entirely with Java without frameworks.
 It targets two distinct user groups: authenticated users who persist all their financial data in PostgreSQL, and guest users who can generate one-off financial reports.
 
-```markdown
+
+### Current Phase: Sprint 1 (MVP)
+Based on team discussion, our immediate focus is building a solid MVP.
+Currently prioritizing:
+- Core Auth (Login/Register)
+- Basic CRUD for Wallets and Transactions
+  *Guest features, PAC, Forecasting, and PDF exports are scheduled for later sprints.*
+
 ## Repository structure
 
-```text
+```markdown
 wa2526-wasp/
 ├── db/                              # SQL scripts for DB initialization
 ├── src/
@@ -35,13 +42,6 @@ wa2526-wasp/
 ├── pom.xml
 └── README.md
 ```
-
-### Current Phase: Sprint 1 (MVP)
-Based on team discussion, our immediate focus is building a solid MVP.
-Currently prioritizing:
-- Core Auth (Login/Register)
-- Basic CRUD for Wallets and Transactions
-  *Guest features, PAC, Forecasting, and PDF exports are scheduled for later sprints.*
 
 ## Technology Stack
 * **Frontend:** JSP, CSS, JavaScript
