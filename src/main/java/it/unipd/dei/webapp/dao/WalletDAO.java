@@ -27,8 +27,16 @@ public class WalletDAO {
             "SELECT id, user_id, name, type, currency, created_at " +
                     "FROM wallets WHERE id = ?";
 
+    private static final String UPDATE_SQL =
+            "UPDATE wallets SET name = ?, type = ?::wallet_type, currency = ? " +
+                    "WHERE id = ? " +
+                    "RETURNING id, user_id, name, type, currency, created_at";
+
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM wallets WHERE id = ?";
+
+    private static final String COUNT_TRANSACTIONS_SQL =
+            "SELECT COUNT(*) FROM transactions WHERE wallet_id = ?";
 
     public Wallet create(final UUID userId,
                          final String name,
@@ -87,6 +95,25 @@ public class WalletDAO {
         return null;
     }
 
+    public Wallet update(final Wallet wallet) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+
+            statement.setString(1, wallet.getName());
+            statement.setString(2, wallet.getType().name());
+            statement.setString(3, wallet.getCurrency());
+            statement.setObject(4, wallet.getId());
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToWallet(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to update wallet.");
+    }
+
     public boolean delete(final UUID id) throws SQLException {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
@@ -94,6 +121,22 @@ public class WalletDAO {
             statement.setObject(1, id);
             return statement.executeUpdate() > 0;
         }
+    }
+
+    public int countTransactions(final UUID walletId) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(COUNT_TRANSACTIONS_SQL)) {
+
+            statement.setObject(1, walletId);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
     }
 
     private Wallet mapRowToWallet(final ResultSet rs) throws SQLException {
