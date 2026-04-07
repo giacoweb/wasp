@@ -16,7 +16,8 @@ import java.io.IOException;
         "/transactions/*",
         "/wallets/*",
         "/forecast/*",
-        "/portfolio/*"
+        "/portfolio/*",
+        "/api/*"
 })
 public class AuthenticationFilter extends HttpFilter implements Filter {
 
@@ -30,7 +31,15 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
         boolean authenticated = session != null && session.getAttribute("authenticatedUser") != null;
 
         if (!authenticated) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            String path = request.getServletPath();
+            if (path != null && path.startsWith("/api/")) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("{\"error\":\"Authentication required.\"}");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/login");
+            }
             return;
         }
 
