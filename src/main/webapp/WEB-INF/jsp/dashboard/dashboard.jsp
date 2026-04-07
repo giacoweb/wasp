@@ -1,16 +1,16 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: nothingtodo
-  Date: 7/4/26
-  Time: 00:22
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
 <html>
     <head>
-        <title>Title</title>
+        <title>Dashboard</title>
     </head>
     <body>
+        <h1>Dashboard</h1>
 
+        <p>You are logged in.</p>
+
+        <form action="<%= request.getContextPath() %>/auth/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
     </body>
 </html>

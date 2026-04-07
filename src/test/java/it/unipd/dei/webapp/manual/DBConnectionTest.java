@@ -1,4 +1,6 @@
-package it.unipd.dei.webapp.util;
+package it.unipd.dei.webapp.manual;
+
+import it.unipd.dei.webapp.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

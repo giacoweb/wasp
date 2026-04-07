@@ -1,5 +1,6 @@
-package it.unipd.dei.webapp.dao;
+package it.unipd.dei.webapp.manual;
 
+import it.unipd.dei.webapp.dao.UserDAO;
 import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.model.UserRole;
 import it.unipd.dei.webapp.util.PasswordUtil;
@@ -10,8 +11,8 @@ public class UserDAOTest {
 
         try {
             User user = new User();
-            user.setName("Danil");
-            user.setSurname("Test");
+            user.setName("Test");
+            user.setSurname("DAO");
             user.setEmail("danil.test@example.com");
             user.setPasswordHash(PasswordUtil.hashPassword("secret123"));
             user.setRole(UserRole.REGISTERED);

@@ -1,6 +1,7 @@
-package it.unipd.dei.webapp.service;
+package it.unipd.dei.webapp.manual;
 
 import it.unipd.dei.webapp.model.User;
+import it.unipd.dei.webapp.service.UserService;
 
 public class UserServiceTest {
 
@@ -9,7 +10,7 @@ public class UserServiceTest {
 
         try {
             User registeredUser = userService.register(
-                    "Danil",
+                    "Test",
                     "Service",
                     "danil.service@example.com",
                     "secret123"

@@ -16,7 +16,7 @@
             }
         %>
 
-        <form action="${pageContext.request.contextPath}/auth/register" method="post">
+        <form action="<%= request.getContextPath() %>/auth/register" method="post">
             <label>Name:</label><br>
             <input type="text" name="name" value="<%= request.getAttribute("name") != null ? request.getAttribute("name") : "" %>"><br><br>
 
@@ -34,7 +34,7 @@
 
         <p>
             Already have an account?
-            <a href="${pageContext.request.contextPath}/login">Login</a>
+            <a href="<%= request.getContextPath() %>/login">Login</a>
         </p>
     </body>
 </html>
