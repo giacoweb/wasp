@@ -27,15 +27,28 @@ public class WalletEditServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User user = (User) request.getSession().getAttribute("authenticatedUser");
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         final String walletId = request.getParameter("walletId");
         final String name = request.getParameter("name");
         final String type = request.getParameter("type");
         final String currency = request.getParameter("currency");
 
         try {
+            if (walletId == null || walletId.isBlank()) {
+                response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+                return;
+            }
+
             UUID id = UUID.fromString(walletId);
             walletService.updateWallet(id, user.getId(), name, type, currency);
             response.sendRedirect(request.getContextPath() + "/wallets?success=updated");
+
+        } catch (IllegalArgumentException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
 
         } catch (ValidationException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=validation");

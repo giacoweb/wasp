@@ -26,12 +26,19 @@ public class WalletListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("authenticatedUser");
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         String error = request.getParameter("error");
 
         if ("validation".equals(error)) {
             request.setAttribute("errorMessage", "Please fill in all required fields correctly.");
         } else if ("unauthorized".equals(error)) {
             request.setAttribute("errorMessage", "You are not authorized to perform this operation.");
+        } else if ("not_found".equals(error)) {
+            request.setAttribute("errorMessage", "Wallet not found.");
         } else if ("has_transactions".equals(error)) {
             request.setAttribute("errorMessage", "Wallet cannot be deleted because it has linked transactions.");
         } else if ("server_error".equals(error)) {

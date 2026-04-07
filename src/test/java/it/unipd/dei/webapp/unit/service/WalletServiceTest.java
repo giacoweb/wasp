@@ -7,13 +7,13 @@ import it.unipd.dei.webapp.service.WalletService;
 import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
+import it.unipd.dei.webapp.service.exception.WalletNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -157,8 +157,8 @@ class WalletServiceTest {
     }
 
     @Test
-    void deleteNonexistentWalletDoesNotThrow() {
-        assertDoesNotThrow(() ->
+    void deleteNonexistentWalletThrowsNotFound() {
+        assertThrows(WalletNotFoundException.class, () ->
                 walletService.deleteWallet(UUID.randomUUID(), UUID.randomUUID()));
     }
 }

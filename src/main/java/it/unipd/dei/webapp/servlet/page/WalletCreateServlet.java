@@ -25,6 +25,11 @@ public class WalletCreateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User user = (User) request.getSession().getAttribute("authenticatedUser");
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         final String name = request.getParameter("name");
         final String type = request.getParameter("type");
         final String currency = request.getParameter("currency");

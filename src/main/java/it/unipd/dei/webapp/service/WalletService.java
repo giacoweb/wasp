@@ -6,6 +6,7 @@ import it.unipd.dei.webapp.model.WalletType;
 import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
+import it.unipd.dei.webapp.service.exception.WalletNotFoundException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -33,11 +34,12 @@ public class WalletService {
                                final String currency)
             throws ValidationException, SQLException {
 
-        validateWalletInput(name, type, currency);
+        String normalizedCurrency = normalizeCurrency(currency);
+        validateWalletInput(name, type, normalizedCurrency);
 
         WalletType walletType = parseWalletType(type);
 
-        return walletDAO.create(userId, name, walletType, currency);
+        return walletDAO.create(userId, name, walletType, normalizedCurrency);
     }
 
     public Wallet updateWallet(final UUID walletId,
@@ -47,7 +49,8 @@ public class WalletService {
                                final String currency)
             throws ValidationException, UnauthorizedOperationException, SQLException {
 
-        validateWalletInput(name, type, currency);
+        String normalizedCurrency = normalizeCurrency(currency);
+        validateWalletInput(name, type, normalizedCurrency);
 
         Wallet wallet = walletDAO.findById(walletId);
 
@@ -63,18 +66,18 @@ public class WalletService {
 
         wallet.setName(name);
         wallet.setType(walletType);
-        wallet.setCurrency(currency);
+        wallet.setCurrency(normalizedCurrency);
 
         return walletDAO.update(wallet);
     }
 
     public void deleteWallet(final UUID walletId, final UUID userId)
-            throws UnauthorizedOperationException, WalletHasTransactionsException, SQLException {
+            throws WalletNotFoundException, UnauthorizedOperationException, WalletHasTransactionsException, SQLException {
 
         Wallet wallet = walletDAO.findById(walletId);
 
         if (wallet == null) {
-            return;
+            throw new WalletNotFoundException();
         }
 
         if (!wallet.getUserId().equals(userId)) {
@@ -106,14 +109,21 @@ public class WalletService {
             throw new ValidationException("Currency cannot be empty.");
         }
 
-        if (currency.length() != 3) {
-            throw new ValidationException("Currency must be a 3-letter code.");
+        if (currency.length() != 3 || !currency.chars().allMatch(Character::isLetter)) {
+            throw new ValidationException("Currency must be a 3-letter alphabetic code.");
         }
+    }
+
+    private String normalizeCurrency(final String currency) {
+        if (currency == null) {
+            return null;
+        }
+        return currency.trim().toUpperCase();
     }
 
     private WalletType parseWalletType(final String type) throws ValidationException {
         try {
-            return WalletType.valueOf(type);
+            return WalletType.valueOf(type.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Invalid wallet type.");
         }
