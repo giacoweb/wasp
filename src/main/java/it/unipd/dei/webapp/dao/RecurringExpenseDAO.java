@@ -4,7 +4,12 @@ import it.unipd.dei.webapp.model.Periodicity;
 import it.unipd.dei.webapp.model.RecurringExpense;
 import it.unipd.dei.webapp.util.DBConnection;
 
-import java.sql.*;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +44,7 @@ public class RecurringExpenseDAO {
 
     public RecurringExpense create(final UUID walletId,
                                     final String label,
-                                    final java.math.BigDecimal amount,
+                                    final BigDecimal amount,
                                     final Periodicity periodicity,
                                     final LocalDate nextDue) throws SQLException {
 

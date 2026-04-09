@@ -16,6 +16,8 @@ import java.io.IOException;
         "/transactions/*",
         "/wallets",
         "/wallets/*",
+        "/pac",
+        "/pac/*",
         "/forecast/*",
         "/portfolio/*",
         "/api/*"
