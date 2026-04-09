@@ -91,8 +91,11 @@ public class TransactionApiServlet extends HttpServlet {
 
             sendJsonResponse(response, HttpServletResponse.SC_CREATED, toJsonObject(created));
 
-        } catch (JSONException | IOException e) {
-            sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid or malformed request body.");
+        } catch (JSONException e) {
+            sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Malformed JSON in request body.");
+
+        } catch (IOException e) {
+            sendError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
         } catch (IllegalArgumentException e) {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid walletId format.");

@@ -14,6 +14,7 @@ import java.io.IOException;
 @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {
         "/dashboard",
         "/transactions/*",
+        "/wallets",
         "/wallets/*",
         "/forecast/*",
         "/portfolio/*",

@@ -60,7 +60,7 @@ public class TransactionService {
                 amount.abs(),
                 category.trim(),
                 date,
-                note != null ? note.trim() : null);
+                normalizeNote(note));
     }
 
     public Transaction updateTransaction(final UUID transactionId,
@@ -89,7 +89,7 @@ public class TransactionService {
         existing.setAmount(amount.abs());
         existing.setCategory(category.trim());
         existing.setTransactionDate(date);
-        existing.setNote(note != null ? note.trim() : null);
+        existing.setNote(normalizeNote(note));
 
         return transactionDAO.update(existing);
     }
@@ -122,9 +122,15 @@ public class TransactionService {
         }
     }
 
+    private static final int MAX_CATEGORY_LENGTH = 80;
+
     private void validateTransactionInput(final String category) throws ValidationException {
         if (category == null || category.isBlank()) {
             throw new ValidationException("Category cannot be empty.");
+        }
+
+        if (category.trim().length() > MAX_CATEGORY_LENGTH) {
+            throw new ValidationException("Category must not exceed " + MAX_CATEGORY_LENGTH + " characters.");
         }
     }
 
@@ -158,5 +164,13 @@ public class TransactionService {
         } catch (DateTimeParseException e) {
             throw new ValidationException("Invalid date format. Use YYYY-MM-DD.");
         }
+    }
+
+    private String normalizeNote(final String note) {
+        if (note == null) {
+            return null;
+        }
+        String trimmed = note.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }
