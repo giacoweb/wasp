@@ -1,0 +1,53 @@
+package it.unipd.dei.webapp.servlet.page;
+
+import it.unipd.dei.webapp.model.User;
+import it.unipd.dei.webapp.service.RecurringExpenseService;
+import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
+import it.unipd.dei.webapp.service.exception.ValidationException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+@WebServlet(name = "ExpenseCreateServlet", value = "/expenses/create")
+public class ExpenseCreateServlet extends HttpServlet {
+
+    private RecurringExpenseService expenseService;
+
+    @Override
+    public void init() throws ServletException {
+        this.expenseService = new RecurringExpenseService();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        final String walletId   = request.getParameter("walletId");
+        final String label      = request.getParameter("label");
+        final String amount     = request.getParameter("amount");
+        final String periodicity = request.getParameter("periodicity");
+        final String nextDue    = request.getParameter("nextDue");
+
+        try {
+            expenseService.createExpense(user.getId(), walletId, label, amount, periodicity, nextDue);
+            response.sendRedirect(request.getContextPath() + "/expenses?success=created");
+
+        } catch (ValidationException e) {
+            response.sendRedirect(request.getContextPath() + "/expenses?error=validation");
+
+        } catch (UnauthorizedOperationException e) {
+            response.sendRedirect(request.getContextPath() + "/expenses?error=unauthorized");
+
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + "/expenses?error=server_error");
+        }
+    }
+}
