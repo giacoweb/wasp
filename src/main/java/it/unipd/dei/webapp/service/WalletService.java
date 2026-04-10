@@ -122,6 +122,10 @@ public class WalletService {
     }
 
     private WalletType parseWalletType(final String type) throws ValidationException {
+        if (type == null || type.isBlank()) {
+            throw new ValidationException("Wallet type cannot be empty.");
+        }
+
         try {
             return WalletType.valueOf(type.trim().toUpperCase());
         } catch (IllegalArgumentException e) {

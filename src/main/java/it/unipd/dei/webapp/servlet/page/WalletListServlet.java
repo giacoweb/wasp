@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,8 @@ public class WalletListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        HttpSession session = request.getSession(false);
+        User user = session != null ? (User) session.getAttribute("authenticatedUser") : null;
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");

@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class WalletEditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        HttpSession session = request.getSession(false);
+        User user = session != null ? (User) session.getAttribute("authenticatedUser") : null;
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
@@ -51,7 +53,9 @@ public class WalletEditServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
 
         } catch (ValidationException e) {
-            response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+            String errorCode = e.getMessage() != null && e.getMessage().contains("not found")
+                    ? "not_found" : "validation";
+            response.sendRedirect(request.getContextPath() + "/wallets?error=" + errorCode);
 
         } catch (UnauthorizedOperationException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=unauthorized");
