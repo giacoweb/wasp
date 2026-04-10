@@ -53,7 +53,9 @@ public class WalletEditServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
 
         } catch (ValidationException e) {
-            response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+            String errorCode = e.getMessage() != null && e.getMessage().contains("not found")
+                    ? "not_found" : "validation";
+            response.sendRedirect(request.getContextPath() + "/wallets?error=" + errorCode);
 
         } catch (UnauthorizedOperationException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=unauthorized");

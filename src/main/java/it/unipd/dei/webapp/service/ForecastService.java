@@ -100,23 +100,30 @@ public class ForecastService {
     private static final int AVERAGE_MONTHS_WINDOW = 3;
 
     private BigDecimal computeAverageMonthly(final List<Transaction> transactions, final TransactionType type) {
-        LocalDate windowStart = LocalDate.now().minusMonths(AVERAGE_MONTHS_WINDOW);
+        LocalDate now = LocalDate.now();
+        LocalDate windowStart = now.minusMonths(AVERAGE_MONTHS_WINDOW);
 
         BigDecimal total = BigDecimal.ZERO;
-        boolean hasTransactions = false;
+        LocalDate earliest = null;
 
         for (Transaction txn : transactions) {
             if (txn.getType() == type && !txn.getTransactionDate().isBefore(windowStart)) {
                 total = total.add(txn.getAmount());
-                hasTransactions = true;
+                if (earliest == null || txn.getTransactionDate().isBefore(earliest)) {
+                    earliest = txn.getTransactionDate();
+                }
             }
         }
 
-        if (!hasTransactions) {
+        if (earliest == null) {
             return BigDecimal.ZERO;
         }
 
-        return total.divide(new BigDecimal(AVERAGE_MONTHS_WINDOW), 2, RoundingMode.HALF_UP);
+        long monthsWithData = java.time.temporal.ChronoUnit.MONTHS.between(
+                earliest.withDayOfMonth(1), now.withDayOfMonth(1)) + 1;
+        long divisor = Math.min(monthsWithData, AVERAGE_MONTHS_WINDOW);
+
+        return total.divide(new BigDecimal(divisor), 2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal computeMonthlyRecurringExpenses(final UUID userId) throws SQLException {
