@@ -4,7 +4,16 @@ import it.unipd.dei.webapp.model.Transaction;
 import it.unipd.dei.webapp.model.TransactionType;
 import it.unipd.dei.webapp.util.DBConnection;
 
+<<<<<<< HEAD
 import java.sql.*;
+=======
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+>>>>>>> master
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +41,24 @@ public class TransactionDAO {
             "SELECT id, wallet_id, type, amount, category, transaction_date, note, created_at " +
                     "FROM transactions WHERE id = ?";
 
+<<<<<<< HEAD
+=======
+    private static final String UPDATE_SQL =
+            "UPDATE transactions SET type = ?::transaction_type, amount = ?, category = ?, " +
+                    "transaction_date = ?, note = ? WHERE id = ? " +
+                    "RETURNING id, wallet_id, type, amount, category, transaction_date, note, created_at";
+
+>>>>>>> master
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM transactions WHERE id = ?";
 
     public Transaction create(final UUID walletId,
                                final TransactionType type,
+<<<<<<< HEAD
                                final java.math.BigDecimal amount,
+=======
+                               final BigDecimal amount,
+>>>>>>> master
                                final String category,
                                final LocalDate transactionDate,
                                final String note) throws SQLException {
@@ -114,6 +135,30 @@ public class TransactionDAO {
         return null;
     }
 
+<<<<<<< HEAD
+=======
+    public Transaction update(final Transaction transaction) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+
+            statement.setString(1, transaction.getType().name());
+            statement.setBigDecimal(2, transaction.getAmount());
+            statement.setString(3, transaction.getCategory());
+            statement.setDate(4, Date.valueOf(transaction.getTransactionDate()));
+            statement.setString(5, transaction.getNote());
+            statement.setObject(6, transaction.getId());
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToTransaction(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to update transaction.");
+    }
+
+>>>>>>> master
     public boolean delete(final UUID id) throws SQLException {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
@@ -123,10 +168,13 @@ public class TransactionDAO {
         }
     }
 
+<<<<<<< HEAD
     /**
      * Filtra le transazioni di un utente per tipo, categoria e/o range di date.
      * Tutti i parametri sono opzionali (null = ignorato).
      */
+=======
+>>>>>>> master
     public List<Transaction> findByUserIdAndFilters(final UUID userId,
                                                      final TransactionType type,
                                                      final String category,
