@@ -41,4 +41,42 @@ public class CalculatorService {
     }
 
 
+    public List<CompoundResult> calculateCompound(double initialCapital, double monthlyContribution, double annualRate, int years) throws ValidationException {
+
+        if (initialCapital <=0){
+            throw new ValidationException("The initial capital need to be greater than 0.");
+        }
+
+        if (monthlyContribution < 0) {
+            throw new ValidationException("The monthly contribution need to be positive.");
+        }
+
+        if (annualRate < 0 || annualRate > 100) {
+            throw new ValidationException("The annual rate need to be between 0% and 100%,");
+        }
+
+        if (years <= 0) {
+            throw new ValidationException("The duration of investment need to be at least 1 year.");
+        }
+
+        List<CompoundResult> projection = new ArrayList<>();
+        double monthlyRate = annualRate / 12 / 100;
+        double currentBalance = initialCapital;
+
+        for (int y = 1; y <= years; y++) {
+
+            for (int m = 1; m <= 12; m++) {
+
+                currentBalance = (currentBalance + monthlyContribution) * (1 + monthlyRate);
+            }
+
+            projection.add(new CompoundResult(y, currentBalance));
+
+        }
+
+
+        return projection;
+    }
+
+
 }
