@@ -1,0 +1,66 @@
+package it.unipd.dei.webapp.servlet.page;
+
+import it.unipd.dei.webapp.model.User;
+import it.unipd.dei.webapp.service.WalletService;
+import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
+import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
+import it.unipd.dei.webapp.service.exception.WalletNotFoundException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.UUID;
+
+@WebServlet(name = "WalletDeleteServlet", value = "/wallets/delete")
+public class WalletDeleteServlet extends HttpServlet {
+
+    private WalletService walletService;
+
+    @Override
+    public void init() throws ServletException {
+        this.walletService = new WalletService();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        User user = session != null ? (User) session.getAttribute("authenticatedUser") : null;
+
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        final String walletId = request.getParameter("walletId");
+
+        try {
+            if (walletId == null || walletId.isBlank()) {
+                response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+                return;
+            }
+
+            UUID id = UUID.fromString(walletId);
+            walletService.deleteWallet(id, user.getId());
+            response.sendRedirect(request.getContextPath() + "/wallets?success=deleted");
+
+        } catch (IllegalArgumentException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+
+        } catch (WalletNotFoundException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=not_found");
+
+        } catch (UnauthorizedOperationException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=unauthorized");
+
+        } catch (WalletHasTransactionsException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=has_transactions");
+
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=server_error");
+        }
+    }
+}
