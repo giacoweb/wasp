@@ -13,15 +13,15 @@ public class CalculatorService {
     public List<AmortizationRow> calculateLoan(double principal, double annualRate, int months) throws ValidationException{
 
         if (principal <= 0) {
-            throw new ValidationException("The capital need to be greater than 0.");
+            throw new ValidationException("loan_error_principal"); //The capital need to be greater than 0.
         }
 
         if (annualRate < 0 || annualRate > 100) {
-            throw new ValidationException("The interest need to be between 0 and 100.");
+            throw new ValidationException("loan_error_annualRate"); //The interest need to be between 0 and 100.
         }
 
         if (months <= 0) {
-            throw new ValidationException("The duration need to be greater than 0.");
+            throw new ValidationException("loan_error_durations"); //The duration need to be greater than 0.
         }
 
 
