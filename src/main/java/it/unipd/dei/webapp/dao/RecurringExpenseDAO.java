@@ -4,16 +4,7 @@ import it.unipd.dei.webapp.model.Periodicity;
 import it.unipd.dei.webapp.model.RecurringExpense;
 import it.unipd.dei.webapp.util.DBConnection;
 
-<<<<<<< HEAD
 import java.sql.*;
-=======
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
->>>>>>> master
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +31,6 @@ public class RecurringExpenseDAO {
             "SELECT id, wallet_id, label, amount, periodicity, next_due, active, created_at " +
                     "FROM recurring_expenses WHERE id = ?";
 
-<<<<<<< HEAD
     private static final String UPDATE_SQL =
             "UPDATE recurring_expenses SET label = ?, amount = ?, periodicity = ?::periodicity_type, next_due = ? " +
                     "WHERE id = ? " +
@@ -52,21 +42,12 @@ public class RecurringExpenseDAO {
     private static final String TOGGLE_ACTIVE_SQL =
             "UPDATE recurring_expenses SET active = NOT active WHERE id = ?";
 
-=======
-    private static final String SET_ACTIVE_SQL =
-            "UPDATE recurring_expenses SET active = ? WHERE id = ?";
-
->>>>>>> master
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM recurring_expenses WHERE id = ?";
 
     public RecurringExpense create(final UUID walletId,
                                     final String label,
-<<<<<<< HEAD
                                     final java.math.BigDecimal amount,
-=======
-                                    final BigDecimal amount,
->>>>>>> master
                                     final Periodicity periodicity,
                                     final LocalDate nextDue) throws SQLException {
 
@@ -141,7 +122,6 @@ public class RecurringExpenseDAO {
         return null;
     }
 
-<<<<<<< HEAD
     public RecurringExpense update(final UUID id,
                                     final String label,
                                     final java.math.BigDecimal amount,
@@ -176,8 +156,6 @@ public class RecurringExpenseDAO {
         }
     }
 
-=======
->>>>>>> master
     public boolean setActive(final UUID id, final boolean active) throws SQLException {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(SET_ACTIVE_SQL)) {
