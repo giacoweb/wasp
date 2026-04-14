@@ -40,7 +40,8 @@ public class RecurringExpenseDAO {
             "UPDATE recurring_expenses SET active = ? WHERE id = ?";
 
     private static final String TOGGLE_ACTIVE_SQL =
-            "UPDATE recurring_expenses SET active = NOT active WHERE id = ?";
+            "UPDATE recurring_expenses SET active = NOT active WHERE id = ? " +
+                    "RETURNING id, wallet_id, label, amount, periodicity, next_due, active, created_at";
 
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM recurring_expenses WHERE id = ?";
@@ -147,13 +148,20 @@ public class RecurringExpenseDAO {
         throw new SQLException("Failed to update recurring expense.");
     }
 
-    public boolean toggleActive(final UUID id) throws SQLException {
+    public RecurringExpense toggleActive(final UUID id) throws SQLException {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(TOGGLE_ACTIVE_SQL)) {
 
             statement.setObject(1, id);
-            return statement.executeUpdate() > 0;
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToRecurringExpense(rs);
+                }
+            }
         }
+
+        throw new SQLException("Failed to toggle recurring expense.");
     }
 
     public boolean setActive(final UUID id, final boolean active) throws SQLException {

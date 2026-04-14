@@ -30,6 +30,14 @@ public class WalletDAO {
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM wallets WHERE id = ?";
 
+    private static final String UPDATE_WALLET_SQL =
+            "UPDATE wallets SET name = ?, type = ?::wallet_type, currency = ? " +
+                    "WHERE id = ? " +
+                    "RETURNING id, user_id, name, type, currency, created_at";
+
+    private static final String COUNT_TRANSACTIONS_SQL =
+            "SELECT COUNT(*) FROM transactions WHERE wallet_id = ?";
+
     public Wallet create(final UUID userId,
                          final String name,
                          final WalletType type,
@@ -94,6 +102,45 @@ public class WalletDAO {
             statement.setObject(1, id);
             return statement.executeUpdate() > 0;
         }
+    }
+
+    public Wallet update(final UUID id,
+                         final String name,
+                         final WalletType type,
+                         final String currency) throws SQLException {
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_WALLET_SQL)) {
+
+            statement.setString(1, name);
+            statement.setString(2, type.name());
+            statement.setString(3, currency);
+            statement.setObject(4, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToWallet(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to update wallet.");
+    }
+
+    public int countTransactions(final UUID walletId) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(COUNT_TRANSACTIONS_SQL)) {
+
+            statement.setObject(1, walletId);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
     }
 
     private Wallet mapRowToWallet(final ResultSet rs) throws SQLException {
