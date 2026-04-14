@@ -181,11 +181,8 @@ public class ExpenseApiServlet extends HttpServlet {
 
         try {
             UUID id = UUID.fromString(parts[1]);
-            expenseService.toggleExpense(id, user.getId());
-
-            JSONObject result = new JSONObject();
-            result.put("message", "Active status toggled successfully.");
-            sendJsonResponse(response, HttpServletResponse.SC_OK, result);
+            RecurringExpense updated = expenseService.toggleExpense(id, user.getId());
+            sendJsonResponse(response, HttpServletResponse.SC_OK, toJsonObject(updated));
 
         } catch (IllegalArgumentException e) {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid expense ID format.");

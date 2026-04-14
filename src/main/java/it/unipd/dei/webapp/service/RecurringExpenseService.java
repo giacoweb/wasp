@@ -86,11 +86,11 @@ public class RecurringExpenseService {
         return expenseDAO.update(expenseId, label.trim(), amount, newPeriodicity, nextDue);
     }
 
-    public void toggleExpense(final UUID expenseId, final UUID userId)
+    public RecurringExpense toggleExpense(final UUID expenseId, final UUID userId)
             throws RecurringExpenseNotFoundException, UnauthorizedOperationException, SQLException {
 
         loadAndCheckOwnership(expenseId, userId);
-        expenseDAO.toggleActive(expenseId);
+        return expenseDAO.toggleActive(expenseId);
     }
 
     public void deleteExpense(final UUID expenseId, final UUID userId)
