@@ -47,7 +47,7 @@ public class TransactionDAO {
 
     public Transaction create(final UUID walletId,
                                final TransactionType type,
-                               final BigDecimal amount,
+                               final java.math.BigDecimal amount,
                                final String category,
                                final LocalDate transactionDate,
                                final String note) throws SQLException {
@@ -154,6 +154,10 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Filtra le transazioni di un utente per tipo, categoria e/o range di date.
+     * Tutti i parametri sono opzionali (null = ignorato).
+     */
     public List<Transaction> findByUserIdAndFilters(final UUID userId,
                                                      final TransactionType type,
                                                      final String category,

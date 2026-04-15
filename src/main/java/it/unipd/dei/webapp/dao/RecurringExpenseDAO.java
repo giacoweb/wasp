@@ -4,12 +4,7 @@ import it.unipd.dei.webapp.model.Periodicity;
 import it.unipd.dei.webapp.model.RecurringExpense;
 import it.unipd.dei.webapp.util.DBConnection;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +31,24 @@ public class RecurringExpenseDAO {
             "SELECT id, wallet_id, label, amount, periodicity, next_due, active, created_at " +
                     "FROM recurring_expenses WHERE id = ?";
 
+    private static final String UPDATE_SQL =
+            "UPDATE recurring_expenses SET label = ?, amount = ?, periodicity = ?::periodicity_type, next_due = ? " +
+                    "WHERE id = ? " +
+                    "RETURNING id, wallet_id, label, amount, periodicity, next_due, active, created_at";
+
     private static final String SET_ACTIVE_SQL =
             "UPDATE recurring_expenses SET active = ? WHERE id = ?";
+
+    private static final String TOGGLE_ACTIVE_SQL =
+            "UPDATE recurring_expenses SET active = NOT active WHERE id = ? " +
+                    "RETURNING id, wallet_id, label, amount, periodicity, next_due, active, created_at";
 
     private static final String DELETE_BY_ID_SQL =
             "DELETE FROM recurring_expenses WHERE id = ?";
 
     public RecurringExpense create(final UUID walletId,
                                     final String label,
-                                    final BigDecimal amount,
+                                    final java.math.BigDecimal amount,
                                     final Periodicity periodicity,
                                     final LocalDate nextDue) throws SQLException {
 
@@ -117,6 +121,47 @@ public class RecurringExpenseDAO {
         }
 
         return null;
+    }
+
+    public RecurringExpense update(final UUID id,
+                                    final String label,
+                                    final java.math.BigDecimal amount,
+                                    final Periodicity periodicity,
+                                    final LocalDate nextDue) throws SQLException {
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+
+            statement.setString(1, label);
+            statement.setBigDecimal(2, amount);
+            statement.setString(3, periodicity.name());
+            statement.setDate(4, Date.valueOf(nextDue));
+            statement.setObject(5, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToRecurringExpense(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to update recurring expense.");
+    }
+
+    public RecurringExpense toggleActive(final UUID id) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(TOGGLE_ACTIVE_SQL)) {
+
+            statement.setObject(1, id);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToRecurringExpense(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to toggle recurring expense.");
     }
 
     public boolean setActive(final UUID id, final boolean active) throws SQLException {
