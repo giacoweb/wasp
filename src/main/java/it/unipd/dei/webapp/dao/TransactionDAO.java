@@ -4,7 +4,6 @@ import it.unipd.dei.webapp.model.Transaction;
 import it.unipd.dei.webapp.model.TransactionType;
 import it.unipd.dei.webapp.util.DBConnection;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -155,8 +154,8 @@ public class TransactionDAO {
     }
 
     /**
-     * Filtra le transazioni di un utente per tipo, categoria e/o range di date.
-     * Tutti i parametri sono opzionali (null = ignorato).
+     * Filters a user's transactions by type, category, and/or date range.
+     * All parameters are optional (null = ignored).
      */
     public List<Transaction> findByUserIdAndFilters(final UUID userId,
                                                      final TransactionType type,

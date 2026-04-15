@@ -1,20 +1,20 @@
-# Cartella di compilazione di Maven (MAI caricare)
+# Maven build directory (NEVER commit)
 target/
 
-# Impostazioni di IntelliJ IDEA
+# IntelliJ IDEA settings
 .idea/
 *.iml
 *.iws
 
-# Impostazioni di VS Code / Eclipse
+# VS Code / Eclipse settings
 .vscode/
 .project
 .classpath
 .settings/
 
-# File spazzatura di Windows e Mac
+# Windows and Mac junk files
 .DS_Store
 Thumbs.db
 
-# File con le password del database (Importantissimo per la sicurezza!)
+# File containing database passwords (critical for security!)
 src/main/resources/config.properties
