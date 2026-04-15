@@ -104,18 +104,15 @@ public class WalletDAO {
         }
     }
 
-    public Wallet update(final UUID id,
-                         final String name,
-                         final WalletType type,
-                         final String currency) throws SQLException {
+    public Wallet update(final Wallet wallet) throws SQLException {
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_WALLET_SQL)) {
 
-            statement.setString(1, name);
-            statement.setString(2, type.name());
-            statement.setString(3, currency);
-            statement.setObject(4, id);
+            statement.setString(1, wallet.getName());
+            statement.setString(2, wallet.getType().name());
+            statement.setString(3, wallet.getCurrency());
+            statement.setObject(4, wallet.getId());
 
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
