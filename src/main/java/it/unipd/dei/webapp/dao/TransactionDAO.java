@@ -124,6 +124,27 @@ public class TransactionDAO {
         return null;
     }
 
+    public Transaction update(final Transaction transaction) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+
+            statement.setString(1, transaction.getType().name());
+            statement.setBigDecimal(2, transaction.getAmount());
+            statement.setString(3, transaction.getCategory());
+            statement.setDate(4, Date.valueOf(transaction.getTransactionDate()));
+            statement.setString(5, transaction.getNote());
+            statement.setObject(6, transaction.getId());
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToTransaction(rs);
+                }
+            }
+        }
+
+        throw new SQLException("Failed to update transaction.");
+    }
+
     public boolean delete(final UUID id) throws SQLException {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
