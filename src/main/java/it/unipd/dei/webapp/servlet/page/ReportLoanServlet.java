@@ -25,7 +25,7 @@ public class ReportLoanServlet extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(request.getContextPath());
+
 
     }
 
@@ -36,22 +36,21 @@ public class ReportLoanServlet extends HttpServlet{
         double principal = Double.parseDouble(request.getParameter("principal"));
         double annualRate =Double.parseDouble(request.getParameter("annualRate"));
         int months = Integer.parseInt(request.getParameter("months"));
-        System.out.println(principal);
-        System.out.println(annualRate);
-        System.out.println(months);
+
 
         try
         {
 
             List<AmortizationRow> amortizationList = calculator.calculateLoan(principal,annualRate,months);
             request.setAttribute("amortizationList",amortizationList);
-            //getServletContext().getRequestDispatcher("/WEB-INF/jsp/loanreport.jsp").forward(request,response);
             request.getRequestDispatcher("/WEB-INF/jsp/loanreport.jsp").forward(request, response);
+
         }
         catch(ValidationException e)
         {
-            //getServletContext().getRequestDispatcher(request.getContextPath()+"/guest/report?error="+e.getMessage()).forward(request,response);
-            response.sendRedirect(request.getContextPath()+"/guest/report?error="+e.getMessage());
+            request.setAttribute("errorMessage", e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator.jsp").forward(request, response);
+
         }
 
 
