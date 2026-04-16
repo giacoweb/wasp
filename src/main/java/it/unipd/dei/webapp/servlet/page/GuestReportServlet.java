@@ -23,14 +23,18 @@ public class GuestReportServlet extends HttpServlet {
         //response.getWriter().write("Guest session token: " + token);
 
         String error = request.getParameter("error");
+        if (error != null)
+        {
+            if(error.equals("loan_error_principal")){
+                request.setAttribute("errorMessage", "Loan: The capital need to be greater than 0.");
+            } else if(error.equals("loan_error_annualRate")){
+                request.setAttribute("errorMessage", "Loan: The interest need to be between 0 and 100.");
+            }else if(error.equals("loan_error_durations")){
+                request.setAttribute("errorMessage", "Loan: The duration need to be greater than 0.");
+            }
 
-        if(error.equals("loan_error_principal")){
-            request.setAttribute("errorMessage", "Loan: The capital need to be greater than 0.");
-        } else if(error.equals("loan_error_annualRate")){
-            request.setAttribute("errorMessage", "Loan: The interest need to be between 0 and 100.");
-        }else if(error.equals("loan_error_durations")){
-            request.setAttribute("errorMessage", "Loan: The duration need to be greater than 0.");
         }
+
 
 
 
