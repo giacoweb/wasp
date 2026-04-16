@@ -2,10 +2,13 @@ package it.unipd.dei.webapp.service;
 
 import it.unipd.dei.webapp.model.AmortizationRow;
 import it.unipd.dei.webapp.model.CompoundResult;
+import it.unipd.dei.webapp.model.BudgetResult;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CalculatorService {
 
@@ -78,5 +81,55 @@ public class CalculatorService {
         return projection;
     }
 
+    public BudgetResult calculateBudget(String[] incomeCategories,double[] incomeAmounts,String[] expenseCategories,double[] expenseAmounts) throws ValidationException{
+
+        if (incomeCategories == null || incomeCategories.length == 0) {
+            throw new ValidationException("At least one income item is required.");
+        }
+        if (expenseCategories == null || expenseCategories.length == 0) {
+            throw new ValidationException("At least one expense item is required.");
+        }
+        if (incomeCategories.length != incomeAmounts.length) {
+            throw new ValidationException("Income categories and amounts must match.");
+        }
+        if (expenseCategories.length != expenseAmounts.length) {
+            throw new ValidationException("Expense categories and amounts must match.");
+        }
+
+        Map<String, Double> incomeByCategory = new LinkedHashMap<>();
+        double totalIncome = 0;
+
+        for (int i = 0; i < incomeCategories.length; i++) {
+            String category = incomeCategories[i].trim();
+            double amount = incomeAmounts[i];
+
+            if(amount < 0){
+                throw new ValidationException("Income amount for '" + category + "' must be positive.");
+            }
+
+            incomeByCategory.merge(category,amount, Double::sum);
+            totalIncome += amount;
+        }
+
+        Map<String, Double> expensesByCategory = new LinkedHashMap<>();
+        double totalExpenses = 0;
+
+        for (int i = 0; i < expenseCategories.length; i++) {
+            String category = expenseCategories[i].trim();
+            double amount = expenseAmounts[i];
+
+            if (amount <= 0) {
+                throw new ValidationException("Expense amount for '" + category + "' must be positive.");
+            }
+
+            expensesByCategory.merge(category,amount,Double::sum);
+            totalExpenses += amount;
+
+        }
+
+
+        return new BudgetResult(totalIncome,totalExpenses,incomeByCategory,expensesByCategory);
+
+    }
 
 }
