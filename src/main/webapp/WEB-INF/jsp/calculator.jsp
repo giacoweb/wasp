@@ -16,7 +16,7 @@
         </div>
     </c:if>
 
-    <form action="<%= request.getContextPath() %>/report/compound" method="post">
+    <form action="<%= request.getContextPath() %>/report/loan" method="post">
 
         <div>
              <label>Principal (€):</label><br>
@@ -62,8 +62,8 @@
 
     <br>
 
-    <form action="<%= request.getContextPath() %>/guest/report" method="get">
-      <button type="submit">Continue as Guest</button>
+    <form action="<%= request.getContextPath() %>" method="get">
+      <button type="submit">Back to Homepage</button>
 
     </form>
   </body>
