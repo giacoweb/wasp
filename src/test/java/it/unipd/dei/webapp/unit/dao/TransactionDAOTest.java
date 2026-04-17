@@ -37,14 +37,18 @@ class TransactionDAOTest {
         userDAO = new UserDAO();
     }
 
-    private Wallet createTestWallet() throws Exception {
+    private User createTestUser() throws Exception {
         User user = new User();
         user.setName("Txn");
         user.setSurname("DAOTest");
         user.setEmail("junit-tdao-" + System.currentTimeMillis() + "@test.com");
         user.setPasswordHash(PasswordUtil.hashPassword("secret123"));
         user.setRole(UserRole.REGISTERED);
-        User created = userDAO.createUser(user);
+        return userDAO.createUser(user);
+    }
+
+    private Wallet createTestWallet() throws Exception {
+        User created = createTestUser();
         return walletDAO.create(created.getId(), "Test Wallet", WalletType.CASH, "EUR");
     }
 
