@@ -6,7 +6,6 @@ import it.unipd.dei.webapp.model.WalletSummary;
 import it.unipd.dei.webapp.model.WalletType;
 import it.unipd.dei.webapp.util.DBConnection;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -73,7 +72,7 @@ public class TransactionDAO {
 
     public Transaction create(final UUID walletId,
                                final TransactionType type,
-                               final BigDecimal amount,
+                               final java.math.BigDecimal amount,
                                final String category,
                                final LocalDate transactionDate,
                                final String note) throws SQLException {
@@ -180,6 +179,10 @@ public class TransactionDAO {
         }
     }
 
+    /**
+     * Filters a user's transactions by type, category, and/or date range.
+     * All parameters are optional (null = ignored).
+     */
     public List<Transaction> findByUserIdAndFilters(final UUID userId,
                                                      final TransactionType type,
                                                      final String category,
