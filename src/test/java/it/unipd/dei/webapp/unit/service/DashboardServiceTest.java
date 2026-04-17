@@ -62,7 +62,7 @@ class DashboardServiceTest {
 
         assertEquals(0, summary.getTotalEquity().compareTo(BigDecimal.ZERO));
         assertEquals(0, summary.getYtdExpenses().compareTo(BigDecimal.ZERO));
-        assertEquals(0, summary.getTotalSavings().compareTo(BigDecimal.ZERO));
+        assertEquals(0, summary.getYtdSavings().compareTo(BigDecimal.ZERO));
         assertTrue(summary.getWallets().isEmpty());
     }
 
@@ -92,8 +92,8 @@ class DashboardServiceTest {
 
         // totalEquity = 1000 - 200 = 800
         assertEquals(0, summary.getTotalEquity().compareTo(new BigDecimal("800.00")));
-        // totalSavings = same
-        assertEquals(0, summary.getTotalSavings().compareTo(new BigDecimal("800.00")));
+        // ytdSavings = same for current-year transactions
+        assertEquals(0, summary.getYtdSavings().compareTo(new BigDecimal("800.00")));
     }
 
     @Test
@@ -130,7 +130,7 @@ class DashboardServiceTest {
 
         // Only current-year expense in YTD
         assertEquals(0, summary.getYtdExpenses().compareTo(new BigDecimal("300.00")));
-        // But total equity and savings include all-time transactions
+        // Total equity still includes all-time transactions
         assertEquals(0, summary.getTotalEquity().compareTo(new BigDecimal("-1000.00")));
     }
 
