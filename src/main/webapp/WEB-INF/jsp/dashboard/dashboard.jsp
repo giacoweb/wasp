@@ -40,8 +40,8 @@
         <td><%= summary.getYtdExpenses() %></td>
     </tr>
     <tr>
-        <th>Total Savings</th>
-        <td><%= summary.getTotalSavings() %></td>
+        <th>YTD Savings</th>
+        <td><%= summary.getYtdSavings() %></td>
     </tr>
 </table>
 

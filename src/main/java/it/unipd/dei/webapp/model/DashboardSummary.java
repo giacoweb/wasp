@@ -7,17 +7,17 @@ public class DashboardSummary {
 
     private BigDecimal totalEquity;
     private BigDecimal ytdExpenses;
-    private BigDecimal totalSavings;
+    private BigDecimal ytdSavings;
     private List<WalletSummary> wallets;
 
     public DashboardSummary() {
     }
 
     public DashboardSummary(BigDecimal totalEquity, BigDecimal ytdExpenses,
-                            BigDecimal totalSavings, List<WalletSummary> wallets) {
+                            BigDecimal ytdSavings, List<WalletSummary> wallets) {
         this.totalEquity = totalEquity;
         this.ytdExpenses = ytdExpenses;
-        this.totalSavings = totalSavings;
+        this.ytdSavings = ytdSavings;
         this.wallets = wallets;
     }
 
@@ -37,12 +37,12 @@ public class DashboardSummary {
         this.ytdExpenses = ytdExpenses;
     }
 
-    public BigDecimal getTotalSavings() {
-        return totalSavings;
+    public BigDecimal getYtdSavings() {
+        return ytdSavings;
     }
 
-    public void setTotalSavings(BigDecimal totalSavings) {
-        this.totalSavings = totalSavings;
+    public void setYtdSavings(BigDecimal ytdSavings) {
+        this.ytdSavings = ytdSavings;
     }
 
     public List<WalletSummary> getWallets() {
