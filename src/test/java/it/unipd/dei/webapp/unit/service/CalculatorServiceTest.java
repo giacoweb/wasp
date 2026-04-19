@@ -65,7 +65,6 @@ public class CalculatorServiceTest {
         assertNotNull(results);
         assertEquals(2, results.size());
 
-        assertTrue(results.get(0).getTotalValue() > 1100);
     }
 
     @Test

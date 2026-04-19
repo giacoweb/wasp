@@ -1,31 +1,34 @@
 package it.unipd.dei.webapp.model;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class BudgetResult {
 
-    private final double totalIncome;
-    private final double totalExpenses;
-    private final double netBalance;
-    private final Map<String, Double> incomeByCategory;
-    private final Map<String, Double> expensesByCategory;
+    private final BigDecimal totalIncome;
+    private final BigDecimal totalExpenses;
+    private final BigDecimal netBalance;
+    private final Map<String, BigDecimal> incomeByCategory;
+    private final Map<String, BigDecimal> expensesByCategory;
 
-    public BudgetResult(double totalIncome, double totalExpenses,
-                        Map<String, Double> incomeByCategory,
-                        Map<String, Double> expensesByCategory) {
-
-        this.totalIncome = totalIncome;
-        this.totalExpenses = totalExpenses;
-        this.netBalance = totalIncome - totalExpenses;
-        this.incomeByCategory = incomeByCategory;
-        this.expensesByCategory = expensesByCategory;
+    public BudgetResult(BigDecimal totalIncome,
+                        BigDecimal totalExpenses,
+                        Map<String, BigDecimal> incomeByCategory,
+                        Map<String, BigDecimal> expensesByCategory) {
+        this.totalIncome       = totalIncome;
+        this.totalExpenses     = totalExpenses;
+        this.netBalance        = totalIncome.subtract(totalExpenses);
+        // Defensive copies — il chiamante non può modificare le mappe interne
+        this.incomeByCategory   = Collections.unmodifiableMap(incomeByCategory);
+        this.expensesByCategory = Collections.unmodifiableMap(expensesByCategory);
     }
 
-    public double getTotalIncome()                  { return totalIncome; }
-    public double getTotalExpenses()                { return totalExpenses; }
-    public double getNetBalance()                   { return netBalance; }
-    public Map<String, Double> getIncomeByCategory()   { return incomeByCategory; }
-    public Map<String, Double> getExpensesByCategory() { return expensesByCategory; }
+    public BigDecimal getTotalIncome()                        { return totalIncome; }
+    public BigDecimal getTotalExpenses()                      { return totalExpenses; }
+    public BigDecimal getNetBalance()                         { return netBalance; }
+    public Map<String, BigDecimal> getIncomeByCategory()      { return incomeByCategory; }
+    public Map<String, BigDecimal> getExpensesByCategory()    { return expensesByCategory; }
 
 }

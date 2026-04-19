@@ -5,6 +5,8 @@ import it.unipd.dei.webapp.model.CompoundResult;
 import it.unipd.dei.webapp.model.BudgetResult;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,7 +15,13 @@ import java.util.Map;
 public class CalculatorService {
 
 
+
+
+
+
     public List<AmortizationRow> calculateLoan(double principal, double annualRate, int months) throws ValidationException{
+
+
 
         if (principal <= 0) {
             throw new ValidationException("The capital need to be greater than 0.");
@@ -27,18 +35,43 @@ public class CalculatorService {
             throw new ValidationException("The duration need to be greater than 0.");
         }
 
+        List<AmortizationRow> schedule = new ArrayList<>();
+
+        if (annualRate == 0.0) {
+            BigDecimal bdPrincipal     = toBD(principal);
+            BigDecimal monthlyPayment  = toBD(principal / months);
+            BigDecimal interest        = BigDecimal.ZERO;
+            BigDecimal balance         = bdPrincipal;
+
+            for (int i = 1; i <= months; i++) {
+                balance = balance.subtract(monthlyPayment);
+                if (balance.compareTo(BigDecimal.ZERO) < 0) {
+                    balance = BigDecimal.ZERO;
+                }
+                schedule.add(new AmortizationRow(i, monthlyPayment,
+                        monthlyPayment, interest, balance));
+            }
+
+            return schedule;
+        }
+
 
         double monthlyRate = annualRate / 12 / 100;
         double monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-
-        List<AmortizationRow> schedule = new ArrayList<>();
         double balance = principal;
 
         for (int i = 1; i <= months; i++) {
             double interest = balance * monthlyRate;
             double principalPaid = monthlyPayment - interest;
             balance -= principalPaid;
-            schedule.add(new AmortizationRow(i, monthlyPayment, principalPaid, interest, Math.max(0, balance)));
+
+            schedule.add(new AmortizationRow(
+                    i,
+                    toBD(monthlyPayment),
+                    toBD(principalPaid),
+                    toBD(interest),
+                    toBD(Math.max(0, balance))
+            ));
         }
         return schedule;
     }
@@ -73,7 +106,7 @@ public class CalculatorService {
                 currentBalance = (currentBalance + monthlyContribution) * (1 + monthlyRate);
             }
 
-            projection.add(new CompoundResult(y, currentBalance));
+            projection.add(new CompoundResult(y, toBD(currentBalance)));
 
         }
 
@@ -96,40 +129,47 @@ public class CalculatorService {
             throw new ValidationException("Expense categories and amounts must match.");
         }
 
-        Map<String, Double> incomeByCategory = new LinkedHashMap<>();
-        double totalIncome = 0;
+        Map<String, BigDecimal> incomeByCategory = new LinkedHashMap<>();
+        BigDecimal totalIncome = BigDecimal.ZERO;
 
         for (int i = 0; i < incomeCategories.length; i++) {
-            String category = incomeCategories[i].trim();
-            double amount = incomeAmounts[i];
 
-            if(amount < 0){
+            String category = incomeCategories[i].trim();
+
+            if (incomeAmounts[i] <= 0) {
                 throw new ValidationException("Income amount for '" + category + "' must be positive.");
             }
 
-            incomeByCategory.merge(category,amount, Double::sum);
-            totalIncome += amount;
+            BigDecimal amount = toBD(incomeAmounts[i]);
+            incomeByCategory.merge(category, amount, BigDecimal::add);
+            totalIncome = totalIncome.add(amount);
         }
 
-        Map<String, Double> expensesByCategory = new LinkedHashMap<>();
-        double totalExpenses = 0;
+        Map<String, BigDecimal> expensesByCategory = new LinkedHashMap<>();
+        BigDecimal totalExpenses = BigDecimal.ZERO;
 
         for (int i = 0; i < expenseCategories.length; i++) {
             String category = expenseCategories[i].trim();
-            double amount = expenseAmounts[i];
 
-            if (amount <= 0) {
+            if (expenseAmounts[i] <= 0) {
                 throw new ValidationException("Expense amount for '" + category + "' must be positive.");
             }
 
-            expensesByCategory.merge(category,amount,Double::sum);
-            totalExpenses += amount;
-
+            BigDecimal amount = toBD(expenseAmounts[i]);
+            expensesByCategory.merge(category, amount, BigDecimal::add);
+            totalExpenses = totalExpenses.add(amount);
         }
 
 
-        return new BudgetResult(totalIncome,totalExpenses,incomeByCategory,expensesByCategory);
+        return new BudgetResult(totalIncome, totalExpenses, incomeByCategory, expensesByCategory);
 
     }
+
+
+    private BigDecimal toBD(double value) {
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
+    }
+
+
 
 }
