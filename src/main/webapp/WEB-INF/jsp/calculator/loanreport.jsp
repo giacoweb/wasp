@@ -10,7 +10,16 @@
   <body>
     <h1>Loan Report</h1>
 
-    <p>Total number of payments: ${amortizationList.size()}</p>
+    <%
+        List<AmortizationRow> result = (List<AmortizationRow>) request.getAttribute("amortizationList");
+        if (result == null) {
+            response.sendRedirect(request.getContextPath() + "/guest/report");
+            return;
+        }
+    %>
+
+
+    <p>Total number of payments: <%= result.size() %></p>
 
     <table border="1">
         <thead>
@@ -25,10 +34,7 @@
         <tbody>
 
             <%
-                  List<AmortizationRow> result= (List<AmortizationRow>) request.getAttribute("amortizationList");
 
-              if(result != null)
-              {
                     for(int i=0; i<result.size();i++)
                     {
                         AmortizationRow row = result.get(i);
@@ -46,7 +52,6 @@
             <%
                    }
 
-               }
             %>
 
 

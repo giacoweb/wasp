@@ -13,6 +13,10 @@
 
     <%
           BudgetResult result = (BudgetResult) request.getAttribute("budgetResult");
+          if (result == null) {
+                response.sendRedirect(request.getContextPath() + "/guest/report");
+                return;
+          }
     %>
 
     <h2>Summary</h2>

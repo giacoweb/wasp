@@ -10,7 +10,17 @@
   <body>
     <h1>Compound Report</h1>
 
-    <p>Number of years: ${compoundList.size()}</p>
+    <%
+           List<CompoundResult> result= (List<CompoundResult>) request.getAttribute("compoundList");
+           if (result == null) {
+                    response.sendRedirect(request.getContextPath() + "/guest/report");
+                    return;
+           }
+    %>
+
+
+
+    <p>Number of years: <%= result.size() %></p>
 
     <table border="1">
         <thead>
@@ -22,10 +32,7 @@
         <tbody>
 
             <%
-                  List<CompoundResult> result= (List<CompoundResult>) request.getAttribute("compoundList");
 
-              if(result != null)
-              {
                     for(int i=0; i<result.size();i++)
                     {
                         CompoundResult row = result.get(i);
@@ -39,7 +46,6 @@
             <%
                    }
 
-               }
             %>
 
 
