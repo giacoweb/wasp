@@ -10,11 +10,11 @@
 
     <p></strong>Loan Calculator</strong></p>
 
-    <c:if test="${not empty errorMessage}">
+    <% if (request.getAttribute("errorMessage") != null) { %>
         <div style="color: red; font-weight: bold; margin-bottom: 10px;">
-            ${errorMessage}
+            <%= request.getAttribute("errorMessage") %>
         </div>
-    </c:if>
+    <% } %>
 
     <form action="<%= request.getContextPath() %>/report/loan" method="post">
 
