@@ -18,7 +18,7 @@ public class AmortizationRow {
         this.remainingBalance=remainingBalance;
     }
 
-    public int getMonth() { return month; }
+    public int getMonth () { return month; }
     public double getTotalPayment() { return totalPayment; }
     public double getPrincipalPaid() { return principalPaid; }
     public double getInterestPaid() { return interestPaid; }

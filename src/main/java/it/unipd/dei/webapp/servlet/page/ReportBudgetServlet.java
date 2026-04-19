@@ -48,12 +48,12 @@ public class ReportBudgetServlet extends HttpServlet {
 
             BudgetResult result = calculator.calculateBudget(incomeCategory,incomeAmount,expenseCategory,expenseAmount);
             request.setAttribute("budgetResult",result);
-            request.getRequestDispatcher("/WEB-INF/jsp/budgetreport.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/budgetreport.jsp").forward(request, response);
 
         } catch (ValidationException e) {
 
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/calculator.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
 

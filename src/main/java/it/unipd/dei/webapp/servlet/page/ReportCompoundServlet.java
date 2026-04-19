@@ -47,13 +47,13 @@ public class ReportCompoundServlet extends HttpServlet{
 
             List<CompoundResult> compoundList = calculator.calculateCompound(initialCapital,monthlyContribution,annualRate,years);
             request.setAttribute("compoundList",compoundList);
-            request.getRequestDispatcher("/WEB-INF/jsp/compoundreport.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/compoundreport.jsp").forward(request, response);
 
         }
         catch(ValidationException e)
         {
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/calculator.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
 

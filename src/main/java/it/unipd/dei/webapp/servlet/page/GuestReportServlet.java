@@ -24,6 +24,6 @@ public class GuestReportServlet extends HttpServlet {
         //response.getWriter().write("Guest session token: " + token);
 
 
-        request.getRequestDispatcher("/WEB-INF/jsp/calculator.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
     }
 }

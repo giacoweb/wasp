@@ -43,13 +43,13 @@ public class ReportLoanServlet extends HttpServlet{
 
             List<AmortizationRow> amortizationList = calculator.calculateLoan(principal,annualRate,months);
             request.setAttribute("amortizationList",amortizationList);
-            request.getRequestDispatcher("/WEB-INF/jsp/loanreport.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
         }
         catch(ValidationException e)
         {
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/calculator.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
 
