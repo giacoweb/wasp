@@ -34,13 +34,14 @@ public class ReportLoanServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        double principal = Double.parseDouble(request.getParameter("principal"));
-        double annualRate =Double.parseDouble(request.getParameter("annualRate"));
-        int months = Integer.parseInt(request.getParameter("months"));
-
 
         try
         {
+
+            double principal = Double.parseDouble(request.getParameter("principal"));
+            double annualRate =Double.parseDouble(request.getParameter("annualRate"));
+            int months = Integer.parseInt(request.getParameter("months"));
+
 
             List<AmortizationRow> amortizationList = calculator.calculateLoan(principal,annualRate,months);
             request.setAttribute("amortizationList",amortizationList);
@@ -53,8 +54,9 @@ public class ReportLoanServlet extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
-
-
-
+        catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Please enter valid numbers.");
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        }
     }
 }

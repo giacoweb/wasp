@@ -34,17 +34,14 @@ public class ReportCompoundServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        double initialCapital = Double.parseDouble(request.getParameter("initialCapital"));
-        double monthlyContribution = Double.parseDouble(request.getParameter("monthlyContribution"));
-        double annualRate = Double.parseDouble(request.getParameter("annualRate"));
-        int years = Integer.parseInt(request.getParameter("years"));
-        System.out.println(initialCapital);
-        System.out.println(monthlyContribution);
-        System.out.println(annualRate);
-
-
         try
         {
+
+            double initialCapital = Double.parseDouble(request.getParameter("initialCapital"));
+            double monthlyContribution = Double.parseDouble(request.getParameter("monthlyContribution"));
+            double annualRate = Double.parseDouble(request.getParameter("annualRate"));
+            int years = Integer.parseInt(request.getParameter("years"));
+
 
             List<CompoundResult> compoundList = calculator.calculateCompound(initialCapital,monthlyContribution,annualRate,years);
             request.setAttribute("compoundList",compoundList);
@@ -57,8 +54,9 @@ public class ReportCompoundServlet extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
-
-
-
+        catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Please enter valid numbers.");
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        }
     }
 }

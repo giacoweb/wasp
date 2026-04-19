@@ -43,18 +43,17 @@ public class ReportBudgetServlet extends HttpServlet {
         String[] expenseCategory = request.getParameterValues("expenseCategory");
         String[] expenseAmountStrings = request.getParameterValues("expenseAmount");
 
-        double[] incomeAmount = new double[incomeAmountStrings.length];
-        for (int i = 0; i < incomeAmountStrings.length; i++) {
-            incomeAmount[i] = Double.parseDouble(incomeAmountStrings[i]);
-        }
-
-        double[] expenseAmount = new double[expenseAmountStrings.length];
-        for (int i = 0; i < expenseAmountStrings.length; i++) {
-            expenseAmount[i] = Double.parseDouble(expenseAmountStrings[i]);
-        }
-
-
         try {
+
+            double[] incomeAmount = new double[incomeAmountStrings.length];
+            for (int i = 0; i < incomeAmountStrings.length; i++) {
+                incomeAmount[i] = Double.parseDouble(incomeAmountStrings[i]);
+            }
+
+            double[] expenseAmount = new double[expenseAmountStrings.length];
+            for (int i = 0; i < expenseAmountStrings.length; i++) {
+                expenseAmount[i] = Double.parseDouble(expenseAmountStrings[i]);
+            }
 
             BudgetResult result = calculator.calculateBudget(incomeCategory,incomeAmount,expenseCategory,expenseAmount);
             request.setAttribute("budgetResult",result);
@@ -66,6 +65,9 @@ public class ReportBudgetServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         }
-
+        catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Please enter valid numbers.");
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        }
     }
 }
