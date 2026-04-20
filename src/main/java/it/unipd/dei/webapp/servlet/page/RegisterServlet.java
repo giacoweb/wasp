@@ -4,12 +4,12 @@ import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.service.UserService;
 import it.unipd.dei.webapp.service.exception.UserAlreadyExistsException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
+import it.unipd.dei.webapp.util.AuthenticationSessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -48,8 +48,7 @@ public class RegisterServlet extends HttpServlet {
         try {
             User user = userService.register(name, surname, email, password);
 
-            HttpSession session = request.getSession(true);
-            session.setAttribute("authenticatedUser", user);
+            AuthenticationSessionUtil.startAuthenticatedSession(request, user);
 
             response.sendRedirect(request.getContextPath() + "/dashboard");
 
