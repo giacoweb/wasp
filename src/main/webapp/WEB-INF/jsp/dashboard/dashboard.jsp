@@ -2,6 +2,7 @@
 <%@ page import="it.unipd.dei.webapp.model.DashboardSummary" %>
 <%@ page import="it.unipd.dei.webapp.model.WalletSummary" %>
 <%@ page import="it.unipd.dei.webapp.model.User" %>
+<%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
@@ -13,13 +14,13 @@
 <%
     User user = (User) session.getAttribute("authenticatedUser");
 %>
-<h1>Welcome, <%= user.getName() %></h1>
+<h1>Welcome, <%= HtmlUtil.escape(user.getName()) %></h1>
 
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");
     if (errorMessage != null) {
 %>
-<p style="color: red;"><%= errorMessage %></p>
+<p style="color: red;"><%= HtmlUtil.escape(errorMessage) %></p>
 <%
     }
 %>
@@ -68,9 +69,9 @@
         for (WalletSummary wallet : wallets) {
     %>
         <tr>
-            <td><%= wallet.getName() %></td>
+            <td><%= HtmlUtil.escape(wallet.getName()) %></td>
             <td><%= wallet.getType() %></td>
-            <td><%= wallet.getCurrency() %></td>
+            <td><%= HtmlUtil.escape(wallet.getCurrency()) %></td>
             <td><%= wallet.getBalance() %></td>
         </tr>
     <%
