@@ -14,6 +14,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 @WebFilter(filterName = "CsrfProtectionFilter", urlPatterns = {
+        "/login",
+        "/register",
+        "/auth/login",
+        "/auth/register",
         "/dashboard",
         "/wallets",
         "/wallets/*",
@@ -31,10 +35,15 @@ public class CsrfProtectionFilter extends HttpFilter implements Filter {
 
         HttpSession session = request.getSession(false);
         boolean authenticated = session != null && session.getAttribute("authenticatedUser") != null;
+        boolean publicAuthRoute = isPublicAuthRoute(request);
 
-        if (!authenticated) {
+        if (!authenticated && !publicAuthRoute) {
             chain.doFilter(request, response);
             return;
+        }
+
+        if (session == null) {
+            session = request.getSession(true);
         }
 
         String csrfToken = CsrfUtil.getOrCreateToken(session);
@@ -72,6 +81,14 @@ public class CsrfProtectionFilter extends HttpFilter implements Filter {
     private boolean isApiRequest(final HttpServletRequest request) {
         String path = request.getServletPath();
         return path != null && path.startsWith("/api/");
+    }
+
+    private boolean isPublicAuthRoute(final HttpServletRequest request) {
+        String path = request.getServletPath();
+        return "/login".equals(path)
+                || "/register".equals(path)
+                || "/auth/login".equals(path)
+                || "/auth/register".equals(path);
     }
 
     private void reject(final HttpServletRequest request,
