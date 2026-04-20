@@ -1,5 +1,6 @@
 package it.unipd.dei.webapp.servlet.page;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +14,16 @@ import java.util.UUID;
 public class GuestReportServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         UUID token = session != null ? (UUID) session.getAttribute("guestSessionToken") : null;
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("Guest session token: " + token);
+        System.out.println("Guest session token: " + token);
+        //response.getWriter().write("Guest session token: " + token);
+
+
+        request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
     }
 }
