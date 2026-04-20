@@ -81,14 +81,19 @@ class UserServiceTest {
     void registerAndLoginSucceeds() throws Exception {
         String email = "junit-user-" + System.currentTimeMillis() + "@test.com";
 
-        User user = userService.register("Test", "User", email, "secret123");
+        User registered = userService.register("Test", "User", email, "secret123");
+        User loggedIn = userService.login(email, "secret123");
 
-        assertNotNull(user.getId());
-        assertEquals("Test", user.getName());
-        assertEquals("User", user.getSurname());
-        assertEquals(email, user.getEmail());
-        assertEquals(UserRole.REGISTERED, user.getRole());
-        assertNotNull(user.getCreatedAt());
+        assertNotNull(registered.getId());
+        assertEquals("Test", registered.getName());
+        assertEquals("User", registered.getSurname());
+        assertEquals(email, registered.getEmail());
+        assertEquals(UserRole.REGISTERED, registered.getRole());
+        assertNotNull(registered.getCreatedAt());
+
+        assertNotNull(loggedIn);
+        assertEquals(registered.getId(), loggedIn.getId());
+        assertEquals(email, loggedIn.getEmail());
     }
 
     @Test

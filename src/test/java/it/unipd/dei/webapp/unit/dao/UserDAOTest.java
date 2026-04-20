@@ -77,6 +77,22 @@ class UserDAOTest {
     }
 
     @Test
+    void createdUserCanBeFoundByEmailAndId() throws Exception {
+        User user = buildTestUser();
+        User created = userDAO.createUser(user);
+
+        User foundByEmail = userDAO.findByEmail(created.getEmail());
+        User foundById = userDAO.findById(created.getId());
+
+        assertNotNull(foundByEmail);
+        assertNotNull(foundById);
+        assertEquals(created.getId(), foundByEmail.getId());
+        assertEquals(created.getId(), foundById.getId());
+        assertEquals(created.getEmail(), foundByEmail.getEmail());
+        assertEquals(created.getEmail(), foundById.getEmail());
+    }
+
+    @Test
     void findByIdReturnsNullForNonexistent() throws Exception {
         User found = userDAO.findById(UUID.randomUUID());
 
