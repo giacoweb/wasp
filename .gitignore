@@ -18,3 +18,19 @@ Thumbs.db
 
 # File containing database passwords (critical for security!)
 src/main/resources/config.properties
+
+# Legacy report build directory
+out/
+
+# Homework 1 report build artifacts
+homework1/*.aux
+homework1/*.bbl
+homework1/*.blg
+homework1/*.fdb_latexmk
+homework1/*.fls
+homework1/*.lof
+homework1/*.log
+homework1/*.lot
+homework1/*.out
+homework1/*.synctex.gz
+homework1/*.toc
