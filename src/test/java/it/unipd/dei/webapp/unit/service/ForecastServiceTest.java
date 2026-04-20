@@ -45,7 +45,7 @@ class ForecastServiceTest {
 
     private User createTestUser() throws Exception {
         String email = "junit-forecast-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Forecast", "Tester", email, "secret123");
+        return userService.register("Forecast", "Tester", email, "Secret123!");
     }
 
     @Test

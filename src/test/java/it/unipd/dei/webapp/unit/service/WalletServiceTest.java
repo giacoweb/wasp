@@ -37,7 +37,7 @@ class WalletServiceTest {
 
     private User createTestUser() throws Exception {
         String email = "junit-wallet-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Wallet", "Tester", email, "secret123");
+        return userService.register("Wallet", "Tester", email, "Secret123!");
     }
 
     @Test

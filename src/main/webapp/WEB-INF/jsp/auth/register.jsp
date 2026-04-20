@@ -31,6 +31,7 @@
 
             <label>Password:</label><br>
             <input type="password" name="password"><br><br>
+            <small>Password must contain at least 8 characters, one digit, and one special character.</small><br><br>
 
             <button type="submit">Register</button>
         </form>

@@ -41,7 +41,7 @@ class DashboardServiceTest {
 
     private User createTestUser() throws Exception {
         String email = "junit-dash-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Dash", "Tester", email, "secret123");
+        return userService.register("Dash", "Tester", email, "Secret123!");
     }
 
     private Wallet createTestWallet(java.util.UUID userId) throws Exception {
