@@ -84,6 +84,12 @@
 }
 %>
 
+<p>
+    <a href="<%= request.getContextPath() %>/wallets">Manage wallets</a>
+    |
+    <a href="<%= request.getContextPath() %>/pac">Manage PAC plans</a>
+</p>
+
 <br>
 <form action="<%= request.getContextPath() %>/auth/logout" method="post">
     <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(request.getAttribute("csrfToken")) %>">
