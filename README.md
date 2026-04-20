@@ -149,7 +149,6 @@ Deploy `target/FinTrack.war` to Tomcat 11.
 
 ### 4. Verify
 
-- `/ping` — backend health check (should return `OK`)
 - `/login` — authentication page
 
 ## Main Components
