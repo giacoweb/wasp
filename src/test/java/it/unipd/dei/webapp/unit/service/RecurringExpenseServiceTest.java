@@ -33,7 +33,7 @@ class RecurringExpenseServiceTest {
 
     private User createTestUser() throws Exception {
         String email = "junit-exp-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Exp", "Tester", email, "secret123");
+        return userService.register("Exp", "Tester", email, "Secret123!");
     }
 
     private Wallet createTestWallet(UUID userId) throws Exception {

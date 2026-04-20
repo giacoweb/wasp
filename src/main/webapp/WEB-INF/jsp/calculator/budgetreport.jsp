@@ -2,6 +2,7 @@
 <%-- Important: add this line to enable <c: tags --%>
 <%@ page import="java.util.*" %>
 <%@ page import="it.unipd.dei.webapp.model.BudgetResult" %>
+<%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
 <%@ page import="java.math.BigDecimal" %>
 <!DOCTYPE html>
 <html>
@@ -32,7 +33,7 @@
             <tbody>
             <% for (Map.Entry<String, BigDecimal> entry : result.getIncomeByCategory().entrySet()) { %>
                 <tr>
-                    <td><%= entry.getKey() %></td>
+                    <td><%= HtmlUtil.escape(entry.getKey()) %></td>
                     <td><%= String.format("%.2f", entry.getValue()) %></td>
                 </tr>
             <% } %>
@@ -45,7 +46,7 @@
             <tbody>
             <% for (Map.Entry<String, BigDecimal> entry : result.getExpensesByCategory().entrySet()) { %>
                 <tr>
-                    <td><%= entry.getKey() %></td>
+                    <td><%= HtmlUtil.escape(entry.getKey()) %></td>
                     <td><%= String.format("%.2f", entry.getValue()) %></td>
                 </tr>
             <% } %>

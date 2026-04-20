@@ -8,7 +8,11 @@ import it.unipd.dei.webapp.service.exception.UserAlreadyExistsException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.util.PasswordUtil;
 
+import java.util.Locale;
+
 public class UserService {
+
+    private static final int MIN_PASSWORD_LENGTH = 8;
 
     private final UserDAO userDAO;
 
@@ -26,9 +30,13 @@ public class UserService {
                          final String password)
             throws Exception, ValidationException, UserAlreadyExistsException {
 
-        validateRegistrationInput(name, surname, email, password);
+        String normalizedName = normalizeRequiredField(name);
+        String normalizedSurname = normalizeRequiredField(surname);
+        String normalizedEmail = normalizeEmail(email);
 
-        User existingUser = userDAO.findByEmail(email);
+        validateRegistrationInput(normalizedName, normalizedSurname, normalizedEmail, password);
+
+        User existingUser = userDAO.findByEmail(normalizedEmail);
         if (existingUser != null) {
             throw new UserAlreadyExistsException();
         }
@@ -36,9 +44,9 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(password);
 
         User user = new User();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setEmail(email);
+        user.setName(normalizedName);
+        user.setSurname(normalizedSurname);
+        user.setEmail(normalizedEmail);
         user.setPasswordHash(hashedPassword);
         user.setRole(UserRole.REGISTERED);
 
@@ -48,15 +56,13 @@ public class UserService {
     public User login(final String email, final String password)
             throws Exception, ValidationException, InvalidCredentialsException {
 
-        if (email == null || email.isBlank()) {
-            throw new ValidationException("Email cannot be empty.");
-        }
+        String normalizedEmail = normalizeEmail(email);
 
         if (password == null || password.isBlank()) {
             throw new ValidationException("Password cannot be empty.");
         }
 
-        User user = userDAO.findByEmail(email);
+        User user = userDAO.findByEmail(normalizedEmail);
 
         if (user == null) {
             throw new InvalidCredentialsException();
@@ -91,5 +97,35 @@ public class UserService {
         if (password == null || password.isBlank()) {
             throw new ValidationException("Password cannot be empty.");
         }
+
+        validatePasswordStrength(password);
+    }
+
+    private void validatePasswordStrength(final String password) throws ValidationException {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new ValidationException("Password must contain at least 8 characters, one digit, and one special character.");
+        }
+
+        boolean hasDigit = password.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = password.chars().anyMatch(ch -> !Character.isLetterOrDigit(ch));
+
+        if (!hasDigit || !hasSpecial) {
+            throw new ValidationException("Password must contain at least 8 characters, one digit, and one special character.");
+        }
+    }
+
+    private String normalizeRequiredField(final String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.trim();
+    }
+
+    private String normalizeEmail(final String email) throws ValidationException {
+        if (email == null || email.isBlank()) {
+            throw new ValidationException("Email cannot be empty.");
+        }
+
+        return email.trim().toLowerCase(Locale.ROOT);
     }
 }

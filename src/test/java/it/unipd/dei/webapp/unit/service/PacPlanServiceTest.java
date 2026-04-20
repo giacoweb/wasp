@@ -30,7 +30,7 @@ class PacPlanServiceTest {
 
     private User createTestUser() throws Exception {
         String email = "junit-pac-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Pac", "Tester", email, "secret123");
+        return userService.register("Pac", "Tester", email, "Secret123!");
     }
 
     @Test

@@ -2,6 +2,7 @@ package it.unipd.dei.webapp.servlet.page;
 
 import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.service.WalletService;
+import it.unipd.dei.webapp.service.exception.SingleCurrencyRequiredException;
 import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
@@ -51,6 +52,9 @@ public class WalletEditServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
+
+        } catch (SingleCurrencyRequiredException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=currency_mismatch");
 
         } catch (ValidationException e) {
             String errorCode = e.getMessage() != null && e.getMessage().contains("not found")
