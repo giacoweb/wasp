@@ -110,7 +110,6 @@
 
 <br>
 <form action="<%= request.getContextPath() %>/auth/logout" method="post">
-    <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(request.getAttribute("csrfToken")) %>">
     <button type="submit">Logout</button>
 </form>
 

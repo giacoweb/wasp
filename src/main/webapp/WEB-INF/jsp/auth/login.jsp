@@ -18,8 +18,6 @@
     %>
 
     <form action="<%= request.getContextPath() %>/auth/login" method="post">
-      <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(request.getAttribute("csrfToken")) %>">
-
       <label>Email:</label><br>
       <input type="email" name="email" value="<%= HtmlUtil.escape(request.getAttribute("email")) %>"><br><br>
 

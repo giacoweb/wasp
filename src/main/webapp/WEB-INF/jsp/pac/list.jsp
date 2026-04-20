@@ -13,7 +13,6 @@
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");
     String successMessage = (String) request.getAttribute("successMessage");
-    String csrfToken = (String) request.getAttribute("csrfToken");
     List<PacPlan> pacPlans = (List<PacPlan>) request.getAttribute("pacPlans");
 %>
 
@@ -27,8 +26,6 @@
 
 <h2>Create PAC Plan</h2>
 <form action="<%= request.getContextPath() %>/pac/create" method="post">
-    <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
-
     <label>Asset Name:</label><br>
     <input type="text" name="assetName" required><br><br>
 
@@ -72,7 +69,6 @@
         <td><%= plan.getCreatedAt() %></td>
         <td>
             <form action="<%= request.getContextPath() %>/pac/edit" method="post">
-                <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
                 <input type="hidden" name="planId" value="<%= plan.getId() %>">
 
                 <input type="text" name="assetName" value="<%= HtmlUtil.escape(plan.getAssetName()) %>" required><br><br>
@@ -95,7 +91,6 @@
         </td>
         <td>
             <form action="<%= request.getContextPath() %>/pac/delete" method="post">
-                <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
                 <input type="hidden" name="planId" value="<%= plan.getId() %>">
                 <button type="submit">Delete</button>
             </form>

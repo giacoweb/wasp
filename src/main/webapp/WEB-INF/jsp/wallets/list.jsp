@@ -15,7 +15,6 @@
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");
     String successMessage = (String) request.getAttribute("successMessage");
-    String csrfToken = (String) request.getAttribute("csrfToken");
     List<Wallet> wallets = (List<Wallet>) request.getAttribute("wallets");
 %>
 
@@ -29,8 +28,6 @@
 
 <h2>Create Wallet</h2>
 <form action="<%= request.getContextPath() %>/wallets/create" method="post">
-    <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
-
     <label>Name:</label><br>
     <input type="text" name="name" required><br><br>
 
@@ -71,7 +68,6 @@
         <td><%= wallet.getCreatedAt() %></td>
         <td>
             <form action="<%= request.getContextPath() %>/wallets/edit" method="post">
-                <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
                 <input type="hidden" name="walletId" value="<%= wallet.getId() %>">
 
                 <input type="text" name="name" value="<%= HtmlUtil.escape(wallet.getName()) %>" required><br><br>
@@ -92,7 +88,6 @@
         </td>
         <td>
             <form action="<%= request.getContextPath() %>/wallets/delete" method="post">
-                <input type="hidden" name="csrfToken" value="<%= HtmlUtil.escape(csrfToken) %>">
                 <input type="hidden" name="walletId" value="<%= wallet.getId() %>">
                 <button type="submit">Delete</button>
             </form>

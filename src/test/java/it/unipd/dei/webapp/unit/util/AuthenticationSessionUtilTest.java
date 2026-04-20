@@ -25,7 +25,6 @@ class AuthenticationSessionUtilTest {
         RequestState requestState = new RequestState();
         requestState.currentSessionState = new SessionState();
         requestState.currentSessionState.attributes.put("guestSessionToken", UUID.randomUUID());
-        requestState.currentSessionState.attributes.put("csrfToken", "stale-token");
         HttpSession existingSession = sessionProxy(requestState, requestState.currentSessionState);
         requestState.currentSession = existingSession;
 
@@ -39,7 +38,6 @@ class AuthenticationSessionUtilTest {
         assertEquals(1, requestState.createdSessions);
         assertSame(user, requestState.currentSessionState.attributes.get(AuthenticationSessionUtil.AUTHENTICATED_USER_ATTRIBUTE));
         assertNull(requestState.currentSessionState.attributes.get("guestSessionToken"));
-        assertNull(requestState.currentSessionState.attributes.get("csrfToken"));
     }
 
     @Test
