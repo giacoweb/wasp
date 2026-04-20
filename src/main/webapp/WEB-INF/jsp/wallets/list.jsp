@@ -10,6 +10,7 @@
 </head>
 <body>
 <h1>Your Wallets</h1>
+<p>All wallets under one account must use the same currency.</p>
 
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");

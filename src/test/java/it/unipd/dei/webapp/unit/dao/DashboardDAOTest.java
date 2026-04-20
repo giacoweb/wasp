@@ -131,18 +131,31 @@ class DashboardDAOTest {
     }
 
     @Test
-    void getUserDashboardStatsReturnsZerosForUserWithNoTransactions() throws Exception {
+    void getUserDashboardStatsByCurrencyReturnsEmptyForUserWithNoWallets() throws Exception {
         User user = createTestUser();
 
-        DashboardStats stats = dashboardDAO.getUserDashboardStats(user.getId());
+        List<DashboardStats> stats = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
 
+        assertTrue(stats.isEmpty());
+    }
+
+    @Test
+    void getUserDashboardStatsByCurrencyReturnsZerosForWalletWithNoTransactions() throws Exception {
+        User user = createTestUser();
+        walletDAO.create(user.getId(), "Main", WalletType.CASH, "EUR");
+
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
+
+        assertEquals(1, statsByCurrency.size());
+        DashboardStats stats = statsByCurrency.get(0);
+        assertEquals("EUR", stats.currency());
         assertEquals(0, stats.totalEquity().compareTo(BigDecimal.ZERO));
         assertEquals(0, stats.ytdExpenses().compareTo(BigDecimal.ZERO));
         assertEquals(0, stats.ytdSavings().compareTo(BigDecimal.ZERO));
     }
 
     @Test
-    void getUserDashboardStatsComputesTotalEquity() throws Exception {
+    void getUserDashboardStatsByCurrencyComputesTotalEquity() throws Exception {
         User user = createTestUser();
         Wallet wallet = walletDAO.create(user.getId(), "Main", WalletType.CASH, "EUR");
 
@@ -151,13 +164,16 @@ class DashboardDAOTest {
         transactionDAO.create(wallet.getId(), TransactionType.EXPENSE,
                 new BigDecimal("300.00"), "Bills", LocalDate.now(), null);
 
-        DashboardStats stats = dashboardDAO.getUserDashboardStats(user.getId());
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
 
+        assertEquals(1, statsByCurrency.size());
+        DashboardStats stats = statsByCurrency.get(0);
+        assertEquals("EUR", stats.currency());
         assertEquals(0, stats.totalEquity().compareTo(new BigDecimal("700.00")));
     }
 
     @Test
-    void getUserDashboardStatsYtdExcludesPriorYearExpenses() throws Exception {
+    void getUserDashboardStatsByCurrencyYtdExcludesPriorYearExpenses() throws Exception {
         User user = createTestUser();
         Wallet wallet = walletDAO.create(user.getId(), "Main", WalletType.CASH, "EUR");
 
@@ -169,14 +185,16 @@ class DashboardDAOTest {
         transactionDAO.create(wallet.getId(), TransactionType.EXPENSE,
                 new BigDecimal("500.00"), "Old Expense", priorYear, null);
 
-        DashboardStats stats = dashboardDAO.getUserDashboardStats(user.getId());
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
 
+        assertEquals(1, statsByCurrency.size());
+        DashboardStats stats = statsByCurrency.get(0);
         assertEquals(0, stats.ytdExpenses().compareTo(new BigDecimal("200.00")));
         assertEquals(0, stats.ytdSavings().compareTo(new BigDecimal("-200.00")));
     }
 
     @Test
-    void getUserDashboardStatsYtdSavingsEqualsCurrentYearIncomeMinusExpense() throws Exception {
+    void getUserDashboardStatsByCurrencyYtdSavingsEqualsCurrentYearIncomeMinusExpense() throws Exception {
         User user = createTestUser();
         Wallet wallet = walletDAO.create(user.getId(), "Main", WalletType.CASH, "EUR");
 
@@ -185,8 +203,39 @@ class DashboardDAOTest {
         transactionDAO.create(wallet.getId(), TransactionType.EXPENSE,
                 new BigDecimal("250.00"), "Rent", LocalDate.now(), null);
 
-        DashboardStats stats = dashboardDAO.getUserDashboardStats(user.getId());
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
 
+        assertEquals(1, statsByCurrency.size());
+        DashboardStats stats = statsByCurrency.get(0);
         assertEquals(0, stats.ytdSavings().compareTo(new BigDecimal("550.00")));
+    }
+
+    @Test
+    void getUserDashboardStatsByCurrencySeparatesDifferentCurrencies() throws Exception {
+        User user = createTestUser();
+        Wallet eurWallet = walletDAO.create(user.getId(), "EUR Wallet", WalletType.CASH, "EUR");
+        Wallet usdWallet = walletDAO.create(user.getId(), "USD Wallet", WalletType.BANK_ACCOUNT, "USD");
+
+        transactionDAO.create(eurWallet.getId(), TransactionType.INCOME,
+                new BigDecimal("500.00"), "EUR Income", LocalDate.now(), null);
+        transactionDAO.create(usdWallet.getId(), TransactionType.INCOME,
+                new BigDecimal("200.00"), "USD Income", LocalDate.now(), null);
+        transactionDAO.create(usdWallet.getId(), TransactionType.EXPENSE,
+                new BigDecimal("50.00"), "USD Expense", LocalDate.now(), null);
+
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(user.getId());
+
+        assertEquals(2, statsByCurrency.size());
+        DashboardStats eurStats = statsByCurrency.stream()
+                .filter(stats -> "EUR".equals(stats.currency()))
+                .findFirst()
+                .orElseThrow();
+        DashboardStats usdStats = statsByCurrency.stream()
+                .filter(stats -> "USD".equals(stats.currency()))
+                .findFirst()
+                .orElseThrow();
+
+        assertEquals(0, eurStats.totalEquity().compareTo(new BigDecimal("500.00")));
+        assertEquals(0, usdStats.totalEquity().compareTo(new BigDecimal("150.00")));
     }
 }

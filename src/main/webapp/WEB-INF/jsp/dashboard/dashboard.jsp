@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="it.unipd.dei.webapp.model.DashboardStats" %>
 <%@ page import="it.unipd.dei.webapp.model.DashboardSummary" %>
 <%@ page import="it.unipd.dei.webapp.model.WalletSummary" %>
 <%@ page import="it.unipd.dei.webapp.model.User" %>
@@ -31,20 +32,37 @@
 %>
 
 <h2>Financial Summary</h2>
+<%
+    List<DashboardStats> statsByCurrency = summary.getStatsByCurrency();
+    if (statsByCurrency == null || statsByCurrency.isEmpty()) {
+%>
+<p>No financial data yet.</p>
+<%
+    } else {
+%>
 <table border="1" cellpadding="8">
     <tr>
+        <th>Currency</th>
         <th>Total Equity</th>
-        <td><%= summary.getTotalEquity() %></td>
-    </tr>
-    <tr>
         <th>YTD Expenses</th>
-        <td><%= summary.getYtdExpenses() %></td>
-    </tr>
-    <tr>
         <th>YTD Savings</th>
-        <td><%= summary.getYtdSavings() %></td>
     </tr>
+    <%
+        for (DashboardStats stats : statsByCurrency) {
+    %>
+    <tr>
+        <td><%= HtmlUtil.escape(stats.currency()) %></td>
+        <td><%= stats.totalEquity() %></td>
+        <td><%= stats.ytdExpenses() %></td>
+        <td><%= stats.ytdSavings() %></td>
+    </tr>
+    <%
+        }
+    %>
 </table>
+<%
+    }
+%>
 
 <h2>Wallets</h2>
 <%

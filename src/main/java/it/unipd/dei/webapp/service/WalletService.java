@@ -3,13 +3,16 @@ package it.unipd.dei.webapp.service;
 import it.unipd.dei.webapp.dao.WalletDAO;
 import it.unipd.dei.webapp.model.Wallet;
 import it.unipd.dei.webapp.model.WalletType;
+import it.unipd.dei.webapp.service.exception.SingleCurrencyRequiredException;
 import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
 import it.unipd.dei.webapp.service.exception.WalletNotFoundException;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class WalletService {
@@ -36,6 +39,7 @@ public class WalletService {
 
         String normalizedCurrency = normalizeCurrency(currency);
         validateWalletInput(name, type, normalizedCurrency);
+        validateCurrencyConsistencyForCreate(userId, normalizedCurrency);
 
         WalletType walletType = parseWalletType(type);
 
@@ -63,6 +67,10 @@ public class WalletService {
         }
 
         WalletType walletType = parseWalletType(type);
+        String existingCurrency = normalizeCurrency(wallet.getCurrency());
+        if (!normalizedCurrency.equals(existingCurrency)) {
+            validateCurrencyConsistencyForUpdate(userId, walletId, normalizedCurrency);
+        }
 
         wallet.setName(name);
         wallet.setType(walletType);
@@ -112,6 +120,46 @@ public class WalletService {
         if (currency.length() != 3 || !currency.chars().allMatch(Character::isLetter)) {
             throw new ValidationException("Currency must be a 3-letter alphabetic code.");
         }
+    }
+
+    private void validateCurrencyConsistencyForCreate(final UUID userId,
+                                                      final String requestedCurrency)
+            throws SQLException, SingleCurrencyRequiredException {
+        Set<String> currencies = collectWalletCurrencies(walletDAO.findByUserId(userId), null);
+        currencies.add(requestedCurrency);
+
+        if (currencies.size() > 1) {
+            throw new SingleCurrencyRequiredException();
+        }
+    }
+
+    private void validateCurrencyConsistencyForUpdate(final UUID userId,
+                                                      final UUID walletId,
+                                                      final String requestedCurrency)
+            throws SQLException, SingleCurrencyRequiredException {
+        Set<String> otherCurrencies = collectWalletCurrencies(walletDAO.findByUserId(userId), walletId);
+        otherCurrencies.add(requestedCurrency);
+
+        if (otherCurrencies.size() > 1) {
+            throw new SingleCurrencyRequiredException();
+        }
+    }
+
+    private Set<String> collectWalletCurrencies(final List<Wallet> wallets, final UUID walletIdToExclude) {
+        Set<String> currencies = new HashSet<>();
+
+        for (Wallet wallet : wallets) {
+            if (walletIdToExclude != null && walletIdToExclude.equals(wallet.getId())) {
+                continue;
+            }
+
+            String currency = normalizeCurrency(wallet.getCurrency());
+            if (currency != null && !currency.isBlank()) {
+                currencies.add(currency);
+            }
+        }
+
+        return currencies;
     }
 
     private String normalizeCurrency(final String currency) {
