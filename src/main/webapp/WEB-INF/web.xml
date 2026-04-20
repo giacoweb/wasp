@@ -7,4 +7,11 @@
 
   <display-name>FinTrack</display-name>
 
+  <session-config>
+    <tracking-mode>COOKIE</tracking-mode>
+    <cookie-config>
+      <http-only>true</http-only>
+    </cookie-config>
+  </session-config>
+
 </web-app>
