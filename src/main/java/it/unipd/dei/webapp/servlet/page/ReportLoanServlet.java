@@ -89,19 +89,20 @@ public class ReportLoanServlet extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
         }
-        catch(ValidationException e)
-        {
+        catch(ValidationException e) {
+
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
-
         }
         catch (NumberFormatException e) {
+
             request.setAttribute("errorMessage", "Please enter valid numbers.");
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+
         }
         catch(SQLException e) {
 
-            //request.setAttribute("errorMessage", "Sql Error.");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }
 }

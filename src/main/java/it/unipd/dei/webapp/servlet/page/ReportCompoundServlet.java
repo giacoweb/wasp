@@ -89,17 +89,19 @@ public class ReportCompoundServlet extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/compoundreport.jsp").forward(request, response);
 
         }
-        catch(ValidationException e)
-        {
+        catch(ValidationException e) {
+
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
-
         }
         catch (NumberFormatException e) {
+
             request.setAttribute("errorMessage", "Please enter valid numbers.");
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }
 }

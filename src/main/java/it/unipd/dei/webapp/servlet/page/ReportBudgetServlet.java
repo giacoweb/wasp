@@ -104,10 +104,13 @@ public class ReportBudgetServlet extends HttpServlet {
 
         }
         catch (NumberFormatException e) {
+
             request.setAttribute("errorMessage", "Please enter valid numbers.");
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }
 }
