@@ -18,9 +18,6 @@ public class GuestReportServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         UUID token = session != null ? (UUID) session.getAttribute("guestSessionToken") : null;
 
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-
 
         request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
     }
