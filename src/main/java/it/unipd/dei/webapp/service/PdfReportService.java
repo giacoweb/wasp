@@ -176,6 +176,7 @@ public class PdfReportService {
                 writeText(stream, boldFont, 12, 430, yPos, "Net Value: " + budNode.optString("net")+"€");
                 yPos -= 40;
 
+
                 float[] colX = {50, 300};
                 writeText(stream, boldFont, 13, 50, yPos, "Income Detail");
                 yPos -= 15;
@@ -184,18 +185,48 @@ public class PdfReportService {
                 JSONObject incomeObj = budNode.optJSONObject("income");
                 if (incomeObj != null) {
                     for (String key : incomeObj.keySet()) {
+
+                        if (yPos < 80) {
+                            stream.close();
+                            page = new PDPage(PDRectangle.A4);
+                            document.addPage(page);
+                            stream = new PDPageContentStream(document, page);
+                            yPos = 800;
+                            yPos = drawTableHeader(stream, boldFont, colX, yPos, new String[]{"Category", "Amount"});
+                        }
                         yPos = drawTableRow(stream, normalFont, colX, yPos, new String[]{key, incomeObj.getString(key)+"€"});
                     }
                 }
 
-                yPos -= 20;
+                if (yPos < 120) {
+                    stream.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    stream = new PDPageContentStream(document, page);
+                    yPos = 800;
+                } else
+                {
+                    yPos -= 20;
+                }
+
 
                 writeText(stream, boldFont, 13, 50, yPos, "Expenses Detail");
                 yPos -= 15;
                 yPos = drawTableHeader(stream, boldFont, colX, yPos, new String[]{"Category", "Amount"});
+
                 JSONObject expenseObj = budNode.optJSONObject("expenses");
                 if (expenseObj != null) {
                     for (String key : expenseObj.keySet()) {
+
+                        if (yPos < 80) {
+                            stream.close();
+                            page = new PDPage(PDRectangle.A4);
+                            document.addPage(page);
+                            stream = new PDPageContentStream(document, page);
+                            yPos = 800;
+                            yPos = drawTableHeader(stream, boldFont, colX, yPos, new String[]{"Category", "Amount"});
+                        }
+
                         yPos = drawTableRow(stream, normalFont, colX, yPos, new String[]{key, expenseObj.getString(key)+"€"});
                     }
                 }
