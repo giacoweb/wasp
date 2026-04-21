@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -129,7 +130,21 @@
     <br>
     <form action="<%= request.getContextPath() %>" method="get">
       <button type="submit">Back to Homepage</button>
-
     </form>
+    <%
+
+        UUID tokenObject = (UUID) session.getAttribute("guestSessionToken");
+
+        if(tokenObject != null)
+        {
+    %>
+
+        <a href="<%= request.getContextPath() + "/report/export?token=" + tokenObject.toString() %>">
+                    <button type="button">Export full PDF Result</button>
+        </a>
+
+    <%
+        }
+    %>
   </body>
 </html>
