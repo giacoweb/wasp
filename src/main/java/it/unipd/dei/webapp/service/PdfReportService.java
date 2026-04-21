@@ -20,6 +20,10 @@ import java.util.UUID;
 
 public class PdfReportService {
 
+    private final PDType1Font boldFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+    private final PDType1Font normalFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+
+
     public byte[] generateGuestPdf(UUID userId) throws Exception {
 
         ReportSession reportSession = new ReportSessionDAO().findBySessionToken(userId);
@@ -37,9 +41,7 @@ public class PdfReportService {
             document.addPage(page);
             PDPageContentStream stream = new PDPageContentStream(document, page);
 
-            //Defining the two font types
-            PDType1Font boldFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-            PDType1Font normalFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+
 
             float yPos = 800;
             writeText(stream, boldFont, 18, 50, yPos, "FinTrack - Guest Report");
@@ -201,7 +203,7 @@ public class PdfReportService {
             }
 
             // ==========================================
-            // FOOTER CON CTA
+            // FOOTER
             // ==========================================
             if (yPos < 60) {
                 stream.close();
@@ -220,8 +222,6 @@ public class PdfReportService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
 
 
     }
