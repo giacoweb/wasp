@@ -259,10 +259,12 @@ public class PdfReportService {
     }
 
     private void writeText(PDPageContentStream stream, PDType1Font font, float fontSize, float x, float y, String text) throws IOException {
+        String safeText = text == null ? "" : text.replaceAll("[^\\x20-\\x7E\\xA0-\\xFF\\u20AC]", "?");
+
         stream.beginText();
         stream.setFont(font, fontSize);
         stream.newLineAtOffset(x, y);
-        stream.showText(text);
+        stream.showText(safeText);
         stream.endText();
     }
 
