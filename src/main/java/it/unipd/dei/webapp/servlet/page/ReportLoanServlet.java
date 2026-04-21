@@ -1,6 +1,8 @@
 package it.unipd.dei.webapp.servlet.page;
 
 
+import it.unipd.dei.webapp.dao.ReportSessionDAO;
+import it.unipd.dei.webapp.model.ReportSession;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,9 +11,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import it.unipd.dei.webapp.service.CalculatorService;
 import it.unipd.dei.webapp.model.AmortizationRow;
+import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @WebServlet(name = "ReportLoanServlet", value = {"/report/loan"})
 public class ReportLoanServlet extends HttpServlet{
@@ -37,13 +44,47 @@ public class ReportLoanServlet extends HttpServlet{
 
         try
         {
-
             double principal = Double.parseDouble(request.getParameter("principal"));
             double annualRate =Double.parseDouble(request.getParameter("annualRate"));
             int months = Integer.parseInt(request.getParameter("months"));
 
-
             List<AmortizationRow> amortizationList = calculator.calculateLoan(principal,annualRate,months);
+
+
+            HttpSession httpSession = request.getSession(false);
+            UUID guestToken = (UUID) httpSession.getAttribute("guestSessionToken");
+
+            ReportSessionDAO reportDao = new ReportSessionDAO();
+
+            ReportSession sessioneAttuale = reportDao.findBySessionToken(guestToken);
+            String jsonVecchio = sessioneAttuale.getReportJson();
+            JSONObject rootObject;
+
+            if(jsonVecchio == null || jsonVecchio.equals("{}")) {
+                rootObject = new JSONObject();
+            } else {
+                rootObject = new JSONObject(jsonVecchio);
+            }
+
+            JSONObject loanData = new JSONObject();
+            loanData.put("principal", principal);
+            loanData.put("annualRate", annualRate);
+            loanData.put("months", months);
+            JSONArray arr = new JSONArray();
+            for (AmortizationRow row : amortizationList) {
+                JSONObject r = new JSONObject();
+                r.put("month",            row.getMonth());
+                r.put("totalPayment",     row.getTotalPayment().toPlainString());
+                r.put("principalPaid",    row.getPrincipalPaid().toPlainString());
+                r.put("interestPaid",     row.getInterestPaid().toPlainString());
+                r.put("remainingBalance", row.getRemainingBalance().toPlainString());
+                arr.put(r);
+            }
+            loanData.put("schedule", arr);
+            rootObject.put("loan",loanData);
+            System.out.println(rootObject.toString());
+            reportDao.updateReportSessionJson(guestToken,rootObject.toString());
+
             request.setAttribute("amortizationList",amortizationList);
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
@@ -57,6 +98,10 @@ public class ReportLoanServlet extends HttpServlet{
         catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Please enter valid numbers.");
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        }
+        catch(SQLException e) {
+
+            //request.setAttribute("errorMessage", "Sql Error.");
         }
     }
 }
