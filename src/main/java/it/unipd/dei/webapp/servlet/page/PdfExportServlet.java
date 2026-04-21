@@ -37,6 +37,7 @@ public class PdfExportServlet extends HttpServlet {
         if (tokenParam != null && !tokenParam.isBlank()) {
             try
             {
+
                 UUID guesttoken = UUID.fromString(tokenParam);
                 System.out.println(guesttoken);
                 byte[] pdfBytes = reportService.generateGuestPdf(guesttoken);
@@ -49,39 +50,22 @@ public class PdfExportServlet extends HttpServlet {
             }
             catch (IllegalArgumentException e)
             {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Token not valid.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
             } catch (SQLException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "SQL Error.");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
         }
         else if (authUser != null)
         {
 
-
-
-
-
+            response.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Authenticated export feature is not yet implemented.");
 
         }
         else
         {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized.");
-        }
-
-
-
-
-
-        try
-        {
-
-            String json = "{\"Sono io\":\"Ciao\"}";
-            //new ReportSessionDAO().updateReportSessionJson(tokenObject,json);
-            //System.out.println("Report"+reportSession.getReportJson());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
 
