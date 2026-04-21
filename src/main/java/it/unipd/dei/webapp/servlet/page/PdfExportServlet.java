@@ -24,7 +24,6 @@ public class PdfExportServlet extends HttpServlet {
 
         String tokenParam = request.getParameter("token");
         HttpSession session = request.getSession(false);
-
         PdfReportService reportService = new PdfReportService();
 
 
@@ -38,9 +37,21 @@ public class PdfExportServlet extends HttpServlet {
             try
             {
 
-                UUID guesttoken = UUID.fromString(tokenParam);
-                System.out.println(guesttoken);
-                byte[] pdfBytes = reportService.generateGuestPdf(guesttoken);
+                UUID requestedToken = UUID.fromString(tokenParam);
+
+                UUID ownerToken = null;
+                if (session != null) {
+                    ownerToken = (UUID) session.getAttribute("guestSessionToken");
+                }
+
+                if (ownerToken == null || !ownerToken.equals(requestedToken))
+                {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. You do not have permission to download this file.");
+                    return;
+                }
+
+
+                byte[] pdfBytes = reportService.generateGuestPdf(requestedToken);
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=\"fintrack-report.pdf\"");
                 response.setContentLength(pdfBytes.length);
