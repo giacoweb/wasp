@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 public class PdfReportService {
 
@@ -27,9 +28,17 @@ public class PdfReportService {
     public byte[] generateGuestPdf(UUID userId) throws Exception {
 
         ReportSession reportSession = new ReportSessionDAO().findBySessionToken(userId);
-        if (reportSession == null || reportSession.getReportJson() == null || reportSession.getReportJson().equals("{}")) {
-            throw new IllegalArgumentException("No data to save.");
+
+        if (reportSession != null && reportSession.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Token expired.");
         }
+
+        if (reportSession == null || reportSession.getReportJson() == null || reportSession.getReportJson().equals("{}")) {
+            throw new IllegalArgumentException("No data to save. The report session is empty.");
+        }
+
+
+
 
         JSONObject root = new JSONObject(reportSession.getReportJson());
 

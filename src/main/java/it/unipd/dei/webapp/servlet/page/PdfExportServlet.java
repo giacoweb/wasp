@@ -51,9 +51,13 @@ public class PdfExportServlet extends HttpServlet {
             catch (IllegalArgumentException e)
             {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+
             } catch (SQLException e) {
+
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
+
             } catch (Exception e) {
+
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
         }
