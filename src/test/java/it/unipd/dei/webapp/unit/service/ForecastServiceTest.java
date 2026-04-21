@@ -1,8 +1,10 @@
 package it.unipd.dei.webapp.unit.service;
 
+import it.unipd.dei.webapp.dao.WalletDAO;
 import it.unipd.dei.webapp.model.Forecast;
 import it.unipd.dei.webapp.model.ForecastScenario;
 import it.unipd.dei.webapp.model.User;
+import it.unipd.dei.webapp.model.WalletType;
 import it.unipd.dei.webapp.service.ForecastService;
 import it.unipd.dei.webapp.service.PacPlanService;
 import it.unipd.dei.webapp.service.TransactionService;
@@ -15,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +31,7 @@ class ForecastServiceTest {
     private WalletService walletService;
     private TransactionService transactionService;
     private PacPlanService pacPlanService;
+    private WalletDAO walletDAO;
 
     @BeforeEach
     void setUp() {
@@ -38,11 +40,12 @@ class ForecastServiceTest {
         walletService = new WalletService();
         transactionService = new TransactionService();
         pacPlanService = new PacPlanService();
+        walletDAO = new WalletDAO();
     }
 
     private User createTestUser() throws Exception {
         String email = "junit-forecast-" + System.currentTimeMillis() + "@test.com";
-        return userService.register("Forecast", "Tester", email, "secret123");
+        return userService.register("Forecast", "Tester", email, "Secret123!");
     }
 
     @Test
@@ -101,6 +104,7 @@ class ForecastServiceTest {
         assertTrue(firstMonth.has("pacContribution"));
         assertTrue(firstMonth.has("netFlow"));
         assertTrue(firstMonth.has("balance"));
+        assertTrue(firstMonth.has("currency"));
         assertEquals(1, firstMonth.getInt("month"));
     }
 
@@ -118,6 +122,17 @@ class ForecastServiceTest {
         JSONObject firstMonth = projection.getJSONObject(0);
 
         assertNotNull(firstMonth.getBigDecimal("balance"));
+        assertEquals("EUR", firstMonth.getString("currency"));
+    }
+
+    @Test
+    void computeWithMixedWalletCurrenciesThrowsValidation() throws Exception {
+        User user = createTestUser();
+        walletDAO.create(user.getId(), "EUR Wallet", WalletType.CASH, "EUR");
+        walletDAO.create(user.getId(), "USD Wallet", WalletType.BANK_ACCOUNT, "USD");
+
+        assertThrows(ValidationException.class, () ->
+                forecastService.compute(user.getId(), ForecastScenario.OPTIMISTIC));
     }
 
     @Test

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="jakarta.servlet.http.HttpSession" %>
-<%@ page import="java.util.*" %>
+<%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
+<%@ page import="java.util.UUID" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -13,7 +13,7 @@
 
     <% if (request.getAttribute("errorMessage") != null) { %>
         <div style="color: red; font-weight: bold; margin-bottom: 10px;">
-            <%= request.getAttribute("errorMessage") %>
+            <%= HtmlUtil.escape(request.getAttribute("errorMessage")) %>
         </div>
     <% } %>
 
@@ -21,17 +21,17 @@
 
         <div>
              <label>Principal (€):</label><br>
-              <input type="number" step="0.01" name="principal" value="${param.principal}">
+              <input type="number" step="0.01" name="principal" value="<%= HtmlUtil.escape(request.getParameter("principal")) %>">
 
         </div>
         <div>
               <label>Annual Rate (TAN %):</label><br>
-              <input type="number" step="0.1" name="annualRate" value="${param.annualRate}">
+              <input type="number" step="0.1" name="annualRate" value="<%= HtmlUtil.escape(request.getParameter("annualRate")) %>">
 
         </div>
         <div>
               <label>Duration (Months):</label><br>
-              <input type="number" name="months" value="${param.termMonths}">
+              <input type="number" name="months" value="<%= HtmlUtil.escape(request.getParameter("months")) %>">
 
         </div>
 

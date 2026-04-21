@@ -37,6 +37,8 @@ public class WalletListServlet extends HttpServlet {
 
         if ("validation".equals(error)) {
             request.setAttribute("errorMessage", "Please fill in all required fields correctly.");
+        } else if ("currency_mismatch".equals(error)) {
+            request.setAttribute("errorMessage", "All wallets under one account must use the same currency.");
         } else if ("unauthorized".equals(error)) {
             request.setAttribute("errorMessage", "You are not authorized to perform this operation.");
         } else if ("not_found".equals(error)) {

@@ -23,8 +23,8 @@ public class DashboardService {
 
     public DashboardSummary getSummary(final UUID userId) throws SQLException {
         List<WalletSummary> wallets = dashboardDAO.getWalletSummariesByUserId(userId);
-        DashboardStats stats = dashboardDAO.getUserDashboardStats(userId);
+        List<DashboardStats> statsByCurrency = dashboardDAO.getUserDashboardStatsByCurrency(userId);
 
-        return new DashboardSummary(stats.totalEquity(), stats.ytdExpenses(), stats.ytdSavings(), wallets);
+        return new DashboardSummary(statsByCurrency, wallets);
     }
 }

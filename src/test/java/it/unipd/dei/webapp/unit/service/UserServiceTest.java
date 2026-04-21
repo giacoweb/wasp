@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserServiceTest {
 
+    private static final String VALID_PASSWORD = "Secret123!";
+
     private UserService userService;
 
     @BeforeEach
@@ -26,31 +28,49 @@ class UserServiceTest {
     @Test
     void registerWithNullNameThrowsValidation() {
         assertThrows(ValidationException.class, () ->
-                userService.register(null, "Surname", "a@b.com", "pass123"));
+                userService.register(null, "Surname", "a@b.com", VALID_PASSWORD));
     }
 
     @Test
     void registerWithBlankNameThrowsValidation() {
         assertThrows(ValidationException.class, () ->
-                userService.register("", "Surname", "a@b.com", "pass123"));
+                userService.register("", "Surname", "a@b.com", VALID_PASSWORD));
     }
 
     @Test
     void registerWithNullSurnameThrowsValidation() {
         assertThrows(ValidationException.class, () ->
-                userService.register("Name", null, "a@b.com", "pass123"));
+                userService.register("Name", null, "a@b.com", VALID_PASSWORD));
     }
 
     @Test
     void registerWithBlankEmailThrowsValidation() {
         assertThrows(ValidationException.class, () ->
-                userService.register("Name", "Surname", "", "pass123"));
+                userService.register("Name", "Surname", "", VALID_PASSWORD));
     }
 
     @Test
     void registerWithNullPasswordThrowsValidation() {
         assertThrows(ValidationException.class, () ->
                 userService.register("Name", "Surname", "a@b.com", null));
+    }
+
+    @Test
+    void registerWithShortPasswordThrowsValidation() {
+        assertThrows(ValidationException.class, () ->
+                userService.register("Name", "Surname", "a@b.com", "Ab1!xyz"));
+    }
+
+    @Test
+    void registerWithPasswordMissingDigitThrowsValidation() {
+        assertThrows(ValidationException.class, () ->
+                userService.register("Name", "Surname", "a@b.com", "Password!"));
+    }
+
+    @Test
+    void registerWithPasswordMissingSpecialCharThrowsValidation() {
+        assertThrows(ValidationException.class, () ->
+                userService.register("Name", "Surname", "a@b.com", "Password1"));
     }
 
     @Test
@@ -81,22 +101,27 @@ class UserServiceTest {
     void registerAndLoginSucceeds() throws Exception {
         String email = "junit-user-" + System.currentTimeMillis() + "@test.com";
 
-        User user = userService.register("Test", "User", email, "secret123");
+        User registered = userService.register("Test", "User", email, VALID_PASSWORD);
+        User loggedIn = userService.login(email, VALID_PASSWORD);
 
-        assertNotNull(user.getId());
-        assertEquals("Test", user.getName());
-        assertEquals("User", user.getSurname());
-        assertEquals(email, user.getEmail());
-        assertEquals(UserRole.REGISTERED, user.getRole());
-        assertNotNull(user.getCreatedAt());
+        assertNotNull(registered.getId());
+        assertEquals("Test", registered.getName());
+        assertEquals("User", registered.getSurname());
+        assertEquals(email, registered.getEmail());
+        assertEquals(UserRole.REGISTERED, registered.getRole());
+        assertNotNull(registered.getCreatedAt());
+
+        assertNotNull(loggedIn);
+        assertEquals(registered.getId(), loggedIn.getId());
+        assertEquals(email, loggedIn.getEmail());
     }
 
     @Test
     void loginWithCorrectCredentialsReturnsUser() throws Exception {
         String email = "junit-login-" + System.currentTimeMillis() + "@test.com";
-        userService.register("Test", "Login", email, "secret123");
+        userService.register("Test", "Login", email, VALID_PASSWORD);
 
-        User loggedIn = userService.login(email, "secret123");
+        User loggedIn = userService.login(email, VALID_PASSWORD);
 
         assertNotNull(loggedIn);
         assertEquals(email, loggedIn.getEmail());
@@ -105,7 +130,7 @@ class UserServiceTest {
     @Test
     void loginWithWrongPasswordThrowsInvalidCredentials() throws Exception {
         String email = "junit-wrongpw-" + System.currentTimeMillis() + "@test.com";
-        userService.register("Test", "WrongPw", email, "secret123");
+        userService.register("Test", "WrongPw", email, VALID_PASSWORD);
 
         assertThrows(InvalidCredentialsException.class, () ->
                 userService.login(email, "wrongpassword"));
@@ -120,18 +145,49 @@ class UserServiceTest {
     @Test
     void registerDuplicateEmailThrowsAlreadyExists() throws Exception {
         String email = "junit-dup-" + System.currentTimeMillis() + "@test.com";
-        userService.register("Test", "Dup", email, "secret123");
+        userService.register("Test", "Dup", email, VALID_PASSWORD);
 
         assertThrows(UserAlreadyExistsException.class, () ->
-                userService.register("Test", "Dup2", email, "secret456"));
+                userService.register("Test", "Dup2", email, "Secret456!"));
     }
 
     @Test
     void registeredUserPasswordIsHashed() throws Exception {
         String email = "junit-hash-" + System.currentTimeMillis() + "@test.com";
-        User user = userService.register("Test", "Hash", email, "secret123");
+        User user = userService.register("Test", "Hash", email, VALID_PASSWORD);
 
-        assertNotEquals("secret123", user.getPasswordHash());
+        assertNotEquals(VALID_PASSWORD, user.getPasswordHash());
         assertNotNull(user.getPasswordHash());
+    }
+
+    @Test
+    void registerNormalizesEmailAndNames() throws Exception {
+        String rawEmail = "  Mixed.Case-" + System.currentTimeMillis() + "@Test.COM  ";
+
+        User user = userService.register("  Test  ", "  User  ", rawEmail, VALID_PASSWORD);
+
+        assertEquals("Test", user.getName());
+        assertEquals("User", user.getSurname());
+        assertEquals(rawEmail.trim().toLowerCase(), user.getEmail());
+    }
+
+    @Test
+    void loginNormalizesEmailBeforeLookup() throws Exception {
+        String email = "normalized-" + System.currentTimeMillis() + "@test.com";
+        userService.register("Test", "Login", email, VALID_PASSWORD);
+
+        User loggedIn = userService.login("  " + email.toUpperCase() + "  ", VALID_PASSWORD);
+
+        assertNotNull(loggedIn);
+        assertEquals(email, loggedIn.getEmail());
+    }
+
+    @Test
+    void registerDuplicateEmailIsDetectedAfterNormalization() throws Exception {
+        String email = "dup-normalized-" + System.currentTimeMillis() + "@test.com";
+        userService.register("Test", "Dup", email, VALID_PASSWORD);
+
+        assertThrows(UserAlreadyExistsException.class, () ->
+                userService.register("Test", "Dup2", "  " + email.toUpperCase() + "  ", "Secret456!"));
     }
 }

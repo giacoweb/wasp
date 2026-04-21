@@ -28,8 +28,9 @@ public class DashboardDAO {
             "GROUP BY w.id, w.name, w.type, w.currency, w.created_at " +
             "ORDER BY w.created_at ASC";
 
-    private static final String DASHBOARD_STATS_BY_USER_SQL =
+    private static final String DASHBOARD_STATS_BY_USER_AND_CURRENCY_SQL =
             "SELECT " +
+            "w.currency AS currency, " +
             "COALESCE(SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE -t.amount END), 0) AS total_equity, " +
             "COALESCE(SUM(CASE WHEN t.type = 'EXPENSE' " +
             "    AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE) " +
@@ -42,7 +43,9 @@ public class DashboardDAO {
             "        AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE) " +
             "        THEN t.amount ELSE 0 END), 0) AS ytd_savings " +
             "FROM wallets w LEFT JOIN transactions t ON t.wallet_id = w.id " +
-            "WHERE w.user_id = ?";
+            "WHERE w.user_id = ? " +
+            "GROUP BY w.currency " +
+            "ORDER BY w.currency ASC";
 
     public List<WalletSummary> getWalletSummariesByUserId(final UUID userId) throws SQLException {
         List<WalletSummary> summaries = new ArrayList<>();
@@ -62,23 +65,27 @@ public class DashboardDAO {
         return summaries;
     }
 
-    public DashboardStats getUserDashboardStats(final UUID userId) throws SQLException {
+    public List<DashboardStats> getUserDashboardStatsByCurrency(final UUID userId) throws SQLException {
+        List<DashboardStats> stats = new ArrayList<>();
+
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DASHBOARD_STATS_BY_USER_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(DASHBOARD_STATS_BY_USER_AND_CURRENCY_SQL)) {
 
             statement.setObject(1, userId);
 
             try (ResultSet rs = statement.executeQuery()) {
-                if (!rs.next()) {
-                    throw new SQLException("Failed to retrieve dashboard stats.");
+                while (rs.next()) {
+                    stats.add(new DashboardStats(
+                            rs.getString("currency"),
+                            rs.getBigDecimal("total_equity"),
+                            rs.getBigDecimal("ytd_expenses"),
+                            rs.getBigDecimal("ytd_savings")
+                    ));
                 }
-                return new DashboardStats(
-                        rs.getBigDecimal("total_equity"),
-                        rs.getBigDecimal("ytd_expenses"),
-                        rs.getBigDecimal("ytd_savings")
-                );
             }
         }
+
+        return stats;
     }
 
     private WalletSummary mapRowToWalletSummary(final ResultSet rs) throws SQLException {
