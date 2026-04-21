@@ -82,7 +82,6 @@ public class ReportLoanServlet extends HttpServlet{
             }
             loanData.put("schedule", arr);
             rootObject.put("loan",loanData);
-            System.out.println(rootObject.toString());
             reportDao.updateReportSessionJson(guestToken,rootObject.toString());
 
             request.setAttribute("amortizationList",amortizationList);
