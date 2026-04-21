@@ -20,8 +20,6 @@ public class GuestReportServlet extends HttpServlet {
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        System.out.println("Guest session token: " + token);
-        //response.getWriter().write("Guest session token: " + token);
 
 
         request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
