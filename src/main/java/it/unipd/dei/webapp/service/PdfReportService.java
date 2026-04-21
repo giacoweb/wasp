@@ -245,7 +245,7 @@ public class PdfReportService {
                 stream = new PDPageContentStream(document, page);
             }
 
-            writeText(stream, normalFont, 10, 50, 40, "Create a free account at http://localhost:8080/FinTrack/register to track this data over time");
+            writeText(stream, normalFont, 10, 50, 40, "Create a free account at http://www.fintrack.com/register to track this data over time");
             stream.close();
             document.save(out);
             document.close();
