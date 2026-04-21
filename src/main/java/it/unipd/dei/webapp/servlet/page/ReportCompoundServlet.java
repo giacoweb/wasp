@@ -1,7 +1,9 @@
 package it.unipd.dei.webapp.servlet.page;
 
 
+import it.unipd.dei.webapp.dao.ReportSessionDAO;
 import it.unipd.dei.webapp.model.CompoundResult;
+import it.unipd.dei.webapp.model.ReportSession;
 import it.unipd.dei.webapp.service.CalculatorService;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
@@ -9,9 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @WebServlet(name = "ReportCompoundServlet", value = {"/report/compound"})
 public class ReportCompoundServlet extends HttpServlet{
@@ -42,8 +49,42 @@ public class ReportCompoundServlet extends HttpServlet{
             double annualRate = Double.parseDouble(request.getParameter("annualRate"));
             int years = Integer.parseInt(request.getParameter("years"));
 
-
             List<CompoundResult> compoundList = calculator.calculateCompound(initialCapital,monthlyContribution,annualRate,years);
+
+            HttpSession httpSession = request.getSession(false);
+            UUID guestToken = (UUID) httpSession.getAttribute("guestSessionToken");
+            ReportSessionDAO reportDao = new ReportSessionDAO();
+
+            ReportSession reportsession = reportDao.findBySessionToken(guestToken);
+            String jsonOld = reportsession.getReportJson();
+            JSONObject rootObject;
+
+            if(jsonOld == null || jsonOld.equals("{}")) {
+                rootObject = new JSONObject();
+            } else {
+                rootObject = new JSONObject(jsonOld);
+            }
+
+            JSONObject compoundData = new JSONObject();
+            compoundData.put("initialCapital", initialCapital);
+            compoundData.put("monthlyContribution", monthlyContribution);
+            compoundData.put("annualRate", annualRate);
+            compoundData.put("years", years);
+            JSONArray arr = new JSONArray();
+
+            for (CompoundResult cr : compoundList) {
+                JSONObject r = new JSONObject();
+                r.put("year", cr.getYear());
+                r.put("balance", cr.getTotalValue().toPlainString());
+                arr.put(r);
+            }
+            compoundData .put("projection", arr);
+            rootObject.put("compound",compoundData);
+            reportDao.updateReportSessionJson(guestToken,rootObject.toString());
+
+
+
+
             request.setAttribute("compoundList",compoundList);
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/compoundreport.jsp").forward(request, response);
 
@@ -57,6 +98,8 @@ public class ReportCompoundServlet extends HttpServlet{
         catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Please enter valid numbers.");
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
