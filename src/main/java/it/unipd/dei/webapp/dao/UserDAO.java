@@ -19,7 +19,7 @@ public class UserDAO {
 
     private static final String FIND_BY_EMAIL_SQL =
             "SELECT id, name, surname, email, password_hash, role, created_at " +
-                    "FROM users WHERE email = ?";
+                    "FROM users WHERE LOWER(email) = LOWER(?)";
 
     private static final String FIND_BY_ID_SQL =
             "SELECT id, name, surname, email, password_hash, role, created_at " +

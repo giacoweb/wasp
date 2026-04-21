@@ -4,6 +4,7 @@ import it.unipd.dei.webapp.dao.ForecastDAO;
 import it.unipd.dei.webapp.dao.PacPlanDAO;
 import it.unipd.dei.webapp.dao.RecurringExpenseDAO;
 import it.unipd.dei.webapp.dao.TransactionDAO;
+import it.unipd.dei.webapp.dao.WalletDAO;
 import it.unipd.dei.webapp.model.Forecast;
 import it.unipd.dei.webapp.model.ForecastScenario;
 import it.unipd.dei.webapp.model.PacPlan;
@@ -11,6 +12,8 @@ import it.unipd.dei.webapp.model.Periodicity;
 import it.unipd.dei.webapp.model.RecurringExpense;
 import it.unipd.dei.webapp.model.Transaction;
 import it.unipd.dei.webapp.model.TransactionType;
+import it.unipd.dei.webapp.model.Wallet;
+import it.unipd.dei.webapp.service.exception.SingleCurrencyRequiredException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +23,9 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ForecastService {
@@ -36,22 +41,26 @@ public class ForecastService {
     private final RecurringExpenseDAO recurringExpenseDAO;
     private final PacPlanDAO pacPlanDAO;
     private final ForecastDAO forecastDAO;
+    private final WalletDAO walletDAO;
 
     public ForecastService() {
         this.transactionDAO = new TransactionDAO();
         this.recurringExpenseDAO = new RecurringExpenseDAO();
         this.pacPlanDAO = new PacPlanDAO();
         this.forecastDAO = new ForecastDAO();
+        this.walletDAO = new WalletDAO();
     }
 
     public ForecastService(final TransactionDAO transactionDAO,
                            final RecurringExpenseDAO recurringExpenseDAO,
                            final PacPlanDAO pacPlanDAO,
-                           final ForecastDAO forecastDAO) {
+                           final ForecastDAO forecastDAO,
+                           final WalletDAO walletDAO) {
         this.transactionDAO = transactionDAO;
         this.recurringExpenseDAO = recurringExpenseDAO;
         this.pacPlanDAO = pacPlanDAO;
         this.forecastDAO = forecastDAO;
+        this.walletDAO = walletDAO;
     }
 
     public Forecast compute(final UUID userId, final ForecastScenario scenario)
@@ -62,6 +71,7 @@ public class ForecastService {
         }
 
         List<Transaction> allTransactions = transactionDAO.findByUserId(userId);
+        String currency = resolveSingleForecastCurrency(userId);
         BigDecimal currentBalance = computeCurrentBalance(allTransactions);
         BigDecimal avgMonthlyIncome = computeAverageMonthly(allTransactions, TransactionType.INCOME);
         BigDecimal avgMonthlyExpense = computeAverageMonthly(allTransactions, TransactionType.EXPENSE);
@@ -69,7 +79,7 @@ public class ForecastService {
         BigDecimal monthlyPac = computeMonthlyPacContributions(userId);
 
         JSONArray projection = buildProjection(
-                scenario, currentBalance, avgMonthlyIncome, avgMonthlyExpense, monthlyRecurring, monthlyPac);
+                scenario, currentBalance, avgMonthlyIncome, avgMonthlyExpense, monthlyRecurring, monthlyPac, currency);
 
         Forecast forecast = new Forecast();
         forecast.setUserId(userId);
@@ -166,12 +176,31 @@ public class ForecastService {
         return total.setScale(2, RoundingMode.HALF_UP);
     }
 
+    private String resolveSingleForecastCurrency(final UUID userId)
+            throws SQLException, SingleCurrencyRequiredException {
+        List<Wallet> wallets = walletDAO.findByUserId(userId);
+        Set<String> currencies = new LinkedHashSet<>();
+
+        for (Wallet wallet : wallets) {
+            if (wallet.getCurrency() != null && !wallet.getCurrency().isBlank()) {
+                currencies.add(wallet.getCurrency().trim().toUpperCase());
+            }
+        }
+
+        if (currencies.size() > 1) {
+            throw new SingleCurrencyRequiredException("Forecast requires all wallets to use the same currency.");
+        }
+
+        return currencies.isEmpty() ? null : currencies.iterator().next();
+    }
+
     private JSONArray buildProjection(final ForecastScenario scenario,
                                       final BigDecimal currentBalance,
                                       final BigDecimal avgMonthlyIncome,
                                       final BigDecimal avgMonthlyExpense,
                                       final BigDecimal monthlyRecurring,
-                                      final BigDecimal monthlyPac) {
+                                      final BigDecimal monthlyPac,
+                                      final String currency) {
 
         JSONArray projection = new JSONArray();
         BigDecimal balance = currentBalance;
@@ -212,6 +241,7 @@ public class ForecastService {
             entry.put("pacContribution", pacOutflow);
             entry.put("netFlow", netFlow);
             entry.put("balance", balance);
+            entry.put("currency", currency != null ? currency : JSONObject.NULL);
             projection.put(entry);
         }
 

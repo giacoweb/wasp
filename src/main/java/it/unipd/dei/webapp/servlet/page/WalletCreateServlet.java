@@ -2,6 +2,7 @@ package it.unipd.dei.webapp.servlet.page;
 
 import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.service.WalletService;
+import it.unipd.dei.webapp.service.exception.SingleCurrencyRequiredException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,6 +40,9 @@ public class WalletCreateServlet extends HttpServlet {
         try {
             walletService.createWallet(user.getId(), name, type, currency);
             response.sendRedirect(request.getContextPath() + "/wallets?success=created");
+
+        } catch (SingleCurrencyRequiredException e) {
+            response.sendRedirect(request.getContextPath() + "/wallets?error=currency_mismatch");
 
         } catch (ValidationException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=validation");
