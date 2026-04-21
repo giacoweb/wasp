@@ -38,8 +38,6 @@ public class PdfReportService {
         }
 
 
-
-
         JSONObject root = new JSONObject(reportSession.getReportJson());
 
 
@@ -97,12 +95,7 @@ public class PdfReportService {
 
                         yPos = drawTableRow(stream, normalFont, colX, yPos, rigaDati);
 
-
-
-
                     }
-
-
                 }
 
                 yPos -= 30;

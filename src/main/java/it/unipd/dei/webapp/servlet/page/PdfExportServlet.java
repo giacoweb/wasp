@@ -74,7 +74,7 @@ public class PdfExportServlet extends HttpServlet {
         }
         else if (authUser != null)
         {
-
+            //Not implemented Authenticated method
             response.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Authenticated export feature is not yet implemented.");
 
         }
