@@ -2,4 +2,12 @@
 
 %if needed write here other details about your Data Logic Layer that cannot be expressed directly through the ER schema
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+In addition to the standard conceptual schema, the Data Logic Layer incorporates several implementation-specific features at the database level to ensure data integrity and operational safety:
+
+\begin{itemize}
+    \item \textbf{Primary Keys and Security}: All entities utilize universally unique identifiers (\texttt{UUIDv4}) as primary keys instead of predictable sequential integers. This choice mitigates enumeration attacks and aids in distributed data handling across services.
+    \item \textbf{Strong Typing with PostgreSQL ENUMs}: Business constraints on categorical fields are strictly enforced at the database level using custom ENUM types (e.g., \texttt{wallet\_type}, \texttt{transaction\_type}, \texttt{periodicity\_type}, \texttt{forecast\_scenario}). This natively prevents invalid states rather than relying solely on the application layer validation.
+    \item \textbf{JSONB Serialization}: Elements with dynamic structural logic, such as forecast projections (\texttt{projection\_json}) and guest report sessions (\texttt{report\_json}), leverage PostgreSQL's \texttt{JSONB} binary format. This allows high-performance reads and flexible data structures for analytical features without rigid schema changes.
+    \item \textbf{Defensive Constraints}: Critical numerical fields (such as \texttt{amount} in transactions and \texttt{monthly\_amount} in plans) are safeguarded with explicit \texttt{CHECK} constraints directly in the DDL to enforce strictly positive values.
+    \item \textbf{Data Lifecycle}: Most relational links (e.g., wallet to user, transaction to wallet) enforce \texttt{ON DELETE CASCADE} constraints. This guarantees that when a parent entity is purged (like a user account), all subordinate financial data is automatically expunged, effectively preventing orphaned records.
+\end{itemize}
