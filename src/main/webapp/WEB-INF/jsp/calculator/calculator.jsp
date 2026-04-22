@@ -132,11 +132,10 @@
       <button type="submit">Back to Homepage</button>
     </form>
     <%
-
         UUID tokenObject = (UUID) session.getAttribute("guestSessionToken");
+        Boolean hasGuestReportData = (Boolean) request.getAttribute("hasGuestReportData");
 
-        if(tokenObject != null)
-        {
+        if (tokenObject != null && Boolean.TRUE.equals(hasGuestReportData)) {
     %>
 
         <a href="<%= request.getContextPath() + "/report/export?token=" + tokenObject.toString() %>">

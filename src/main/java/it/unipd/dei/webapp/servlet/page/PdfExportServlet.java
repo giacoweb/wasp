@@ -61,6 +61,10 @@ public class PdfExportServlet extends HttpServlet {
             }
             catch (IllegalArgumentException e)
             {
+                if ("No data to save. The report session is empty.".equals(e.getMessage())) {
+                    response.sendRedirect(request.getContextPath() + "/guest/report?error=no_data");
+                    return;
+                }
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
             } catch (SQLException e) {
