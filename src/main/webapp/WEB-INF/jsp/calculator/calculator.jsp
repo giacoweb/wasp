@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
-
+<%@ page import="java.util.UUID" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -130,7 +130,20 @@
     <br>
     <form action="<%= request.getContextPath() %>" method="get">
       <button type="submit">Back to Homepage</button>
-
     </form>
+    <%
+        UUID tokenObject = (UUID) session.getAttribute("guestSessionToken");
+        Boolean hasGuestReportData = (Boolean) request.getAttribute("hasGuestReportData");
+
+        if (tokenObject != null && Boolean.TRUE.equals(hasGuestReportData)) {
+    %>
+
+        <a href="<%= request.getContextPath() + "/report/export?token=" + tokenObject.toString() %>">
+                    <button type="button">Export full PDF Result</button>
+        </a>
+
+    <%
+        }
+    %>
   </body>
 </html>

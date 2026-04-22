@@ -22,6 +22,11 @@ public class ReportSessionDAO {
             "SELECT id, session_token, report_json, expires_at, created_at " +
                     "FROM report_sessions WHERE session_token = ?";
 
+    private static final String UPDATE_REPORT_JSON_SQL =
+            "UPDATE report_sessions " +
+                    "SET report_json = ?::jsonb " +
+                    "WHERE session_token = ?";
+
     public ReportSession createReportSession(final UUID sessionToken,
                                              final String reportJson,
                                              final LocalDateTime expiresAt) throws SQLException {
@@ -56,6 +61,17 @@ public class ReportSessionDAO {
         }
 
         return null;
+    }
+
+    public void updateReportSessionJson(UUID token, String json) throws SQLException {
+        try (Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_REPORT_JSON_SQL)) {
+
+            statement.setObject(1,json);
+            statement.setObject(2,token);
+            statement.executeUpdate();
+
+        }
     }
 
     private ReportSession mapRowToReportSession(final ResultSet rs) throws SQLException {
