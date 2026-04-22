@@ -8,7 +8,16 @@
     \end{center}
 }
 
-%Describe here your ER schema
+The application's data is persisted in a relational database mapping its core entities. The ER schema models the users, their financial wallets, atomic exchanges (transactions), recurring events, saving plans, analytical forecasts, and temporary sessions.
 
+The primary attributes and relationships of each entity are defined as follows:
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{itemize}
+    \item \textbf{User}: Represents the central entity, storing personal details, authentication credentials (via \texttt{password\_hash}), and the assigned \texttt{role} (e.g., \texttt{REGISTERED} or \texttt{GUEST\_SESSION}).
+    \item \textbf{Wallet}: A one-to-many relationship exists between User and Wallet since a user can possess multiple wallets (e.g., Cash, Bank Account). Each wallet maintains a strict \texttt{user\_id} reference (with cascading deletion) and stores the \texttt{currency} used.
+    \item \textbf{Transaction}: Linked to a specific Wallet (\texttt{wallet\_id}), representing an atomic financial entry (\texttt{INCOME} or \texttt{EXPENSE}). It stores crucial financial data such as \texttt{amount}, \texttt{category}, \texttt{transaction\_date}, and an optional \texttt{note}.
+    \item \textbf{Recurring Expense}: Also associated with a Wallet, this entity defines scheduled cash outflows, keeping track of the \texttt{periodicity} (e.g., Monthly), the \texttt{next\_due} date, and an \texttt{active} flag for toggling state without deletion.
+    \item \textbf{Pac Plan}: Defines periodic investment (PAC) goals mapped directly to a User. It captures the \texttt{asset\_name}, \texttt{monthly\_amount}, and the overall \texttt{target\_amount}.
+    \item \textbf{Forecast}: A purely analytical entity connected to a User, storing a chosen scenario (e.g., \texttt{OPTIMISTIC}) and the resultant JSON structural breakdown of the \texttt{projection\_json}.
+    \item \textbf{Report Session}: A transient entity used for temporary guest access, managing a \texttt{session\_token}, the embedded \texttt{report\_json}, and an \texttt{expires\_at} timestamp.
+\end{itemize}
