@@ -1,21 +1,663 @@
 \subsection{REST API Details}
 
-%List here a few resources retrievable via REST API
+This section documents the REST/JSON API endpoints and the Servlet/JSP endpoints. REST endpoints return JSON responses with appropriate HTTP status codes. Servlet/JSP endpoints follow the Post/Redirect/Get pattern and forward to JSP pages for rendering.
 
-\subsubsection*{A resource}
+%% ==================== AUTHENTICATION ====================
 
-% the description of the resource
+\subsubsection{User Registration}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+Registers a new user. The password is hashed using PBKDF2 before storage.
 
 \begin{itemize}
-    \item URL: \texttt{the URL to retrieve it}
-    \item Method: \texttt{Method to retrieve it}
-    \item URL Parameters:
-    \item Data Parameters: 
-    \item Success Response:
-    \item Error Response:
-    
+    \item \textbf{URL:} \texttt{/auth/register}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{name} = \{string\}
+        \item \texttt{surname} = \{string\}
+        \item \texttt{email} = \{string\}
+        \item \texttt{password} = \{string\}
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 302 redirect to \texttt{/dashboard}; session created with authenticated user.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/register?error=email\_exists} if the email is already registered.
+        \item Redirect to \texttt{/register?error=validation} if required fields are missing.
+        \item Redirect to \texttt{/register?error=server\_error} on internal failure.
+    \end{itemize}
 \end{itemize}
 
+\subsubsection{User Login}
+
+Authenticates an existing user by verifying email and password against the stored hash.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/auth/login}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{email} = \{string\}
+        \item \texttt{password} = \{string\}
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 302 redirect to \texttt{/dashboard}; session created with authenticated user.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/login?error=invalid\_credentials} if credentials are wrong.
+        \item Redirect to \texttt{/login?error=validation} if fields are missing.
+        \item Redirect to \texttt{/login?error=server\_error} on internal failure.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{User Logout}
+
+Invalidates the current session and redirects to the login page.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/auth/logout}
+    \item \textbf{Method:} \texttt{POST} or \texttt{GET}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 302 redirect to \texttt{/login}.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== WALLETS ====================
+
+\subsubsection{List Wallets}
+
+Returns all wallets belonging to the authenticated user, forwarded to a JSP page for rendering.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/wallets}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the wallet list page rendered via JSP.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/login} if unauthenticated.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Create Wallet}
+
+Creates a new wallet for the authenticated user. Currency is normalized to uppercase and validated as a 3-letter alphabetic code. All wallets under one account must use the same currency.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/wallets/create}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{name} = \{string\}
+        \item \texttt{type} = \{string\} (CASH, BANK\_ACCOUNT, CREDIT\_CARD, or INVESTMENT)
+        \item \texttt{currency} = \{string\} (3-letter code, e.g., EUR)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?success=created}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?error=validation} if fields are invalid.
+        \item Redirect to \texttt{/wallets?error=currency\_mismatch} if currency differs from existing wallets.
+        \item Redirect to \texttt{/wallets?error=server\_error} on internal failure.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Edit Wallet}
+
+Updates wallet name, type, or currency. Ownership is verified before mutation.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/wallets/edit}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{walletId} = \{UUID\}
+        \item \texttt{name} = \{string\}
+        \item \texttt{type} = \{string\}
+        \item \texttt{currency} = \{string\}
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?success=updated}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?error=validation} for invalid input or malformed UUID.
+        \item Redirect to \texttt{/wallets?error=not\_found} if wallet does not exist.
+        \item Redirect to \texttt{/wallets?error=currency\_mismatch} if currency differs from other wallets.
+        \item Redirect to \texttt{/wallets?error=unauthorized} if wallet belongs to another user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Delete Wallet}
+
+Deletes a wallet. Rejected if the wallet contains linked transactions.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/wallets/delete}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{walletId} = \{UUID\}
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?success=deleted}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/wallets?error=validation} for missing or malformed UUID.
+        \item Redirect to \texttt{/wallets?error=not\_found} if wallet does not exist.
+        \item Redirect to \texttt{/wallets?error=has\_transactions} if wallet has linked transactions.
+        \item Redirect to \texttt{/wallets?error=unauthorized} if wallet belongs to another user.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== TRANSACTIONS (REST) ====================
+
+\subsubsection{List Transactions}
+
+Retrieves all transactions for a given wallet as JSON, ordered by transaction date descending. Wallet ownership is verified.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/transactions?walletId=\{walletId\}}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{walletId} = \{UUID\} (required)
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with a JSON array of transaction objects.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if \texttt{walletId} is missing or has an invalid UUID format.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the wallet does not belong to the authenticated user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Create Transaction}
+
+Creates a new transaction within a wallet. The transaction type (income or expense) is resolved automatically from the sign of the amount: positive values are treated as income, negative values as expenses. The amount is stored as an absolute value scaled to two decimal places.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/transactions}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (JSON body):}
+    \begin{itemize}
+        \item \texttt{walletId} = \{UUID\} (required)
+        \item \texttt{amount} = \{string\} (required, non-zero numeric value)
+        \item \texttt{category} = \{string\} (required, max 80 characters)
+        \item \texttt{date} = \{string\} (required, format YYYY-MM-DD)
+        \item \texttt{note} = \{string\} (optional, blank values normalized to null)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 201 with the created transaction as a JSON object.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the request body is malformed, empty, oversized (>8KB), or contains invalid field values.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the wallet does not belong to the authenticated user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Update Transaction}
+
+Updates an existing transaction. Ownership is verified through the transaction's parent wallet.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/transactions/\{transactionId\}}
+    \item \textbf{Method:} \texttt{PUT}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{transactionId} in path (UUID)
+    \end{itemize}
+    \item \textbf{Data Parameters (JSON body):}
+    \begin{itemize}
+        \item \texttt{amount} = \{string\} (required)
+        \item \texttt{category} = \{string\} (required)
+        \item \texttt{date} = \{string\} (required, format YYYY-MM-DD)
+        \item \texttt{note} = \{string\} (optional)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the updated transaction as a JSON object.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the transaction ID is invalid, the body is malformed, or field values are invalid.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the transaction's wallet does not belong to the authenticated user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Delete Transaction}
+
+Deletes an existing transaction. Ownership is verified through the transaction's parent wallet.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/transactions/\{transactionId\}}
+    \item \textbf{Method:} \texttt{DELETE}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{transactionId} in path (UUID)
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 204 No Content.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the transaction ID is missing or has an invalid format.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the transaction's wallet does not belong to the authenticated user.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== RECURRING EXPENSES (REST) ====================
+
+\subsubsection{List Recurring Expenses}
+
+Retrieves all recurring expenses for the authenticated user as JSON.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/expenses}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with a JSON array of recurring expense objects.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 500 on internal failure.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Create Recurring Expense}
+
+Creates a new recurring expense linked to a wallet owned by the authenticated user.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/expenses}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (JSON body):}
+    \begin{itemize}
+        \item \texttt{walletId} = \{UUID\} (required)
+        \item \texttt{label} = \{string\} (required)
+        \item \texttt{amount} = \{string\} (required, positive numeric value)
+        \item \texttt{periodicity} = \{string\} (required: MONTHLY, QUARTERLY, or YEARLY)
+        \item \texttt{nextDue} = \{string\} (required, format YYYY-MM-DD)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 201 with the created recurring expense as a JSON object.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 for malformed JSON or invalid field values.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the wallet does not belong to the authenticated user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Update Recurring Expense}
+
+Updates an existing recurring expense. Ownership is verified through the expense's parent wallet.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/expenses/\{expenseId\}}
+    \item \textbf{Method:} \texttt{PUT}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{expenseId} in path (UUID)
+    \end{itemize}
+    \item \textbf{Data Parameters (JSON body):}
+    \begin{itemize}
+        \item \texttt{label} = \{string\} (required)
+        \item \texttt{amount} = \{string\} (required)
+        \item \texttt{periodicity} = \{string\} (required)
+        \item \texttt{nextDue} = \{string\} (required, format YYYY-MM-DD)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the updated recurring expense as a JSON object.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 for malformed JSON, invalid UUID, or invalid field values.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the expense's wallet does not belong to the authenticated user.
+        \item HTTP 404 if the recurring expense does not exist.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Delete Recurring Expense}
+
+Deletes an existing recurring expense. Ownership is verified.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/expenses/\{expenseId\}}
+    \item \textbf{Method:} \texttt{DELETE}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{expenseId} in path (UUID)
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 204 No Content.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the expense ID is missing or invalid.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the expense's wallet does not belong to the authenticated user.
+        \item HTTP 404 if the recurring expense does not exist.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Toggle Recurring Expense Active Status}
+
+Toggles a recurring expense between active and inactive. Ownership is verified.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/expenses/\{expenseId\}/toggle}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{expenseId} in path (UUID)
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the updated recurring expense as a JSON object.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the expense ID is invalid.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 403 if the expense's wallet does not belong to the authenticated user.
+        \item HTTP 404 if the recurring expense does not exist.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== PAC PLANS ====================
+
+\subsubsection{List PAC Plans}
+
+Returns all PAC plans belonging to the authenticated user, forwarded to a JSP page.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/pac}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the PAC plan list page rendered via JSP.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/login} if unauthenticated.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Create PAC Plan}
+
+Creates a new PAC (DCA) investment plan for the authenticated user.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/pac/create}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{assetName} = \{string\} (max 120 characters)
+        \item \texttt{monthlyAmount} = \{string\} (positive numeric value)
+        \item \texttt{targetAmount} = \{string\} (positive numeric value)
+        \item \texttt{startDate} = \{string\} (format YYYY-MM-DD)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?success=created}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?error=validation} for invalid input.
+        \item Redirect to \texttt{/pac?error=server\_error} on internal failure.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Edit PAC Plan}
+
+Updates an existing PAC plan. Ownership is verified.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/pac/edit}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{planId} = \{UUID\}
+        \item \texttt{assetName} = \{string\}
+        \item \texttt{monthlyAmount} = \{string\}
+        \item \texttt{targetAmount} = \{string\}
+        \item \texttt{startDate} = \{string\}
+        \item \texttt{active} = \{string\} (``true'' or ``false'')
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?success=updated}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?error=validation} for invalid input or malformed UUID.
+        \item Redirect to \texttt{/pac?error=not\_found} if plan does not exist.
+        \item Redirect to \texttt{/pac?error=unauthorized} if plan belongs to another user.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Delete PAC Plan}
+
+Deletes an existing PAC plan. Ownership is verified.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/pac/delete}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{planId} = \{UUID\}
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?success=deleted}.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/pac?error=validation} for missing or malformed UUID.
+        \item Redirect to \texttt{/pac?error=not\_found} if plan does not exist.
+        \item Redirect to \texttt{/pac?error=unauthorized} if plan belongs to another user.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== FORECAST (REST) ====================
+
+\subsubsection{Compute Forecast}
+
+Computes a 24-month financial projection for the authenticated user under the specified scenario and stores the result as JSONB in the \texttt{forecasts} table. The projection is based on: current wallet balances, the 3-month average of income and expenses (with adaptive windowing for newer users), active recurring expenses normalized to monthly equivalents, and active PAC plan contributions. All wallets must use the same currency.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/forecast?scenario=\{scenario\}}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{scenario} = \{string\} (required, one of: \texttt{OPTIMISTIC}, \texttt{CONSERVATIVE}, \texttt{STRESS\_TEST})
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 201 with a JSON object containing:
+        \begin{itemize}
+            \item \texttt{id}: the forecast UUID
+            \item \texttt{scenario}: the scenario name
+            \item \texttt{projection}: a JSON array of 24 monthly entries, each containing \texttt{month}, \texttt{income}, \texttt{expense}, \texttt{pacContribution}, \texttt{netFlow}, \texttt{balance}, and \texttt{currency}
+            \item \texttt{createdAt}: the computation timestamp
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the scenario parameter is missing or invalid.
+        \item HTTP 400 if wallets use mixed currencies.
+        \item HTTP 401 if the user is not authenticated.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Retrieve Latest Forecast}
+
+Retrieves the most recently computed forecast for the authenticated user and the specified scenario.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/api/forecast?scenario=\{scenario\}}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{scenario} = \{string\} (required, one of: \texttt{OPTIMISTIC}, \texttt{CONSERVATIVE}, \texttt{STRESS\_TEST})
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the forecast JSON object (same structure as the compute response).
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item HTTP 400 if the scenario parameter is missing or invalid.
+        \item HTTP 401 if the user is not authenticated.
+        \item HTTP 404 if no forecast has been computed yet for the given scenario.
+    \end{itemize}
+\end{itemize}
+
+%% ==================== GUEST REPORTS ====================
+
+\subsubsection{Guest Report Page}
+
+Displays the guest calculator page with options for loan amortization, compound interest, and budget analysis.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/guest/report}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with the calculator page rendered via JSP.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Compute Loan Amortization}
+
+Calculates a loan amortization schedule and stores the result in the guest session's report data.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/report/loan}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{principal} = \{number\} (loan amount)
+        \item \texttt{annualRate} = \{number\} (annual interest rate)
+        \item \texttt{months} = \{integer\} (repayment period in months)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report} with results stored in the guest session.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report?error=validation} for invalid input.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Compute Compound Interest}
+
+Calculates a compound interest projection and stores the result in the guest session's report data.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/report/compound}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{initialCapital} = \{number\} (starting amount)
+        \item \texttt{monthlyContribution} = \{number\} (monthly deposit)
+        \item \texttt{annualRate} = \{number\} (annual interest rate)
+        \item \texttt{years} = \{integer\} (investment period in years)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report} with results stored in the guest session.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report?error=validation} for invalid input.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Compute Budget Breakdown}
+
+Calculates income vs.\ expense totals with categorized breakdowns and stores the result in the guest session.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/report/budget}
+    \item \textbf{Method:} \texttt{POST}
+    \item \textbf{Data Parameters (form):}
+    \begin{itemize}
+        \item \texttt{incomeCategory[]} = \{string[]\} (array of income category names)
+        \item \texttt{incomeAmount[]} = \{number[]\} (array of income amounts)
+        \item \texttt{expenseCategory[]} = \{string[]\} (array of expense category names)
+        \item \texttt{expenseAmount[]} = \{number[]\} (array of expense amounts)
+    \end{itemize}
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report} with results stored in the guest session.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report?error=validation} for invalid input.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Export Report as PDF}
+
+Exports the accumulated guest report data as a downloadable PDF file.
+
+\begin{itemize}
+    \item \textbf{URL:} \texttt{/report/export?token=\{sessionToken\}}
+    \item \textbf{Method:} \texttt{GET}
+    \item \textbf{URL Parameters:}
+    \begin{itemize}
+        \item \texttt{token} = \{UUID\} (the guest session token)
+    \end{itemize}
+    \item \textbf{Data Parameters:} None
+    \item \textbf{Success Response:}
+    \begin{itemize}
+        \item HTTP 200 with \texttt{Content-Type: application/pdf} and the PDF file as the response body.
+    \end{itemize}
+    \item \textbf{Error Responses:}
+    \begin{itemize}
+        \item Redirect to \texttt{/guest/report?error=no\_data} if no report data exists.
+        \item HTTP 403 if the token does not match the current session.
+    \end{itemize}
+\end{itemize}

@@ -1,11 +1,21 @@
 \subsection{REST Error Codes}
 
-%If needed, add few lines of text, describing the error codes table
+All REST API endpoints return errors as JSON objects in the format \texttt{\{"error": "message"\}}. The following table summarizes the HTTP status codes used across the API and their meaning.
 
-\begin{longtable}{|p{.15\columnwidth}|p{.2\columnwidth} |p{.6\columnwidth}|} 
+\begin{longtable}{|p{.15\columnwidth}|p{.2\columnwidth} |p{.6\columnwidth}|}
 \hline
-\textbf{Error Code} & \textbf{HTTP Status Code} & \textbf{Description} \\\hline
-Error Code Identifier & Corresponding HTTP Status Code &  Description of the error \\\hline
-\caption{Describe in this table your REST API}
-\label{tab:termGlossary}
+\textbf{Error Code} & \textbf{HTTP Status} & \textbf{Description} \\\hline
+
+400 & Bad Request & Malformed JSON body, missing required fields, invalid UUID format, invalid amount or date format, empty request body, oversized request body (>8KB), invalid scenario value, or blank required parameters. \\\hline
+
+401 & Unauthorized & Authentication required. Returned by \texttt{AuthenticationFilter} for unauthenticated \texttt{/api/*} requests, or by the servlet-level defensive check if the session has expired. \\\hline
+
+403 & Forbidden & The authenticated user does not own the requested resource (e.g., attempting to modify another user's wallet or transaction). \\\hline
+
+404 & Not Found & The requested resource does not exist (e.g., no forecast computed yet for the given scenario). \\\hline
+
+500 & Internal Server Error & An unexpected server error occurred. Internal details are never exposed; the response contains only a generic error message. \\\hline
+
+\caption{HTTP status codes used by the REST API.}
+\label{tab:restErrorCodes}
 \end{longtable}
