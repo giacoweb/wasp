@@ -1,4 +1,27 @@
 \section{Main Functionalities}
-%What are the main functionalities of the web app? what services does it offer and how it is organized?
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{itemize}
+
+    \item \textit{Registration and Login:} New users must register by providing their name, surname, email address, and password. Passwords are hashed using PBKDF2 (pure Java \texttt{javax.crypto}) before storage and are never persisted in plain text. Once registered, users can log in to authenticate their session and access all protected features. Failed login attempts return an error message without exposing internal details.
+
+    \item \textit{Guest Access:} Users who do not wish to create an account can continue as guests. A session-scoped UUID token is generated and persisted in the \texttt{report\_sessions} table, allowing guests to generate one-off financial reports without registration.
+
+    \item \textit{Wallet Management:} Authenticated users can create, view, edit, and delete financial wallets. Each wallet has a name, type (cash, bank account, credit card, or investment), and a 3-letter currency code. All wallets under one account must use the same currency. Deletion is rejected if the wallet contains linked transactions.
+
+    \item \textit{Transaction Tracking:} Users can record income and expense transactions within their wallets. Transactions are managed through a REST/JSON API, allowing interactive creation, editing, and deletion without full page reloads. Positive amounts are treated as income and negative amounts as expenses, resolved automatically at the service layer. Amounts are stored as absolute values with two decimal places.
+
+    \item \textit{PAC (DCA) Investment Plans:} Users can create and manage Dollar Cost Averaging investment plans. Each plan specifies an asset name, a monthly contribution amount, a target amount, and a start date. Plans can be activated or deactivated and are factored into the forecasting engine.
+
+    \item \textit{Recurring Expenses:} Users can define recurring financial obligations with configurable periodicity (monthly, quarterly, or yearly). Active recurring expenses are normalized to monthly equivalents and included in forecast projections.
+
+    \item \textit{Financial Forecasting:} The application provides a 24-month net worth projection engine accessible via a REST/JSON API. Users select one of three scenarios:
+    \begin{itemize}
+        \item \textbf{Optimistic:} income increased by 10\%, expenses unchanged.
+        \item \textbf{Conservative:} income unchanged, expenses subject to 3\% compounding monthly inflation.
+        \item \textbf{Stress Test:} income reduced by 20\%, with a one-off expense shock of 3$\times$ the average monthly expense at month 6.
+    \end{itemize}
+    Projections are computed from current wallet balances, the 3-month average of income and expenses, active recurring expenses, and active PAC contributions. Results are stored as JSONB in the database for later retrieval.
+
+    \item \textit{Dashboard:} After logging in, users are redirected to a dashboard that serves as the central hub for navigating wallets, transactions, PAC plans, and forecasts.
+
+\end{itemize}

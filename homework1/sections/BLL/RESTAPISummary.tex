@@ -1,11 +1,64 @@
 \subsection{REST API Summary}
 
-%describe the REST API. If needed, add a few lines of text here, describing the content of the table.
+The application exposes two categories of endpoints: Servlet/JSP endpoints using the Post/Redirect/Get pattern for page-based interactions, and REST/JSON endpoints for AJAX-driven features. Both categories are listed below.
 
-\begin{longtable}{|p{.375\columnwidth}|p{.1\columnwidth} |p{.35\columnwidth}|p{.1\columnwidth}|} 
+\subsubsection*{Servlet/JSP Endpoints (PRG Pattern)}
+
+\begin{longtable}{|p{.30\columnwidth}|p{.08\columnwidth} |p{.40\columnwidth}|p{.12\columnwidth}|}
 \hline
 \textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
-What is the URI? & What HTTP method uses? &  Describe briefly the result of calling the URI & is it behind a filter?\\\hline
-\caption{Describe in this table your REST API}
-\label{tab:termGlossary}
+
+\texttt{/} & GET & Home page. & -- \\\hline
+\texttt{/login} & GET & Display login page. & -- \\\hline
+\texttt{/auth/login} & POST & Authenticate user; redirect to \texttt{/dashboard}. & -- \\\hline
+\texttt{/register} & GET & Display registration page. & -- \\\hline
+\texttt{/auth/register} & POST & Create new user; redirect to \texttt{/dashboard}. & -- \\\hline
+\texttt{/auth/logout} & POST/GET & Invalidate session; redirect to \texttt{/login}. & -- \\\hline
+
+\texttt{/dashboard} & GET & Dashboard with financial summary. & Auth \\\hline
+
+\texttt{/wallets} & GET & List all wallets for the user. & Auth \\\hline
+\texttt{/wallets/create} & POST & Create a new wallet; redirect to \texttt{/wallets}. & Auth \\\hline
+\texttt{/wallets/edit} & POST & Update wallet; redirect to \texttt{/wallets}. & Auth \\\hline
+\texttt{/wallets/delete} & POST & Delete wallet; redirect to \texttt{/wallets}. & Auth \\\hline
+
+\texttt{/pac} & GET & List all PAC plans for the user. & Auth \\\hline
+\texttt{/pac/create} & POST & Create a new PAC plan; redirect to \texttt{/pac}. & Auth \\\hline
+\texttt{/pac/edit} & POST & Update PAC plan; redirect to \texttt{/pac}. & Auth \\\hline
+\texttt{/pac/delete} & POST & Delete PAC plan; redirect to \texttt{/pac}. & Auth \\\hline
+
+\texttt{/guest/report} & GET & Guest calculator page. & Guest \\\hline
+\texttt{/report/loan} & POST & Compute loan amortization schedule. & Guest \\\hline
+\texttt{/report/compound} & POST & Compute compound interest projection. & Guest \\\hline
+\texttt{/report/budget} & POST & Compute budget breakdown. & Guest \\\hline
+\texttt{/report/export} & GET & Export report as PDF. & -- \\\hline
+
+\texttt{/ping} & GET & Backend health check (returns ``OK''). & -- \\\hline
+
+\caption{Servlet/JSP endpoints. ``Auth'' = \texttt{AuthenticationFilter} (redirects to \texttt{/login}). ``Guest'' = \texttt{GuestSessionFilter} (initializes guest token).}
+\label{tab:servletEndpoints}
+\end{longtable}
+
+\subsubsection*{REST/JSON API Endpoints}
+
+\begin{longtable}{|p{.35\columnwidth}|p{.08\columnwidth} |p{.35\columnwidth}|p{.12\columnwidth}|}
+\hline
+\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
+
+\texttt{/api/transactions?\newline walletId=\{walletId\}} & GET & List all transactions for a wallet. & Auth \\\hline
+\texttt{/api/transactions} & POST & Create a new transaction. & Auth \\\hline
+\texttt{/api/transactions/\newline\{transactionId\}} & PUT & Update a transaction. & Auth \\\hline
+\texttt{/api/transactions/\newline\{transactionId\}} & DELETE & Delete a transaction. & Auth \\\hline
+
+\texttt{/api/expenses} & GET & List all recurring expenses for the user. & Auth \\\hline
+\texttt{/api/expenses} & POST & Create a new recurring expense. & Auth \\\hline
+\texttt{/api/expenses/\{expenseId\}} & PUT & Update a recurring expense. & Auth \\\hline
+\texttt{/api/expenses/\{expenseId\}} & DELETE & Delete a recurring expense. & Auth \\\hline
+\texttt{/api/expenses/\newline\{expenseId\}/toggle} & POST & Toggle active/inactive status. & Auth \\\hline
+
+\texttt{/api/forecast?\newline scenario=\{scenario\}} & POST & Compute 24-month projection. & Auth \\\hline
+\texttt{/api/forecast?\newline scenario=\{scenario\}} & GET & Retrieve latest stored projection. & Auth \\\hline
+
+\caption{REST/JSON API endpoints. All \texttt{/api/*} routes are protected by \texttt{AuthenticationFilter}, which returns a JSON 401 response for unauthenticated requests instead of redirecting.}
+\label{tab:restApiSummary}
 \end{longtable}
