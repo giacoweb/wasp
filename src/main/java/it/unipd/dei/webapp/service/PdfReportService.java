@@ -9,6 +9,7 @@ import it.unipd.dei.webapp.dao.DashboardDAO;
 import it.unipd.dei.webapp.dao.ForecastDAO;
 import it.unipd.dei.webapp.dao.RecurringExpenseDAO;
 import it.unipd.dei.webapp.dao.ReportSessionDAO;
+
 import it.unipd.dei.webapp.model.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -19,9 +20,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
 import java.time.LocalDateTime;
 
 public class PdfReportService {
