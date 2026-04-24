@@ -14,9 +14,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "WalletEditServlet", value = "/wallets/edit")
 public class WalletEditServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(WalletEditServlet.class.getName());
 
     private WalletService walletService;
 
@@ -62,9 +66,12 @@ public class WalletEditServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/wallets?error=" + errorCode);
 
         } catch (UnauthorizedOperationException e) {
+            logger.log(Level.WARNING, "User {0} attempted to edit wallet {1} owned by another user",
+                    new Object[]{user.getId(), walletId});
             response.sendRedirect(request.getContextPath() + "/wallets?error=unauthorized");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to update wallet " + walletId + " for user " + user.getId(), e);
             response.sendRedirect(request.getContextPath() + "/wallets?error=server_error");
         }
     }

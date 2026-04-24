@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "RegisterServlet", value = {"/register", "/auth/register"})
 public class RegisterServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(RegisterServlet.class.getName());
 
     private UserService userService;
 
@@ -50,15 +54,18 @@ public class RegisterServlet extends HttpServlet {
 
             AuthenticationSessionUtil.startAuthenticatedSession(request, user);
 
+            logger.log(Level.INFO, "New user registered: {0}", user.getId());
             response.sendRedirect(request.getContextPath() + "/dashboard");
 
         } catch (UserAlreadyExistsException e) {
+            logger.log(Level.INFO, "Registration attempt with existing email {0}", email);
             response.sendRedirect(request.getContextPath() + "/register?error=email_exists");
 
         } catch (ValidationException e) {
             response.sendRedirect(request.getContextPath() + "/register?error=validation");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error during registration for email " + email, e);
             response.sendRedirect(request.getContextPath() + "/register?error=server_error");
         }
     }

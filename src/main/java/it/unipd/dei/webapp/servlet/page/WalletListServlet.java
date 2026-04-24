@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "WalletListServlet", value = "/wallets")
 public class WalletListServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(WalletListServlet.class.getName());
 
     private WalletService walletService;
 
@@ -63,6 +67,7 @@ public class WalletListServlet extends HttpServlet {
             List<Wallet> wallets = walletService.getWalletsByUser(user.getId());
             request.setAttribute("wallets", wallets);
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to load wallets for user " + user.getId(), e);
             request.setAttribute("errorMessage", "Unable to load wallets.");
         }
 
