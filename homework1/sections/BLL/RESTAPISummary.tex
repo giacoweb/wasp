@@ -33,8 +33,6 @@ The application exposes two categories of endpoints: Servlet/JSP endpoints using
 \texttt{/report/budget} & POST & Compute budget breakdown. & Guest \\\hline
 \texttt{/report/export} & GET & Export report as PDF. & -- \\\hline
 
-\texttt{/ping} & GET & Backend health check (returns ``OK''). & -- \\\hline
-
 \caption{Servlet/JSP endpoints. ``Auth'' = \texttt{AuthenticationFilter} (redirects to \texttt{/login}). ``Guest'' = \texttt{GuestSessionFilter} (initializes guest token).}
 \label{tab:servletEndpoints}
 \end{longtable}
