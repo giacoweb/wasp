@@ -13,9 +13,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "PacDeleteServlet", value = "/pac/delete")
 public class PacDeleteServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(PacDeleteServlet.class.getName());
 
     private PacPlanService pacPlanService;
 
@@ -55,9 +59,12 @@ public class PacDeleteServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/pac?error=" + errorCode);
 
         } catch (UnauthorizedOperationException e) {
+            logger.log(Level.WARNING, "User {0} attempted to delete PAC plan {1} owned by another user",
+                    new Object[]{user.getId(), planId});
             response.sendRedirect(request.getContextPath() + "/pac?error=unauthorized");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to delete PAC plan " + planId + " for user " + user.getId(), e);
             response.sendRedirect(request.getContextPath() + "/pac?error=server_error");
         }
     }

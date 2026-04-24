@@ -19,9 +19,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "ReportCompoundServlet", value = {"/report/compound"})
 public class ReportCompoundServlet extends HttpServlet{
+
+    private static final Logger logger = Logger.getLogger(ReportCompoundServlet.class.getName());
 
     private CalculatorService calculator;
 
@@ -100,7 +104,7 @@ public class ReportCompoundServlet extends HttpServlet{
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, "Database error computing compound interest", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }

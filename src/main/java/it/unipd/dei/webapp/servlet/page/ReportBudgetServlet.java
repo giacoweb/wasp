@@ -20,10 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @WebServlet(name = "ReportBudgetServlet", value = "/report/budget")
 public class ReportBudgetServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(ReportBudgetServlet.class.getName());
 
     private CalculatorService calculator;
 
@@ -109,7 +113,7 @@ public class ReportBudgetServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
 
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, "Database error computing budget breakdown", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }

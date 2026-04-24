@@ -15,9 +15,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "ForecastApiServlet", value = "/api/forecast")
 public class ForecastApiServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(ForecastApiServlet.class.getName());
 
     private ForecastService forecastService;
 
@@ -56,6 +60,7 @@ public class ForecastApiServlet extends HttpServlet {
                     "Invalid scenario. Use OPTIMISTIC, CONSERVATIVE, or STRESS_TEST.");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ForecastApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }
@@ -88,6 +93,7 @@ public class ForecastApiServlet extends HttpServlet {
             sendError(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ForecastApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }

@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "PacListServlet", value = "/pac")
 public class PacListServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(PacListServlet.class.getName());
 
     private PacPlanService pacPlanService;
 
@@ -59,6 +63,7 @@ public class PacListServlet extends HttpServlet {
             List<PacPlan> plans = pacPlanService.getPlansByUser(user.getId());
             request.setAttribute("pacPlans", plans);
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to load PAC plans for user " + user.getId(), e);
             request.setAttribute("errorMessage", "Unable to load PAC plans.");
         }
 

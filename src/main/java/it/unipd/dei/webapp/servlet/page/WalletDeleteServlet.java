@@ -14,9 +14,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "WalletDeleteServlet", value = "/wallets/delete")
 public class WalletDeleteServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(WalletDeleteServlet.class.getName());
 
     private WalletService walletService;
 
@@ -54,12 +58,15 @@ public class WalletDeleteServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/wallets?error=not_found");
 
         } catch (UnauthorizedOperationException e) {
+            logger.log(Level.WARNING, "User {0} attempted to delete wallet {1} owned by another user",
+                    new Object[]{user.getId(), walletId});
             response.sendRedirect(request.getContextPath() + "/wallets?error=unauthorized");
 
         } catch (WalletHasTransactionsException e) {
             response.sendRedirect(request.getContextPath() + "/wallets?error=has_transactions");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to delete wallet " + walletId + " for user " + user.getId(), e);
             response.sendRedirect(request.getContextPath() + "/wallets?error=server_error");
         }
     }

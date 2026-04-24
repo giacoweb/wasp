@@ -20,9 +20,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "ExpenseApiServlet", value = "/api/expenses/*")
 public class ExpenseApiServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(ExpenseApiServlet.class.getName());
 
     private RecurringExpenseService expenseService;
 
@@ -43,6 +47,7 @@ public class ExpenseApiServlet extends HttpServlet {
             sendJsonResponse(response, HttpServletResponse.SC_OK, toJsonArray(expenses));
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ExpenseApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }
@@ -106,6 +111,7 @@ public class ExpenseApiServlet extends HttpServlet {
             sendError(response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ExpenseApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }
@@ -138,6 +144,7 @@ public class ExpenseApiServlet extends HttpServlet {
             sendError(response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ExpenseApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }
@@ -166,6 +173,7 @@ public class ExpenseApiServlet extends HttpServlet {
             sendError(response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ExpenseApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }
@@ -194,6 +202,7 @@ public class ExpenseApiServlet extends HttpServlet {
             sendError(response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in ExpenseApiServlet", e);
             sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
         }
     }

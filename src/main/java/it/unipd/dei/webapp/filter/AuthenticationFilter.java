@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {
         "/dashboard",
@@ -24,6 +26,8 @@ import java.io.IOException;
 })
 public class AuthenticationFilter extends HttpFilter implements Filter {
 
+    private static final Logger logger = Logger.getLogger(AuthenticationFilter.class.getName());
+
     @Override
     protected void doFilter(final HttpServletRequest request,
                             final HttpServletResponse response,
@@ -35,6 +39,8 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
 
         if (!authenticated) {
             String path = request.getServletPath();
+            logger.log(Level.FINE, "Unauthenticated access attempt to {0} from {1}",
+                    new Object[]{path, request.getRemoteAddr()});
             if (path != null && path.startsWith("/api/")) {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
