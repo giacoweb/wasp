@@ -264,7 +264,7 @@ public class PdfReportService {
 
     }
 
-    public byte[] generateAuthenticatedPdf(UUID userId) throws SQLException,IllegalArgumentException
+    public byte[] generateAuthenticatedPdf(UUID userId) throws SQLException
     {
         DashboardDAO dashboardDAO = new DashboardDAO();
         List<WalletSummary> wallets = dashboardDAO.getWalletSummariesByUserId(userId);
@@ -440,7 +440,7 @@ public class PdfReportService {
             return out.toByteArray();
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Error generating PDF.");
+            throw new IllegalStateException("Error generating PDF.", e);
         }
     }
 
