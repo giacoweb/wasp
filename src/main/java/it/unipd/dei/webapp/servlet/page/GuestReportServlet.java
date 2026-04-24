@@ -38,7 +38,7 @@ public class GuestReportServlet extends HttpServlet {
                         && reportSession.getReportJson() != null
                         && !reportSession.getReportJson().equals("{}");
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, "Failed to load guest report session for token " + token, e);
+                logger.log(Level.SEVERE, "Failed to load guest report session.", e);
                 throw new ServletException("Unable to load guest report session.", e);
             }
         }

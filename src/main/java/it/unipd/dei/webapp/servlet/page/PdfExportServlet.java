@@ -50,8 +50,8 @@ public class PdfExportServlet extends HttpServlet {
 
                 if (ownerToken == null || !ownerToken.equals(requestedToken))
                 {
-                    logger.log(Level.WARNING, "Unauthorized PDF export attempt for token {0} from {1}",
-                            new Object[]{requestedToken, request.getRemoteAddr()});
+                    logger.log(Level.WARNING, "Unauthorized PDF export attempt from {0}",
+                            request.getRemoteAddr());
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. You do not have permission to download this file.");
                     return;
                 }
