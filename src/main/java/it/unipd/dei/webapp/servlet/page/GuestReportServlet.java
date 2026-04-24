@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "GuestReportServlet", value = "/guest/report")
 public class GuestReportServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(GuestReportServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -34,6 +38,7 @@ public class GuestReportServlet extends HttpServlet {
                         && reportSession.getReportJson() != null
                         && !reportSession.getReportJson().equals("{}");
             } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Failed to load guest report session for token " + token, e);
                 throw new ServletException("Unable to load guest report session.", e);
             }
         }

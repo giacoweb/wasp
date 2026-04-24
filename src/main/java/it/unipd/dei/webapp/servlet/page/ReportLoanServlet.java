@@ -19,9 +19,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "ReportLoanServlet", value = {"/report/loan"})
 public class ReportLoanServlet extends HttpServlet{
+
+    private static final Logger logger = Logger.getLogger(ReportLoanServlet.class.getName());
 
     private CalculatorService calculator;
 
@@ -100,7 +104,7 @@ public class ReportLoanServlet extends HttpServlet{
 
         }
         catch(SQLException e) {
-
+            logger.log(Level.SEVERE, "Database error computing loan amortization", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
         }
     }

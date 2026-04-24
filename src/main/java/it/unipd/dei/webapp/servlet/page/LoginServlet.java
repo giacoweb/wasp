@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "LoginServlet", value = {"/login", "/auth/login"})
 public class LoginServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 
     private UserService userService;
 
@@ -48,15 +52,19 @@ public class LoginServlet extends HttpServlet {
 
             AuthenticationSessionUtil.startAuthenticatedSession(request, user);
 
+            logger.log(Level.INFO, "Successful login for user {0}", user.getId());
             response.sendRedirect(request.getContextPath() + "/dashboard");
 
         } catch (ValidationException e) {
             response.sendRedirect(request.getContextPath() + "/login?error=validation");
 
         } catch (InvalidCredentialsException e) {
+            logger.log(Level.WARNING, "Failed login attempt for email {0} from {1}",
+                    new Object[]{email, request.getRemoteAddr()});
             response.sendRedirect(request.getContextPath() + "/login?error=invalid_credentials");
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error during login for email " + email, e);
             response.sendRedirect(request.getContextPath() + "/login?error=server_error");
         }
     }

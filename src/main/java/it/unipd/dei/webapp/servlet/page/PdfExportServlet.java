@@ -13,10 +13,14 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @WebServlet(name = "PdfExportServlet", value = "/report/export")
 public class PdfExportServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(PdfExportServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,6 +50,8 @@ public class PdfExportServlet extends HttpServlet {
 
                 if (ownerToken == null || !ownerToken.equals(requestedToken))
                 {
+                    logger.log(Level.WARNING, "Unauthorized PDF export attempt for token {0} from {1}",
+                            new Object[]{requestedToken, request.getRemoteAddr()});
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. You do not have permission to download this file.");
                     return;
                 }
@@ -68,11 +74,11 @@ public class PdfExportServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 
             } catch (SQLException e) {
-
+                logger.log(Level.SEVERE, "Database error during PDF export", e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
 
             } catch (Exception e) {
-
+                logger.log(Level.SEVERE, "Unexpected error during PDF export", e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
         }
