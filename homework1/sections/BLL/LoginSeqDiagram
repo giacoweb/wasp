@@ -1,0 +1,105 @@
+@startuml
+!theme materia-outline
+autonumber
+
+skinparam BackgroundColor #FFFFFF
+skinparam ArrowColor #0077B6
+skinparam ActorBorderColor #03045E
+skinparam ActorFontColor #03045E
+skinparam ActorBackgroundColor #CAF0F8
+skinparam ParticipantBorderColor #03045E
+skinparam ParticipantFontColor #03045E
+skinparam ParticipantBackgroundColor #90E0EF
+skinparam DatabaseBorderColor #03045E
+skinparam DatabaseBackgroundColor #00B4D8
+skinparam DatabaseFontColor #03045E
+
+title FinTrack - Login Sequence Diagram
+
+actor "User / Browser" as Browser
+participant "Login Page\nlogin.jsp" as LoginPage
+participant "LoginServlet\n/auth/login" as LoginServlet
+participant "UserService" as UserService
+participant "UserDAO" as UserDAO
+database "PostgreSQL\nusers table" as Database
+participant "PasswordUtil" as PasswordUtil
+participant "AuthenticationSessionUtil" as SessionUtil
+participant "DashboardServlet\n/dashboard" as Dashboard
+
+== Open login page ==
+
+Browser -> LoginServlet: GET /login
+activate LoginServlet
+LoginServlet -> LoginPage: forward request
+activate LoginPage
+LoginPage --> Browser: Render login form
+deactivate LoginPage
+deactivate LoginServlet
+
+== Submit credentials ==
+
+Browser -> LoginServlet: POST /auth/login\nemail, password
+activate LoginServlet
+
+LoginServlet -> UserService: login(email, password)
+activate UserService
+
+UserService -> UserService: normalizeEmail(email)
+UserService -> UserService: validate password is not blank
+
+UserService -> UserDAO: findByEmail(normalizedEmail)
+activate UserDAO
+UserDAO -> Database: SELECT user by email
+activate Database
+Database --> UserDAO: User row or no row
+deactivate Database
+UserDAO --> UserService: User or null
+deactivate UserDAO
+
+alt User not found
+    UserService --> LoginServlet: InvalidCredentialsException
+    deactivate UserService
+    LoginServlet --> Browser: 302 Redirect\n/login?error=invalid_credentials
+    deactivate LoginServlet
+else User found
+    UserService -> PasswordUtil: verifyPassword(password, user.passwordHash)
+    activate PasswordUtil
+    PasswordUtil --> UserService: true / false
+    deactivate PasswordUtil
+
+    alt Password does not match
+        UserService --> LoginServlet: InvalidCredentialsException
+        deactivate UserService
+        LoginServlet --> Browser: 302 Redirect\n/login?error=invalid_credentials
+        deactivate LoginServlet
+    else Password matches
+        UserService --> LoginServlet: authenticated User
+        deactivate UserService
+
+        LoginServlet -> SessionUtil: startAuthenticatedSession(request, user)
+        activate SessionUtil
+        SessionUtil -> SessionUtil: invalidate existing session, if present
+        SessionUtil -> SessionUtil: create new HTTP session
+        SessionUtil -> SessionUtil: set "authenticatedUser" = user
+        SessionUtil --> LoginServlet: session initialized
+        deactivate SessionUtil
+
+        LoginServlet --> Browser: 302 Redirect /dashboard
+        deactivate LoginServlet
+
+        Browser -> Dashboard: GET /dashboard
+        activate Dashboard
+        Dashboard --> Browser: Render authenticated dashboard
+        deactivate Dashboard
+    end
+end
+
+== Validation or server error ==
+
+alt Missing email/password
+    LoginServlet --> Browser: 302 Redirect\n/login?error=validation
+else Unexpected exception
+    LoginServlet --> Browser: 302 Redirect\n/login?error=server_error
+end
+
+@enduml
