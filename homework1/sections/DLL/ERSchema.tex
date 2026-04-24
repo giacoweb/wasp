@@ -1,11 +1,17 @@
 \subsection{Entity-Relationship Schema}
 
 \IfFileExists{ERSchema.pdf}{
-    \includegraphics[]{ERSchema.pdf}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\textwidth]{ERSchema.pdf}
+        \caption{Entity-Relationship Schema}
+    \end{figure}
 }{
-    \begin{center}
+    \begin{figure}[H]
+        \centering
         \fbox{\parbox{0.85\linewidth}{\centering Add \texttt{ERSchema.pdf} here.}}
-    \end{center}
+        \caption{Entity-Relationship Schema}
+    \end{figure}
 }
 
 The application's data is persisted in a relational database mapping its core entities. The ER schema models the users, their financial wallets, atomic exchanges (transactions), recurring events, saving plans, analytical forecasts, and temporary sessions.
