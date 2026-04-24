@@ -106,6 +106,9 @@
     <a href="<%= request.getContextPath() %>/wallets">Manage wallets</a>
     |
     <a href="<%= request.getContextPath() %>/pac">Manage PAC plans</a>
+    |
+    <a href="<%= request.getContextPath() %>/report/export">Download PDF Report</a>
+
 </p>
 
 <br>

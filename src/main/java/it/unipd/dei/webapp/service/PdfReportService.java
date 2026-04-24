@@ -1,10 +1,16 @@
 package it.unipd.dei.webapp.service;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
+import it.unipd.dei.webapp.dao.DashboardDAO;
+import it.unipd.dei.webapp.dao.ForecastDAO;
+import it.unipd.dei.webapp.dao.RecurringExpenseDAO;
 import it.unipd.dei.webapp.dao.ReportSessionDAO;
-import it.unipd.dei.webapp.model.ReportSession;
+
+import it.unipd.dei.webapp.model.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -14,9 +20,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
 import java.time.LocalDateTime;
 
 public class PdfReportService {
@@ -25,7 +29,7 @@ public class PdfReportService {
     private final PDType1Font normalFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
 
 
-    public byte[] generateGuestPdf(UUID userId) throws Exception {
+    public byte[] generateGuestPdf(UUID userId) throws SQLException, IllegalArgumentException{
 
         ReportSession reportSession = new ReportSessionDAO().findBySessionToken(userId);
 
@@ -254,11 +258,196 @@ public class PdfReportService {
 
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Error generating PDF.");
         }
 
 
     }
+
+    public byte[] generateAuthenticatedPdf(UUID userId) throws SQLException
+    {
+        DashboardDAO dashboardDAO = new DashboardDAO();
+        List<WalletSummary> wallets = dashboardDAO.getWalletSummariesByUserId(userId);
+        List<DashboardStats> stats = dashboardDAO.getUserDashboardStatsByCurrency(userId);
+        List<RecurringExpense> recurringExpenses = new RecurringExpenseDAO().findByUserId(userId);
+        Forecast forecast = new ForecastDAO().findLatestByUserAndScenario(userId, ForecastScenario.OPTIMISTIC);
+
+        try {
+
+            PDDocument document = new PDDocument();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+            PDPageContentStream stream = new PDPageContentStream(document, page);
+
+            float yPos = 800;
+
+            writeText(stream, boldFont, 18, 50, yPos, "FinTrack - Dashboard Report");
+            yPos -= 15;
+            writeText(stream, normalFont, 10, 50, yPos, "Generated: " + java.time.LocalDate.now().toString());
+            yPos -= 35;
+
+
+            // Wallet Summary
+            writeText(stream, boldFont, 14, 50, yPos, "WALLET BALANCES");
+            yPos -= 20;
+            float[] walletCols = {50, 178, 305, 432};
+            yPos = drawTableHeader(stream, boldFont, walletCols, yPos, new String[]{"Name", "Type", "Currency", "Balance"});
+
+            for (WalletSummary w : wallets) {
+                if (yPos < 80) {
+                    stream.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    stream = new PDPageContentStream(document, page);
+                    yPos = 800;
+                    yPos = drawTableHeader(stream, boldFont, walletCols, yPos,
+                            new String[]{"Name", "Type", "Currency", "Balance"});
+                }
+                yPos = drawTableRow(stream, normalFont, walletCols, yPos, new String[]{
+                        w.getName(),
+                        w.getType().name(),
+                        w.getCurrency(),
+                        w.getBalance().toPlainString()
+                });
+            }
+            yPos -= 25;
+
+
+            // Ytd Expense Summary
+            if (yPos < 150) {
+                stream.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                stream = new PDPageContentStream(document, page);
+                yPos = 800;
+            }
+
+            writeText(stream, boldFont, 14, 50, yPos, "YTD EXPENSE SUMMARY");
+            yPos -= 20;
+            float[] statsCols = {50, 178, 305, 432};
+            yPos = drawTableHeader(stream, boldFont, statsCols, yPos,
+                    new String[]{"Currency", "Total Equity", "YTD Expenses", "YTD Savings"});
+
+            for (DashboardStats s : stats) {
+                if (yPos < 80) {
+                    stream.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    stream = new PDPageContentStream(document, page);
+                    yPos = 800;
+                    yPos = drawTableHeader(stream, boldFont, statsCols, yPos,
+                            new String[]{"Currency", "Total Equity", "YTD Expenses", "YTD Savings"});
+                }
+                yPos = drawTableRow(stream, normalFont, statsCols, yPos, new String[]{
+                        s.currency(),
+                        s.totalEquity().toPlainString(),
+                        s.ytdExpenses().toPlainString(),
+                        s.ytdSavings().toPlainString()
+                });
+            }
+            yPos -= 25;
+
+
+            // Recurring Expenses
+            if (yPos < 150) {
+                stream.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                stream = new PDPageContentStream(document, page);
+                yPos = 800;
+            }
+
+            writeText(stream, boldFont, 14, 50, yPos, "RECURRING EXPENSES");
+            yPos -= 20;
+
+            float[] recCols = {50, 178, 305, 432};
+            yPos = drawTableHeader(stream, boldFont, recCols, yPos,
+                    new String[]{"Label", "Amount", "Periodicity", "Next Due"});
+
+            for (RecurringExpense re : recurringExpenses) {
+                if (yPos < 80) {
+                    stream.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    stream = new PDPageContentStream(document, page);
+                    yPos = 800;
+                    yPos = drawTableHeader(stream, boldFont, recCols, yPos,
+                            new String[]{"Label", "Amount", "Periodicity", "Next Due"});
+                }
+                yPos = drawTableRow(stream, normalFont, recCols, yPos, new String[]{
+                        re.getLabel(),
+                        re.getAmount().toPlainString(),
+                        re.getPeriodicity().name(),
+                        re.getNextDue().toString()
+                });
+            }
+            yPos -= 25;
+
+
+            // Forecast Projection
+            if (yPos < 150) {
+                stream.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                stream = new PDPageContentStream(document, page);
+                yPos = 800;
+            }
+
+            writeText(stream, boldFont, 14, 50, yPos, "FORECAST PROJECTION (OPTIMISTIC)");
+            yPos -= 20;
+
+            if (forecast == null || forecast.getProjectionJson() == null) {
+                writeText(stream, normalFont, 11, 50, yPos, "No forecast available.");
+                yPos -= 20;
+            } else {
+                JSONArray projArray = new JSONArray(forecast.getProjectionJson());
+                float[] forecastCols = {50, 200, 350};
+                yPos = drawTableHeader(stream, boldFont, forecastCols, yPos,
+                        new String[]{"Month", "Projected Balance", "Scenario"});
+                for (int i = 0; i < projArray.length(); i++) {
+                    JSONObject entry = projArray.getJSONObject(i);
+                    if (yPos < 80) {
+                        stream.close();
+                        page = new PDPage(PDRectangle.A4);
+                        document.addPage(page);
+                        stream = new PDPageContentStream(document, page);
+                        yPos = 800;
+                        yPos = drawTableHeader(stream, boldFont, forecastCols, yPos,
+                                new String[]{"Month", "Projected Balance", "Scenario"});
+                    }
+                    yPos = drawTableRow(stream, normalFont, forecastCols, yPos, new String[]{
+                            entry.optString("month", String.valueOf(i + 1)),
+                            entry.optString("balance", "N/A"),
+                            forecast.getScenario().name()
+                    });
+                }
+            }
+
+            //Footer
+            if (yPos < 60) {
+                stream.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                stream = new PDPageContentStream(document, page);
+            }
+
+
+            writeText(stream, normalFont, 10, 50, 40, "FinTrack - Your personal finance dashboard");
+            stream.close();
+            document.save(out);
+            document.close();
+            return out.toByteArray();
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Error generating PDF.", e);
+        }
+    }
+
+
+
+
+
 
     private void writeText(PDPageContentStream stream, PDType1Font font, float fontSize, float x, float y, String text) throws IOException {
         String safeText = text == null ? "" : text.replaceAll("[^\\x20-\\x7E\\xA0-\\xFF\\u20AC]", "?");
