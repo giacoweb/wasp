@@ -10,4 +10,134 @@
 
 %Describe here the class diagram of your project
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+The business logic layer of FinTrack is organized around different services classes, each responsible for a distinct
+functional area of the application. All service classes follow a consistent pattern: they accept validated input,
+apply business rules, and delegate persistence operations to the corresponding DAO class in the data layer. On this
+chapter, we are going to illustrate the structure of classes, and understand his functionality:
+
+\begin{itemize}
+
+
+    \item \textbf{UserService} class handles user registration and authentication. During
+    registration, it normalizes and validates all input fields, checks for duplicate emails via
+    \texttt{UserDAO}, and delegates password hashing to \texttt{PasswordUtil}.
+    On the other hand, during login it retrieves the stored hash and verifies the input
+    password using the same utility. Both operations raise typed exceptions
+    (\texttt{ValidationException}, \texttt{InvalidCredentialsException},
+    \texttt{UserAlreadyExistsException}) that are caught at the servlet level and
+    displayed to the user.
+
+
+    \item \textbf{WalletService} class manages the lifecycle of user wallets. It enforces
+    two invariants: first, all field values are validated (non-blank name, valid
+    3-letter alphabetic currency code, recognized wallet type); second, all wallets
+    belonging to the same user must share a single currency --- a constraint checked
+    at creation and update time via \texttt{SingleCurrencyRequiredException}.
+    Ownership is verified before any mutation, and deletion is blocked if the wallet
+    contains linked transactions (\texttt{WalletHasTransactionsException}).
+
+
+    \item \textbf{TransactionService} class handles creation, update, and deletion of
+    financial transactions. It determines the transaction type (INCOME or EXPENSE)
+    from the sign of the amount, stores the absolute value, and verifies wallet
+    ownership before any write operation.
+
+
+    \item \textbf{RecurringExpenseService} class manages recurring fixed costs associated
+    with a wallet. It supports creation, update, deletion, and toggling of the active
+    status.
+
+
+
+    \item \textbf{PacPlanService} class handles the PAC (Piano di Accumulo Capitale)
+    investment plans. Each plan stores a monthly contribution amount and a target
+    amount; the service validates all numeric fields and verifies ownership before
+    mutations.
+
+
+    \item \textbf{DashboardService} class use the \texttt{DashboardDAO} to obtain two parallel
+    result sets --- per-wallet balance summaries and per-currency YTD statistics --- and wraps them in a
+    \texttt{DashboardSummary} value object consumed by the presentation layer.
+
+
+
+    \item \textbf{ForecastService} class produce a 24-month financial projection for a given
+    user, and it does so by combining several sources of financial data into a single
+    estimate. First, it reconstructs the user's current balance by summing all
+    historical transactions. It then calculates the average monthly income and expenditure
+    over the most recent three months, using a shorter window when the user does not yet
+    have enough history. Active recurring expenses are also taken into account: each one
+    is normalized to a monthly equivalent depending on its frequency, so a quarterly
+    charge is divided by three and a yearly one by twelve. Finally, any active PAC plan
+    contributions are added to the monthly outflow.
+
+
+    Once these figures are assembled, the service projects them forward month by month
+    under one of three user-selected scenarios. In the \texttt{OPTIMISTIC} scenario,
+    monthly income is increased by 10\%. In the \texttt{CONSERVATIVE} scenario, expenses
+    grow each month according to a 3\% annual inflation rate. In the \texttt{STRESS\_TEST}
+    scenario, income is reduced to 80\% of its average and a one-time expense shock
+    equal to three times the average monthly expenditure hits at month six, simulating
+    an unexpected financial event. A prerequisite for the computation is that all of the
+    user's wallets share the same currency; if they do not, a
+    \texttt{SingleCurrencyRequiredException} is raised and the computation is aborted.
+    The final projection is serialized as a JSON array and stored in the database via
+    \texttt{ForecastDAO} for later retrieval.
+
+
+
+    \item \textbf{CalculatorService} class is a stateless service used exclusively in the
+    guest area. It provides three independent calculators: loan amortization (using
+    the standard annuity formula, with a degenerate zero-rate case), compound interest
+    (monthly compounding with optional monthly contributions), and budget analysis
+    (aggregating income and expense categories into totals and a net balance). All
+    inputs are validated and financial values are computed using \texttt{BigDecimal}
+    at 2 decimal places.
+
+
+
+    \item \textbf{GuestSessionService} class manages the lifecycle of temporary guest
+    sessions. When a guest visits a calculator endpoint, the service checks whether
+    a valid, non-expired \texttt{ReportSession} already exists for the token stored
+    in the HTTP session. If not (or if the session has expired), a new UUID is
+    generated, a new \texttt{report\_sessions} row with a 24-hour TTL is created via
+    \texttt{ReportSessionDAO}, and the new token is returned to the filter for
+    storage in the HTTP session.
+
+
+    \item \textbf{PdfReportService} class generates downloadable PDF files using Apache
+    PDFBox. For guest users, it loads the accumulated JSON from the
+    \texttt{ReportSession}, validates that it is non-empty and not expired, and
+    renders up to three sections (loan schedule, compound interest projection, budget
+    breakdown). For authenticated users, it fetches live
+    data from \texttt{DashboardDAO}, \texttt{RecurringExpenseDAO}, and
+    \texttt{ForecastDAO} and renders four sections (wallet balances, YTD summary,
+    recurring expenses, and the forecast projection).
+
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

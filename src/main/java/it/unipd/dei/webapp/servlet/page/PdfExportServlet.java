@@ -2,6 +2,7 @@ package it.unipd.dei.webapp.servlet.page;
 
 import it.unipd.dei.webapp.dao.ReportSessionDAO;
 import it.unipd.dei.webapp.model.ReportSession;
+import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.service.PdfReportService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -40,7 +41,6 @@ public class PdfExportServlet extends HttpServlet {
         if (tokenParam != null && !tokenParam.isBlank()) {
             try
             {
-
                 UUID requestedToken = UUID.fromString(tokenParam);
 
                 UUID ownerToken = null;
@@ -57,11 +57,11 @@ public class PdfExportServlet extends HttpServlet {
                 }
 
 
-                byte[] pdfBytes = reportService.generateGuestPdf(requestedToken);
+                byte[] guestPdf = reportService.generateGuestPdf(requestedToken);
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=\"fintrack-report.pdf\"");
-                response.setContentLength(pdfBytes.length);
-                response.getOutputStream().write(pdfBytes);
+                response.setContentLength(guestPdf.length);
+                response.getOutputStream().write(guestPdf);
 
 
             }
@@ -76,16 +76,36 @@ public class PdfExportServlet extends HttpServlet {
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Database error during PDF export", e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
-
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Unexpected error during PDF export", e);
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
         }
         else if (authUser != null)
         {
-            //Not implemented Authenticated method
-            response.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Authenticated export feature is not yet implemented.");
+            try
+            {
+                User user = (User) authUser;
+                UUID userId = user.getId();
+                byte[] userPdf = reportService.generateAuthenticatedPdf(userId);
+
+                response.setContentType("application/pdf");
+                response.setHeader("Content-Disposition", "attachment; filename=\"fintrack-dashboard.pdf\"");
+                response.setContentLength(userPdf.length);
+                response.getOutputStream().write(userPdf);
+
+            }
+            catch (IllegalArgumentException e)
+            {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+
+            } catch (IllegalStateException e)
+            {
+                logger.log(Level.SEVERE, "Unexpected error during authenticated PDF export", e);
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating PDF.");
+
+            } catch (SQLException e)
+            {
+                logger.log(Level.SEVERE, "Database error during authenticated PDF export", e);
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQL Error.");
+            }
 
         }
         else
