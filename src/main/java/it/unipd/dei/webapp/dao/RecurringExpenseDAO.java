@@ -2,15 +2,13 @@ package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.Periodicity;
 import it.unipd.dei.webapp.model.RecurringExpense;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RecurringExpenseDAO {
+public class RecurringExpenseDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_SQL =
             "INSERT INTO recurring_expenses (wallet_id, label, amount, periodicity, next_due) " +
@@ -52,7 +50,7 @@ public class RecurringExpenseDAO {
                                     final Periodicity periodicity,
                                     final LocalDate nextDue) throws SQLException {
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
 
             statement.setObject(1, walletId);
@@ -74,7 +72,7 @@ public class RecurringExpenseDAO {
     public List<RecurringExpense> findByWalletId(final UUID walletId) throws SQLException {
         List<RecurringExpense> list = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_WALLET_ID_SQL)) {
 
             statement.setObject(1, walletId);
@@ -92,7 +90,7 @@ public class RecurringExpenseDAO {
     public List<RecurringExpense> findByUserId(final UUID userId) throws SQLException {
         List<RecurringExpense> list = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
 
             statement.setObject(1, userId);
@@ -108,7 +106,7 @@ public class RecurringExpenseDAO {
     }
 
     public RecurringExpense findById(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -129,7 +127,7 @@ public class RecurringExpenseDAO {
                                     final Periodicity periodicity,
                                     final LocalDate nextDue) throws SQLException {
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
 
             statement.setString(1, label);
@@ -149,7 +147,7 @@ public class RecurringExpenseDAO {
     }
 
     public RecurringExpense toggleActive(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(TOGGLE_ACTIVE_SQL)) {
 
             statement.setObject(1, id);
@@ -165,7 +163,7 @@ public class RecurringExpenseDAO {
     }
 
     public boolean setActive(final UUID id, final boolean active) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(SET_ACTIVE_SQL)) {
 
             statement.setBoolean(1, active);
@@ -175,7 +173,7 @@ public class RecurringExpenseDAO {
     }
 
     public boolean delete(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
 
             statement.setObject(1, id);

@@ -5,7 +5,7 @@ import it.unipd.dei.webapp.model.Wallet;
 import it.unipd.dei.webapp.service.WalletService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "WalletListServlet", value = "/wallets")
-public class WalletListServlet extends HttpServlet {
+public class WalletListServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(WalletListServlet.class.getName());
 

@@ -2,15 +2,13 @@ package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.model.UserRole;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class UserDAO {
+public class UserDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_USER_SQL =
             "INSERT INTO users (name, surname, email, password_hash, role) " +
@@ -26,7 +24,7 @@ public class UserDAO {
                     "FROM users WHERE id = ?";
 
     public User createUser(final User user) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER_SQL)) {
 
             statement.setString(1, user.getName());
@@ -46,7 +44,7 @@ public class UserDAO {
     }
 
     public User findByEmail(final String email) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_SQL)) {
 
             statement.setString(1, email);
@@ -62,7 +60,7 @@ public class UserDAO {
     }
 
     public User findById(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             statement.setObject(1, id);

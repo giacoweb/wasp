@@ -1,8 +1,6 @@
 package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.ReportSession;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ReportSessionDAO {
+public class ReportSessionDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_REPORT_SESSION_SQL =
             "INSERT INTO report_sessions (session_token, report_json, expires_at) " +
@@ -30,7 +28,7 @@ public class ReportSessionDAO {
     public ReportSession createReportSession(final UUID sessionToken,
                                              final String reportJson,
                                              final LocalDateTime expiresAt) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_REPORT_SESSION_SQL)) {
 
             statement.setObject(1, sessionToken);
@@ -48,7 +46,7 @@ public class ReportSessionDAO {
     }
 
     public ReportSession findBySessionToken(final UUID sessionToken) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_SESSION_TOKEN_SQL)) {
 
             statement.setObject(1, sessionToken);
@@ -64,7 +62,7 @@ public class ReportSessionDAO {
     }
 
     public void updateReportSessionJson(UUID token, String json) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_REPORT_JSON_SQL)) {
 
             statement.setObject(1,json);

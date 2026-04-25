@@ -2,14 +2,14 @@ package it.unipd.dei.webapp.servlet.page;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 @WebServlet(name = "HomeServlet", value = "/")
-public class HomeServlet extends HttpServlet {
+public class HomeServlet extends AbstractPageServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

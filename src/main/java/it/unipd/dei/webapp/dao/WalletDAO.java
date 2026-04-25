@@ -2,8 +2,6 @@ package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.Wallet;
 import it.unipd.dei.webapp.model.WalletType;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class WalletDAO {
+public class WalletDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_WALLET_SQL =
             "INSERT INTO wallets (user_id, name, type, currency) " +
@@ -43,7 +41,7 @@ public class WalletDAO {
                          final WalletType type,
                          final String currency) throws SQLException {
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_WALLET_SQL)) {
 
             statement.setObject(1, userId);
@@ -64,7 +62,7 @@ public class WalletDAO {
     public List<Wallet> findByUserId(final UUID userId) throws SQLException {
         List<Wallet> wallets = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
 
             statement.setObject(1, userId);
@@ -80,7 +78,7 @@ public class WalletDAO {
     }
 
     public Wallet findById(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -96,7 +94,7 @@ public class WalletDAO {
     }
 
     public boolean delete(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -106,7 +104,7 @@ public class WalletDAO {
 
     public Wallet update(final Wallet wallet) throws SQLException {
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_WALLET_SQL)) {
 
             statement.setString(1, wallet.getName());
@@ -125,7 +123,7 @@ public class WalletDAO {
     }
 
     public int countTransactions(final UUID walletId) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(COUNT_TRANSACTIONS_SQL)) {
 
             statement.setObject(1, walletId);

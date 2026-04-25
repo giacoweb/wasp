@@ -5,7 +5,7 @@ import it.unipd.dei.webapp.service.PacPlanService;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "PacCreateServlet", value = "/pac/create")
-public class PacCreateServlet extends HttpServlet {
+public class PacCreateServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(PacCreateServlet.class.getName());
 

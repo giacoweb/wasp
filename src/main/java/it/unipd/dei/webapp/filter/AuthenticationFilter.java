@@ -1,10 +1,8 @@
 package it.unipd.dei.webapp.filter;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +22,7 @@ import java.util.logging.Logger;
         "/portfolio/*",
         "/api/*"
 })
-public class AuthenticationFilter extends HttpFilter implements Filter {
+public class AuthenticationFilter extends AbstractAppFilter {
 
     private static final Logger logger = Logger.getLogger(AuthenticationFilter.class.getName());
 
@@ -34,7 +32,6 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
                             final FilterChain chain) throws IOException, ServletException {
 
         HttpSession session = request.getSession(false);
-
         boolean authenticated = session != null && session.getAttribute("authenticatedUser") != null;
 
         if (!authenticated) {

@@ -3,31 +3,20 @@ package it.unipd.dei.webapp.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ReportSession {
+public class ReportSession extends AbstractResource {
 
-    private UUID id;
     private UUID sessionToken;
     private String reportJson;
     private LocalDateTime expiresAt;
-    private LocalDateTime createdAt;
 
     public ReportSession() {
     }
 
     public ReportSession(UUID id, UUID sessionToken, String reportJson, LocalDateTime expiresAt, LocalDateTime createdAt) {
-        this.id = id;
+        super(id, createdAt);
         this.sessionToken = sessionToken;
         this.reportJson = reportJson;
         this.expiresAt = expiresAt;
-        this.createdAt = createdAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public UUID getSessionToken() {
@@ -54,11 +43,4 @@ public class ReportSession {
         this.expiresAt = expiresAt;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

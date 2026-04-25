@@ -8,7 +8,7 @@ import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractApiServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "ExpenseApiServlet", value = "/api/expenses/*")
-public class ExpenseApiServlet extends HttpServlet {
+public class ExpenseApiServlet extends AbstractApiServlet {
 
     private static final Logger logger = Logger.getLogger(ExpenseApiServlet.class.getName());
 

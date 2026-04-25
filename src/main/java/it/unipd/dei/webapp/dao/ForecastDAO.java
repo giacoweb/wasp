@@ -2,15 +2,13 @@ package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.Forecast;
 import it.unipd.dei.webapp.model.ForecastScenario;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class ForecastDAO {
+public class ForecastDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_SQL =
             "INSERT INTO forecasts (user_id, scenario, projection_json) " +
@@ -23,7 +21,7 @@ public class ForecastDAO {
                     "ORDER BY created_at DESC LIMIT 1";
 
     public Forecast save(final Forecast forecast) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
 
             statement.setObject(1, forecast.getUserId());
@@ -42,7 +40,7 @@ public class ForecastDAO {
 
     public Forecast findLatestByUserAndScenario(final UUID userId,
                                                 final ForecastScenario scenario) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_LATEST_BY_USER_AND_SCENARIO_SQL)) {
 
             statement.setObject(1, userId);

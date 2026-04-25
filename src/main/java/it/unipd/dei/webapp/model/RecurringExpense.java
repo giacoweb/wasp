@@ -5,38 +5,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class RecurringExpense {
+public class RecurringExpense extends AbstractResource {
 
-    private UUID id;
     private UUID walletId;
     private String label;
     private BigDecimal amount;
     private Periodicity periodicity;
     private LocalDate nextDue;
     private boolean active;
-    private LocalDateTime createdAt;
 
     public RecurringExpense() {
     }
 
     public RecurringExpense(UUID id, UUID walletId, String label, BigDecimal amount, Periodicity periodicity,
                             LocalDate nextDue, boolean active, LocalDateTime createdAt) {
-        this.id = id;
+        super(id, createdAt);
         this.walletId = walletId;
         this.label = label;
         this.amount = amount;
         this.periodicity = periodicity;
         this.nextDue = nextDue;
         this.active = active;
-        this.createdAt = createdAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public UUID getWalletId() {
@@ -87,11 +76,4 @@ public class RecurringExpense {
         this.active = active;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

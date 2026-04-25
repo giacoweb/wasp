@@ -3,35 +3,24 @@ package it.unipd.dei.webapp.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class User {
+public class User extends AbstractResource {
 
-    private UUID id;
     private String name;
     private String surname;
     private String email;
     private String passwordHash;
     private UserRole role;
-    private LocalDateTime createdAt;
 
     public User() {
     }
 
     public User(UUID id, String name, String surname, String email, String passwordHash, UserRole role, LocalDateTime createdAt) {
-        this.id = id;
+        super(id, createdAt);
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
-        this.createdAt = createdAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -74,11 +63,4 @@ public class User {
         this.role = role;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

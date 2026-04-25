@@ -5,38 +5,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Transaction {
+public class Transaction extends AbstractResource {
 
-    private UUID id;
     private UUID walletId;
     private TransactionType type;
     private BigDecimal amount;
     private String category;
     private LocalDate transactionDate;
     private String note;
-    private LocalDateTime createdAt;
 
     public Transaction() {
     }
 
     public Transaction(UUID id, UUID walletId, TransactionType type, BigDecimal amount, String category,
                        LocalDate transactionDate, String note, LocalDateTime createdAt) {
-        this.id = id;
+        super(id, createdAt);
         this.walletId = walletId;
         this.type = type;
         this.amount = amount;
         this.category = category;
         this.transactionDate = transactionDate;
         this.note = note;
-        this.createdAt = createdAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public UUID getWalletId() {
@@ -87,11 +76,4 @@ public class Transaction {
         this.note = note;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

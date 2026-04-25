@@ -8,7 +8,7 @@ import it.unipd.dei.webapp.service.CalculatorService;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "ReportCompoundServlet", value = {"/report/compound"})
-public class ReportCompoundServlet extends HttpServlet{
+public class ReportCompoundServlet extends AbstractPageServlet{
 
     private static final Logger logger = Logger.getLogger(ReportCompoundServlet.class.getName());
 
