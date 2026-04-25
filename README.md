@@ -5,6 +5,14 @@ University Project - HW1.
 FinTrack is a server-side web application for personal finance management and investment portfolio tracking, built entirely with Java without frameworks.
 It targets two distinct user groups: authenticated users who persist all their financial data in PostgreSQL, and guest users who can generate one-off financial reports.
 
+## Team Members
+
+- Rajmonda Bardhi
+- Meviola Karriqi
+- Alessandro Perin
+- Smirnov Danil
+- Giacomo Masiero
+
 ## Project Design & Task Management
 
 - [Miro Board - Architecture & Design](https://miro.com/app/board/uXjVGpkBSew=/)
