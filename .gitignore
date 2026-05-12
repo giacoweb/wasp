@@ -16,8 +16,7 @@ target/
 .DS_Store
 Thumbs.db
 
-# Files containing database credentials (never commit)
-src/main/resources/config.properties
+# File containing database credentials (never commit)
 src/main/webapp/META-INF/context.xml
 
 # Legacy report build directory
