@@ -1,60 +1,36 @@
 package it.unipd.dei.webapp.util;
 
-import java.io.IOException;
-import java.io.InputStream;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public final class DBConnection {
 
-    private static final String CONFIG_FILE = "config.properties";
-    private static final Properties properties = new Properties();
+    private static volatile DataSource dataSource;
 
-    static {
-        try (InputStream input = DBConnection.class
-                .getClassLoader()
-                .getResourceAsStream(CONFIG_FILE)) {
-
-            if (input == null) {
-                throw new RuntimeException(CONFIG_FILE + " not found in src/main/resources");
-            }
-
-            properties.load(input);
-
-            String driver = properties.getProperty("db.driver");
-            if (driver == null || driver.isBlank()) {
-                throw new RuntimeException("Missing property: db.driver");
-            }
-
-            Class.forName(driver);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load database configuration", e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Database driver not found", e);
-        }
+    // Package-private: allows tests to inject a DataSource without a JNDI context
+    static void setDataSource(DataSource ds) {
+        dataSource = ds;
     }
 
-    private DBConnection() {
-    }
+    private DBConnection() {}
 
     public static Connection getConnection() throws SQLException {
-        String url = properties.getProperty("db.url");
-        String username = properties.getProperty("db.username");
-        String password = properties.getProperty("db.password");
-
-        if (url == null || url.isBlank()) {
-            throw new RuntimeException("Missing property: db.url");
+        if (dataSource == null) {
+            synchronized (DBConnection.class) {
+                if (dataSource == null) {
+                    try {
+                        dataSource = (DataSource) new InitialContext()
+                                .lookup("java:comp/env/jdbc/fintrack");
+                    } catch (NamingException e) {
+                        throw new RuntimeException(
+                                "Failed to look up JNDI DataSource jdbc/fintrack", e);
+                    }
+                }
+            }
         }
-        if (username == null || username.isBlank()) {
-            throw new RuntimeException("Missing property: db.username");
-        }
-        if (password == null) {
-            throw new RuntimeException("Missing property: db.password");
-        }
-
-        return DriverManager.getConnection(url, username, password);
+        return dataSource.getConnection();
     }
 }
