@@ -3,7 +3,7 @@ package it.unipd.dei.webapp.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Wallet extends AbstractResource {
+public class Wallet extends AbstractResource implements Resource {
 
     private UUID userId;
     private String name;

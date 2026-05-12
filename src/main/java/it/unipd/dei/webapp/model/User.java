@@ -3,7 +3,7 @@ package it.unipd.dei.webapp.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class User extends AbstractResource {
+public class User extends AbstractResource implements Resource {
 
     private String name;
     private String surname;
