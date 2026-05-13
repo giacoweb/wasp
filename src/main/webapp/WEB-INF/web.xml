@@ -7,6 +7,10 @@
 
   <display-name>FinTrack</display-name>
 
+  <listener>
+    <listener-class>it.unipd.dei.webapp.util.DBConnectionContextListener</listener-class>
+  </listener>
+
   <resource-ref>
     <res-ref-name>jdbc/fintrack</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
