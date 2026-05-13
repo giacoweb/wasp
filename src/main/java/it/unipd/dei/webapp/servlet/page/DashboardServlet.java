@@ -5,7 +5,7 @@ import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.service.DashboardService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "DashboardServlet", value = "/dashboard")
-public class DashboardServlet extends HttpServlet {
+public class DashboardServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(DashboardServlet.class.getName());
 

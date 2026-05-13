@@ -3,33 +3,22 @@ package it.unipd.dei.webapp.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Wallet {
+public class Wallet extends AbstractResource implements Resource {
 
-    private UUID id;
     private UUID userId;
     private String name;
     private WalletType type;
     private String currency;
-    private LocalDateTime createdAt;
 
     public Wallet() {
     }
 
     public Wallet(UUID id, UUID userId, String name, WalletType type, String currency, LocalDateTime createdAt) {
-        this.id = id;
+        super(id, createdAt);
         this.userId = userId;
         this.name = name;
         this.type = type;
         this.currency = currency;
-        this.createdAt = createdAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public UUID getUserId() {
@@ -64,11 +53,4 @@ public class Wallet {
         this.currency = currency;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

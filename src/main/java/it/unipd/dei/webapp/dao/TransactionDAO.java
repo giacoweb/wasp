@@ -2,8 +2,6 @@ package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.Transaction;
 import it.unipd.dei.webapp.model.TransactionType;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TransactionDAO {
+public class TransactionDAO extends AbstractDAO implements DAO {
 
     private static final String INSERT_TRANSACTION_SQL =
             "INSERT INTO transactions (wallet_id, type, amount, category, transaction_date, note) " +
@@ -51,7 +49,7 @@ public class TransactionDAO {
                                final LocalDate transactionDate,
                                final String note) throws SQLException {
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_TRANSACTION_SQL)) {
 
             statement.setObject(1, walletId);
@@ -74,7 +72,7 @@ public class TransactionDAO {
     public List<Transaction> findByWalletId(final UUID walletId) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_WALLET_ID_SQL)) {
 
             statement.setObject(1, walletId);
@@ -92,7 +90,7 @@ public class TransactionDAO {
     public List<Transaction> findByUserId(final UUID userId) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
 
             statement.setObject(1, userId);
@@ -108,7 +106,7 @@ public class TransactionDAO {
     }
 
     public Transaction findById(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -124,7 +122,7 @@ public class TransactionDAO {
     }
 
     public Transaction update(final Transaction transaction) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
 
             statement.setString(1, transaction.getType().name());
@@ -145,7 +143,7 @@ public class TransactionDAO {
     }
 
     public boolean delete(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -179,7 +177,7 @@ public class TransactionDAO {
 
         List<Transaction> transactions = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.toString())) {
 
             int paramIndex = 1;

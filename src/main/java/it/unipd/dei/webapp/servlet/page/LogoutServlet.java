@@ -1,7 +1,7 @@
 package it.unipd.dei.webapp.servlet.page;
 
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "LogoutServlet", value = "/auth/logout")
-public class LogoutServlet extends HttpServlet {
+public class LogoutServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(LogoutServlet.class.getName());
 

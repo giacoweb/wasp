@@ -7,7 +7,7 @@ import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.util.AuthenticationSessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "RegisterServlet", value = {"/register", "/auth/register"})
-public class RegisterServlet extends HttpServlet {
+public class RegisterServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(RegisterServlet.class.getName());
 

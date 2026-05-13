@@ -3,8 +3,6 @@ package it.unipd.dei.webapp.dao;
 import it.unipd.dei.webapp.model.DashboardStats;
 import it.unipd.dei.webapp.model.WalletSummary;
 import it.unipd.dei.webapp.model.WalletType;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DashboardDAO {
+public class DashboardDAO extends AbstractDAO implements DAO {
 
     private static final String WALLET_SUMMARIES_BY_USER_SQL =
             "SELECT w.id AS wallet_id, w.name AS wallet_name, w.type AS wallet_type, " +
@@ -50,7 +48,7 @@ public class DashboardDAO {
     public List<WalletSummary> getWalletSummariesByUserId(final UUID userId) throws SQLException {
         List<WalletSummary> summaries = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(WALLET_SUMMARIES_BY_USER_SQL)) {
 
             statement.setObject(1, userId);
@@ -68,7 +66,7 @@ public class DashboardDAO {
     public List<DashboardStats> getUserDashboardStatsByCurrency(final UUID userId) throws SQLException {
         List<DashboardStats> stats = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DASHBOARD_STATS_BY_USER_AND_CURRENCY_SQL)) {
 
             statement.setObject(1, userId);

@@ -138,7 +138,7 @@ wa2526-wasp/
 Copy the template and fill in your credentials:
 
 ```bash
-cp src/main/resources/config.properties.example src/main/resources/config.properties
+cp src/main/webapp/META-INF/context.xml.example src/main/webapp/META-INF/context.xml
 ```
 
 ### 2. Create the schema
@@ -203,7 +203,7 @@ Responsible for centralizing access control before requests reach servlets.
 
 ### Utility Layer
 
-- `DBConnection` — centralized database connection management via `config.properties`
+- `DBConnection` — centralized database connection management via JNDI DataSource
 - `PasswordUtil` — PBKDF2 password hashing and verification (pure Java, no external libraries)
 
 ## Route Protection

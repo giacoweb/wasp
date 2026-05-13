@@ -4,7 +4,7 @@ import it.unipd.dei.webapp.dao.ReportSessionDAO;
 import it.unipd.dei.webapp.model.ReportSession;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "GuestReportServlet", value = "/guest/report")
-public class GuestReportServlet extends HttpServlet {
+public class GuestReportServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(GuestReportServlet.class.getName());
 

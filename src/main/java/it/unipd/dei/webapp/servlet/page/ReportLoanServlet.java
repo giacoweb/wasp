@@ -6,7 +6,7 @@ import it.unipd.dei.webapp.model.ReportSession;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import it.unipd.dei.webapp.service.CalculatorService;
@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "ReportLoanServlet", value = {"/report/loan"})
-public class ReportLoanServlet extends HttpServlet{
+public class ReportLoanServlet extends AbstractPageServlet{
 
     private static final Logger logger = Logger.getLogger(ReportLoanServlet.class.getName());
 

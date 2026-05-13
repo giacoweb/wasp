@@ -7,7 +7,7 @@ import it.unipd.dei.webapp.service.ForecastService;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractApiServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "ForecastApiServlet", value = "/api/forecast")
-public class ForecastApiServlet extends HttpServlet {
+public class ForecastApiServlet extends AbstractApiServlet {
 
     private static final Logger logger = Logger.getLogger(ForecastApiServlet.class.getName());
 

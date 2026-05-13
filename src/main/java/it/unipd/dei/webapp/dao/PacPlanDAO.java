@@ -1,8 +1,6 @@
 package it.unipd.dei.webapp.dao;
 
 import it.unipd.dei.webapp.model.PacPlan;
-import it.unipd.dei.webapp.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PacPlanDAO {
+public class PacPlanDAO extends AbstractDAO implements DAO {
 
     private static final String FIND_BY_USER_ID_SQL =
             "SELECT id, user_id, asset_name, monthly_amount, target_amount, start_date, active, created_at " +
@@ -42,7 +40,7 @@ public class PacPlanDAO {
     public List<PacPlan> findByUserId(final UUID userId) throws SQLException {
         List<PacPlan> plans = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
 
             statement.setObject(1, userId);
@@ -58,7 +56,7 @@ public class PacPlanDAO {
     }
 
     public PacPlan findById(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             statement.setObject(1, id);
@@ -76,7 +74,7 @@ public class PacPlanDAO {
     public List<PacPlan> findActiveByUserId(final UUID userId) throws SQLException {
         List<PacPlan> plans = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ACTIVE_BY_USER_ID_SQL)) {
 
             statement.setObject(1, userId);
@@ -92,7 +90,7 @@ public class PacPlanDAO {
     }
 
     public PacPlan create(final PacPlan plan) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
 
             statement.setObject(1, plan.getUserId());
@@ -112,7 +110,7 @@ public class PacPlanDAO {
     }
 
     public PacPlan update(final PacPlan plan) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
 
             statement.setString(1, plan.getAssetName());
@@ -133,7 +131,7 @@ public class PacPlanDAO {
     }
 
     public boolean delete(final UUID id) throws SQLException {
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
 
             statement.setObject(1, id);

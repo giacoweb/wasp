@@ -7,7 +7,7 @@ import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
 import it.unipd.dei.webapp.service.exception.WalletNotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
+import it.unipd.dei.webapp.servlet.AbstractPageServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet(name = "WalletDeleteServlet", value = "/wallets/delete")
-public class WalletDeleteServlet extends HttpServlet {
+public class WalletDeleteServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(WalletDeleteServlet.class.getName());
 
