@@ -133,29 +133,50 @@ wa2526-wasp/
 
 ## How to Run
 
-### 1. Configure the database
+### Option A — Docker (recommended)
 
-Copy the template and fill in your credentials:
-
-```bash
-cp src/main/webapp/META-INF/context.xml.example src/main/webapp/META-INF/context.xml
-```
-
-### 2. Create the schema
+Requires Docker and Docker Compose.
 
 ```bash
-psql -U your_username -d your_database -f db/init.sql
+docker compose up --build
 ```
 
-### 3. Build and deploy
+This starts two services:
 
-```bash
-mvn clean package
-```
+- `db` — PostgreSQL 16, initialized from `db/init.sql` on first run, data persisted in the `pgdata` named volume.
+- `app` — Tomcat 11 serving the WAR at the ROOT context.
 
-Deploy `target/FinTrack.war` to Tomcat 11.
+App available at <http://localhost:8080/>. Stop with `Ctrl+C`; `docker compose down -v` wipes the database volume.
 
-### 4. Verify
+Docker-specific configuration lives in:
+
+- `Dockerfile` — multi-stage Maven build → Tomcat runtime, with the Postgres JDBC driver placed on Tomcat's common classpath (required for container-managed JNDI).
+- `docker-compose.yml` — service orchestration and DB healthcheck.
+- `docker/context.xml` — Tomcat per-host context descriptor; credentials match the `db` service.
+
+### Option B — Bare-metal Tomcat
+
+1. **Configure the DataSource:**
+
+   ```bash
+   cp src/main/webapp/META-INF/context.xml.example src/main/webapp/META-INF/context.xml
+   ```
+
+2. **Create the schema:**
+
+   ```bash
+   psql -U your_username -d your_database -f db/init.sql
+   ```
+
+3. **Build and deploy:**
+
+   ```bash
+   mvn clean package
+   ```
+
+   Deploy `target/FinTrack.war` to Tomcat 11. Make sure the Postgres JDBC driver is in `$CATALINA_HOME/lib/`.
+
+### Verify
 
 - `/login` — authentication page
 
