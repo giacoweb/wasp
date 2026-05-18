@@ -1,0 +1,138 @@
+/* =====================================================
+   Container
+   ===================================================== */
+
+.container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+.container--narrow { max-width: 720px; }
+.container--wide   { max-width: 1280px; }
+
+/* =====================================================
+   Site header & footer
+   ===================================================== */
+
+.site-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-4) var(--space-6);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+.site-header__nav { display: flex; gap: var(--space-2); }
+
+.brand {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+    text-decoration: none;
+}
+.brand:hover { text-decoration: none; }
+.brand svg { color: var(--color-primary); }
+
+.site-footer {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-6);
+    text-align: center;
+}
+.site-footer p {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* =====================================================
+   Hero
+   ===================================================== */
+
+.hero {
+    text-align: center;
+    padding: var(--space-12) var(--space-6) var(--space-10);
+}
+.hero h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0 0 var(--space-4);
+}
+.hero__lead {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0 0 var(--space-6);
+}
+.hero__actions {
+    display: inline-flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* =====================================================
+   Eyebrow chip (small badge above an H1)
+   ===================================================== */
+
+.eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: var(--space-4);
+    padding: 4px 12px;
+    background: var(--color-primary-tint);
+    color: var(--color-primary);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+}
+.eyebrow svg { width: 14px; height: 14px; }
+
+/* =====================================================
+   Feature card pattern
+   ===================================================== */
+
+.feature-icon {
+    width: 48px; height: 48px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--color-primary-tint);
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
+}
+
+.feature-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0 0 var(--space-1);
+}
+.feature-desc {
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+/* =====================================================
+   Grids
+   ===================================================== */
+
+.grid { display: grid; gap: var(--space-6); }
+.grid--auto-fit { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* =====================================================
+   Section spacing
+   ===================================================== */
+
+.section         { padding: var(--space-10) 0; }
+.section--tight  { padding: var(--space-6) 0; }
+.section--loose  { padding: var(--space-12) 0; }
+
+/* =====================================================
+   Small-screen tweaks
+   ===================================================== */
+
+@media (max-width: 640px) {
+    .site-header { padding: var(--space-3) var(--space-4); }
+    .container   { padding: 0 var(--space-4); }
+    .hero        { padding: var(--space-8) var(--space-4); }
+    .grid--3, .grid--4 { grid-template-columns: 1fr; }
+}
