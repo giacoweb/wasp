@@ -12,6 +12,9 @@ target/
 .classpath
 .settings/
 
+#Password
+.env
+
 # Windows and Mac junk files
 .DS_Store
 Thumbs.db

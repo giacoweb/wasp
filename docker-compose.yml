@@ -2,16 +2,16 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: fintrack_db
-      POSTGRES_USER: fintrack
-      POSTGRES_PASSWORD: fintrack_dev
+      POSTGRES_DB: ${POSTGRES_DB:-fintrack_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fintrack}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fintrack -d fintrack_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fintrack} -d ${POSTGRES_DB:-fintrack_db}"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -20,6 +20,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fintrack_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fintrack}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JAVA_OPTS: "-Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource"
     depends_on:
       db:
         condition: service_healthy
