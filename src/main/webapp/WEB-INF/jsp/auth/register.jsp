@@ -1,42 +1,98 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
+<%
+    String errorMessage = (String) request.getAttribute("errorMessage");
+    String ctxPath = request.getContextPath();
+%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Register</title>
-    </head>
-    <body>
-        <h1>Register</h1>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create account &middot; FinTrack</title>
 
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-        <p style="color: red;"><%= HtmlUtil.escape(errorMessage) %></p>
-        <%
-            }
-        %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-        <form action="<%= request.getContextPath() %>/auth/register" method="post">
-            <label>Name:</label><br>
-            <input type="text" name="name" value="<%= HtmlUtil.escape(request.getAttribute("name")) %>"><br><br>
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forms.css">
+</head>
+<body>
 
-            <label>Surname:</label><br>
-            <input type="text" name="surname" value="<%= HtmlUtil.escape(request.getAttribute("surname")) %>"><br><br>
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
 
-            <label>Email:</label><br>
-            <input type="email" name="email" value="<%= HtmlUtil.escape(request.getAttribute("email")) %>"><br><br>
+    <div class="card" style="width: 100%; max-width: 460px;">
 
-            <label>Password:</label><br>
-            <input type="password" name="password"><br><br>
-            <small>Password must contain at least 8 characters, one digit, and one special character.</small><br><br>
+        <header style="margin-bottom: 1.5rem;">
+            <h1 style="font-size: 2rem; margin: 0 0 0.5rem;">Create your account</h1>
+            <p class="muted" style="margin: 0;">Start tracking in under a minute.</p>
+        </header>
 
-            <button type="submit">Register</button>
+        <% if (errorMessage != null) { %>
+            <div class="alert alert-error" role="alert" style="margin-bottom: 1rem;">
+                <%= HtmlUtil.escape(errorMessage) %>
+            </div>
+        <% } %>
+
+        <form id="register-form" class="form"
+              action="<%= ctxPath %>/auth/register" method="post" novalidate>
+
+            <div class="form-grid-2">
+                <div class="form-field">
+                    <label class="form-label form-required" for="register-name">Name</label>
+                    <input class="form-input" id="register-name" type="text" name="name"
+                           required maxlength="100"
+                           value="<%= HtmlUtil.escape(request.getAttribute("name")) %>"
+                           autocomplete="given-name">
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-field">
+                    <label class="form-label form-required" for="register-surname">Surname</label>
+                    <input class="form-input" id="register-surname" type="text" name="surname"
+                           required maxlength="100"
+                           value="<%= HtmlUtil.escape(request.getAttribute("surname")) %>"
+                           autocomplete="family-name">
+                    <span class="form-error"></span>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label class="form-label form-required" for="register-email">Email</label>
+                <input class="form-input" id="register-email" type="email" name="email"
+                       required maxlength="255"
+                       value="<%= HtmlUtil.escape(request.getAttribute("email")) %>"
+                       placeholder="you@email.com"
+                       autocomplete="email">
+                <span class="form-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label class="form-label form-required" for="register-password">Password</label>
+                <input class="form-input" id="register-password" type="password" name="password"
+                       required minlength="8"
+                       autocomplete="new-password">
+                <span class="form-help">
+                    At least 8 characters, including one digit and one special character.
+                </span>
+                <span class="form-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Create account</button>
         </form>
 
-        <p>
+        <p class="muted" style="text-align: center; margin: 1.5rem 0 0;">
             Already have an account?
-            <a href="<%= request.getContextPath() %>/login">Login</a>
+            <a href="<%= ctxPath %>/login">Log in</a>
         </p>
-    </body>
+    </div>
+
+</main>
+
+<script src="<%= ctxPath %>/static/js/auth.js"></script>
+
+</body>
 </html>
