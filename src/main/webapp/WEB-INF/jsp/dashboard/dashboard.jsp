@@ -9,6 +9,7 @@
     User user = (User) session.getAttribute("authenticatedUser");
     DashboardSummary summary = (DashboardSummary) request.getAttribute("summary");
     String errorMessage = (String) request.getAttribute("errorMessage");
+    String ctxPath = request.getContextPath();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,77 +18,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinTrack - Dashboard</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Design System CSS -->
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/tables.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/forms.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/layout.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tables.css">
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forms.css">
 
-    <style>
-        /* App Shell specific to dashboard */
-        .app-shell { display: flex; min-height: 100vh; }
-        .app-sidebar { 
-            width: 260px; 
-            border-right: 1px solid var(--color-border); 
-            background: var(--color-surface); 
-            padding: var(--space-6) var(--space-4); 
-            display: flex; 
-            flex-direction: column; 
-            position: fixed;
-            top: 0; bottom: 0; left: 0;
-        }
-        .app-main { 
-            flex: 1; 
-            padding: var(--space-8); 
-            background: var(--color-bg); 
-            margin-left: 260px; /* offset for fixed sidebar */
-            min-height: 100vh;
-        }
-        .nav-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-1); }
-        .nav-item { 
-            display: flex; align-items: center; gap: var(--space-3); 
-            padding: var(--space-2) var(--space-3); 
-            border-radius: var(--radius-md); 
-            color: var(--color-text-muted); 
-            font-weight: 500; 
-            text-decoration: none; 
-            transition: background var(--transition); 
-        }
-        .nav-item:hover, .nav-item.active { 
-            background: var(--color-primary-tint); 
-            color: var(--color-primary); 
-        }
-        
-        .user-profile {
-            display: flex; align-items: center; gap: var(--space-3);
-            padding-top: var(--space-4);
-            border-top: 1px solid var(--color-border);
-            margin-top: auto;
-        }
-        .user-avatar {
-            width: 36px; height: 36px;
-            background: var(--color-primary);
-            color: white;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600;
-            font-size: var(--font-size-sm);
-        }
-        .user-info { display: flex; flex-direction: column; }
-        .user-name { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text); }
-        .user-email { font-size: var(--font-size-xs); color: var(--color-text-muted); }
-        
-        /* Utility for the header logo */
-        .brand-logo {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 24px; height: 24px;
-            background: var(--color-primary); color: white;
-            border-radius: 4px;
-            font-size: 14px; font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="<%= ctxPath %>/static/css/dashboard.css">
 </head>
 <body>
 
@@ -95,31 +38,59 @@
     
     <!-- Sidebar -->
     <aside class="app-sidebar">
-        <a href="<%= request.getContextPath() %>/dashboard" class="brand">
+        <a href="<%= ctxPath %>/dashboard" class="brand">
             <span class="brand-logo">▲</span> FinTrack
         </a>
         
         <nav style="margin-top: var(--space-8);">
             <ul class="nav-menu">
-                <li><a href="<%= request.getContextPath() %>/dashboard" class="nav-item active">Dashboard</a></li>
-                <li><a href="<%= request.getContextPath() %>/wallets" class="nav-item">Wallets</a></li>
-                <!-- We don't have a transactions page yet, this is a placeholder link -->
-                <li><a href="#" class="nav-item">Transactions</a></li>
-                <li><a href="<%= request.getContextPath() %>/pac" class="nav-item">PAC Plans</a></li>
-                <li><a href="<%= request.getContextPath() %>/expenses" class="nav-item">Recurring Exp.</a></li>
-                <li><a href="<%= request.getContextPath() %>/report/export" class="nav-item">Forecast / Reports</a></li>
+                <li>
+                    <a href="<%= ctxPath %>/dashboard" class="nav-item active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="<%= ctxPath %>/wallets" class="nav-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                        Wallets
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+                        Transactions
+                    </a>
+                </li>
+                <li>
+                    <a href="<%= ctxPath %>/pac" class="nav-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                        PAC Plans
+                    </a>
+                </li>
+                <li>
+                    <a href="<%= ctxPath %>/expenses" class="nav-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        Recurring Exp.
+                    </a>
+                </li>
+                <li>
+                    <a href="<%= ctxPath %>/report/export" class="nav-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                        Forecast / Reports
+                    </a>
+                </li>
             </ul>
         </nav>
         
         <div class="user-profile">
-            <div class="user-avatar"><%= user.getName().substring(0, 1).toUpperCase() %></div>
+            <div class="user-avatar"><%= user.getName() != null && !user.getName().isEmpty() ? user.getName().substring(0, 1).toUpperCase() : "U" %></div>
             <div class="user-info">
                 <span class="user-name"><%= HtmlUtil.escape(user.getName()) %> <%= HtmlUtil.escape(user.getSurname()) %></span>
                 <span class="user-email"><%= HtmlUtil.escape(user.getEmail()) %></span>
             </div>
             
-            <!-- Minimal Logout Button -->
-            <form action="<%= request.getContextPath() %>/auth/logout" method="post" style="margin-left: auto;">
+            <form action="<%= ctxPath %>/auth/logout" method="post" style="margin-left: auto;">
                 <button type="submit" class="btn btn-icon btn-ghost" title="Logout" style="width: 24px; height: 24px;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
                 </button>
@@ -146,30 +117,26 @@
             <div class="grid grid--3">
                 <% 
                     List<DashboardStats> statsList = summary.getStatsByCurrency();
-                    DashboardStats primaryStats = null;
                     if (statsList != null && !statsList.isEmpty()) {
-                        primaryStats = statsList.get(0); // Take the first currency for the main KPIs
-                    }
+                        for (DashboardStats stats : statsList) {
                 %>
-                
-                <% if (primaryStats != null) { %>
                     <!-- Total Equity -->
                     <div class="card">
-                        <div class="card-subtitle">Total Equity</div>
+                        <div class="card-subtitle">Total Equity (<%= HtmlUtil.escape(stats.currency()) %>)</div>
                         <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
-                            <%= HtmlUtil.escape(primaryStats.currency()) %> <%= primaryStats.totalEquity() %>
+                            <%= HtmlUtil.escape(stats.currency()) %> <%= String.format("%,.2f", stats.totalEquity()) %>
                         </div>
                         <span class="badge badge-income">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M5 12l5 5L20 7"/></svg>
                             Up to date
                         </span>
                     </div>
 
                     <!-- YTD Expenses -->
                     <div class="card">
-                        <div class="card-subtitle">YTD Expenses</div>
+                        <div class="card-subtitle">YTD Expenses (<%= HtmlUtil.escape(stats.currency()) %>)</div>
                         <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
-                            <%= HtmlUtil.escape(primaryStats.currency()) %> <%= primaryStats.ytdExpenses() %>
+                            <%= HtmlUtil.escape(stats.currency()) %> <%= String.format("%,.2f", stats.ytdExpenses()) %>
                         </div>
                         <span class="badge badge-expense">
                             YTD
@@ -178,15 +145,18 @@
 
                     <!-- YTD Savings -->
                     <div class="card">
-                        <div class="card-subtitle">YTD Savings</div>
+                        <div class="card-subtitle">YTD Savings (<%= HtmlUtil.escape(stats.currency()) %>)</div>
                         <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
-                            <%= HtmlUtil.escape(primaryStats.currency()) %> <%= primaryStats.ytdSavings() %>
+                            <%= HtmlUtil.escape(stats.currency()) %> <%= String.format("%,.2f", stats.ytdSavings()) %>
                         </div>
                         <span class="badge badge-income">
                             YTD
                         </span>
                     </div>
-                <% } else { %>
+                <% 
+                        }
+                    } else { 
+                %>
                     <div class="card"><p class="muted" style="margin:0;">No financial data yet.</p></div>
                 <% } %>
             </div>
@@ -194,7 +164,7 @@
             <!-- Wallets Section -->
             <div class="card-header" style="margin-top: var(--space-10);">
                 <h2 class="card-title">Your wallets</h2>
-                <a href="<%= request.getContextPath() %>/wallets" class="btn btn-primary">+ New wallet</a>
+                <a href="<%= ctxPath %>/wallets" class="btn btn-primary">+ New wallet</a>
             </div>
 
             <div class="grid grid--3">
@@ -203,24 +173,25 @@
                     if (wallets != null && !wallets.isEmpty()) {
                         for (WalletSummary wallet : wallets) { 
                             String badgeClass = "badge-primary";
+                            String typeLabel = wallet.getType().name();
                             switch (wallet.getType().name()) {
-                                case "CASH": badgeClass = "badge-wallet-cash"; break;
-                                case "BANK": badgeClass = "badge-wallet-bank"; break;
-                                case "CREDIT_CARD": badgeClass = "badge-wallet-credit-card"; break;
-                                case "INVESTMENT": badgeClass = "badge-wallet-investment"; break;
+                                case "CASH": badgeClass = "badge-wallet-cash"; typeLabel = "Cash"; break;
+                                case "BANK": badgeClass = "badge-wallet-bank"; typeLabel = "Bank"; break;
+                                case "CREDIT_CARD": badgeClass = "badge-wallet-credit-card"; typeLabel = "Credit Card"; break;
+                                case "INVESTMENT": badgeClass = "badge-wallet-investment"; typeLabel = "Investment"; break;
                             }
                 %>
                     <div class="card">
                         <div style="margin-bottom: var(--space-2);">
-                            <span class="badge <%= badgeClass %>"><%= wallet.getType().name() %></span>
+                            <span class="badge <%= badgeClass %>"><%= typeLabel %></span>
                             <span class="muted" style="font-size: var(--font-size-xs); margin-left: 4px;"><%= HtmlUtil.escape(wallet.getCurrency()) %></span>
                         </div>
                         <div class="card-title" style="font-size: var(--font-size-base);"><%= HtmlUtil.escape(wallet.getName()) %></div>
                         <div class="card-title" style="font-size: var(--font-size-xl); margin-top: var(--space-2);">
                             <% if (wallet.getBalance().signum() < 0) { %>
-                                <span class="amount-negative"><%= wallet.getBalance() %></span>
+                                <span class="amount-negative" style="color: var(--color-danger);"><%= String.format("%,.2f", wallet.getBalance()) %></span>
                             <% } else { %>
-                                <%= wallet.getBalance() %>
+                                <%= String.format("%,.2f", wallet.getBalance()) %>
                             <% } %>
                         </div>
                     </div>
