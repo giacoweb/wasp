@@ -50,7 +50,7 @@
             </div>
         <% } %>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-8);">
             <h1 style="margin: 0;">Hi, <%= HtmlUtil.escape(user.getName()) %> 👋</h1>
             <a href="<%= ctxPath %>/report/export" class="btn btn-ghost" style="gap:var(--space-2);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>

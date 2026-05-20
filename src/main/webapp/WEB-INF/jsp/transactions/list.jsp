@@ -45,7 +45,7 @@
             <a href="<%= ctxPath %>/dashboard">FinTrack</a> / <span>Transactions</span>
         </nav>
 
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--space-6);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-3); margin-bottom:var(--space-6);">
             <div>
                 <h1 style="margin:0 0 var(--space-1);">Transactions</h1>
                 <p class="muted" style="margin:0;">Track and manage your financial activity.</p>
