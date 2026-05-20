@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-item">
+                    <a href="<%= ctxPath %>/transactions" class="nav-item">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
                         Transactions
                     </a>
@@ -207,7 +207,7 @@
             <!-- Recent Transactions Section -->
             <div class="card-header" style="margin-top: var(--space-10);">
                 <h2 class="card-title">Recent transactions</h2>
-                <a href="#" class="btn btn-link">View all &rarr;</a>
+                <a href="<%= ctxPath %>/transactions" class="btn btn-link">View all &rarr;</a>
             </div>
 
             <div class="table-wrapper">
@@ -220,13 +220,8 @@
                             <th class="num">Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Placeholder row because backend doesn't provide transactions yet -->
-                        <tr>
-                            <td colspan="4" class="table-empty">
-                                No recent transactions to display (Backend integration pending).
-                            </td>
-                        </tr>
+                    <tbody id="recent-tx-body">
+                        <tr><td colspan="4" class="table-empty">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -234,6 +229,18 @@
         <% } %>
     </main>
 </div>
+
+<script>
+window.CTX_PATH = "<%= ctxPath %>";
+window.WALLET_IDS = [
+    <% if (summary != null && summary.getWallets() != null) {
+        List<WalletSummary> ws = summary.getWallets();
+        for (int i = 0; i < ws.size(); i++) { %>
+    { id: "<%= ws.get(i).getId() %>", name: "<%= HtmlUtil.escape(ws.get(i).getName()) %>" }<%= i < ws.size() - 1 ? "," : "" %>
+    <% } } %>
+];
+</script>
+<script src="<%= ctxPath %>/static/js/dashboard.js"></script>
 
 </body>
 </html>
