@@ -77,7 +77,7 @@
                 <li>
                     <a href="<%= ctxPath %>/report/export" class="nav-item">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                        Forecast / Reports
+                        Forecast
                     </a>
                 </li>
             </ul>
@@ -109,6 +109,10 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
             <h1 style="margin: 0;">Hi, <%= HtmlUtil.escape(user.getName()) %> 👋</h1>
+            <a href="<%= ctxPath %>/report/export" class="btn btn-ghost" style="gap:var(--space-2);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download report
+            </a>
         </div>
 
         <% if (summary != null) { %>
@@ -171,7 +175,7 @@
                 <% 
                     List<WalletSummary> wallets = summary.getWallets();
                     if (wallets != null && !wallets.isEmpty()) {
-                        for (WalletSummary wallet : wallets) { 
+                        for (WalletSummary wallet : wallets) {
                             String badgeClass = "badge-primary";
                             String typeLabel = wallet.getType().name();
                             switch (wallet.getType().name()) {
@@ -189,7 +193,7 @@
                         <div class="card-title" style="font-size: var(--font-size-base);"><%= HtmlUtil.escape(wallet.getName()) %></div>
                         <div class="card-title" style="font-size: var(--font-size-xl); margin-top: var(--space-2);">
                             <% if (wallet.getBalance().signum() < 0) { %>
-                                <span class="amount-negative" style="color: var(--color-danger);"><%= String.format("%,.2f", wallet.getBalance()) %></span>
+                                <span style="color: var(--color-danger);"><%= String.format("%,.2f", wallet.getBalance()) %></span>
                             <% } else { %>
                                 <%= String.format("%,.2f", wallet.getBalance()) %>
                             <% } %>
@@ -207,7 +211,6 @@
             <!-- Recent Transactions Section -->
             <div class="card-header" style="margin-top: var(--space-10);">
                 <h2 class="card-title">Recent transactions</h2>
-                <a href="<%= ctxPath %>/transactions" class="btn btn-link">View all &rarr;</a>
             </div>
 
             <div class="table-wrapper">
@@ -224,6 +227,10 @@
                         <tr><td colspan="4" class="table-empty">Loading...</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="tx-footer" style="display:none; justify-content:space-between; align-items:center; margin-top:var(--space-4); padding-top:var(--space-3); border-top:1px solid var(--color-border);">
+                <span class="muted" id="tx-count" style="font-size:var(--font-size-sm);"></span>
+                <a href="<%= ctxPath %>/transactions" style="font-size:var(--font-size-sm); color:var(--color-primary); text-decoration:none; font-weight:500;">View all transactions &rarr;</a>
             </div>
 
         <% } %>
