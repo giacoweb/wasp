@@ -1,0 +1,78 @@
+/* Breadcrumb */
+.breadcrumb {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+}
+.breadcrumb a  { color: var(--color-text-muted); text-decoration: none; }
+.breadcrumb span { color: var(--color-text); font-weight: 500; }
+
+/* KPI cards */
+.kpi-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: var(--space-3);
+}
+.kpi-icon svg { width: 18px; height: 18px; }
+.kpi-icon--income  { background: var(--color-positive-tint); color: var(--color-positive); }
+.kpi-icon--expense { background: var(--color-negative-tint); color: var(--color-negative); }
+.kpi-icon--flow    { background: var(--color-primary-tint);  color: var(--color-primary);  }
+
+.kpi-amount {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin: var(--space-1) 0;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+.kpi-amount--income  { color: var(--color-positive); }
+.kpi-amount--expense { color: var(--color-negative); }
+.kpi-amount--flow-pos { color: var(--color-primary); }
+.kpi-amount--flow-neg { color: var(--color-negative); }
+
+/* Filter toolbar */
+.tx-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+}
+.filter-tabs { display: flex; gap: var(--space-1); }
+.filter-tab {
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    transition: background var(--transition), color var(--transition);
+    font-family: var(--font-sans);
+}
+.filter-tab.active  { background: var(--color-text); color: #fff; }
+.filter-tab:hover:not(.active) { background: var(--color-neutral-100); }
+
+/* Type toggle (modal) */
+.type-toggle {
+    display: flex;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.type-toggle__btn {
+    flex: 1; height: 40px; border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: background var(--transition), color var(--transition);
+}
+.type-toggle__btn + .type-toggle__btn { border-left: 1px solid var(--color-border); }
+.type-toggle__btn.active[data-value="INCOME"]  { background: var(--color-primary);  color: #fff; }
+.type-toggle__btn.active[data-value="EXPENSE"] { background: var(--color-negative); color: #fff; }
