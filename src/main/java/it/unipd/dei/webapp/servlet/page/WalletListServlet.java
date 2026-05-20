@@ -2,6 +2,8 @@ package it.unipd.dei.webapp.servlet.page;
 
 import it.unipd.dei.webapp.model.User;
 import it.unipd.dei.webapp.model.Wallet;
+import it.unipd.dei.webapp.model.WalletSummary;
+import it.unipd.dei.webapp.service.DashboardService;
 import it.unipd.dei.webapp.service.WalletService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,10 +24,12 @@ public class WalletListServlet extends AbstractPageServlet {
     private static final Logger logger = Logger.getLogger(WalletListServlet.class.getName());
 
     private WalletService walletService;
+    private DashboardService dashboardService;
 
     @Override
     public void init() throws ServletException {
         this.walletService = new WalletService();
+        this.dashboardService = new DashboardService();
     }
 
     @Override
@@ -64,11 +69,12 @@ public class WalletListServlet extends AbstractPageServlet {
         }
 
         try {
-            List<Wallet> wallets = walletService.getWalletsByUser(user.getId());
-            request.setAttribute("wallets", wallets);
+            List<WalletSummary> wallets = dashboardService.getSummary(user.getId()).getWallets();
+            request.setAttribute("wallets", wallets != null ? wallets : Collections.emptyList());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to load wallets for user " + user.getId(), e);
             request.setAttribute("errorMessage", "Unable to load wallets.");
+            request.setAttribute("wallets", Collections.emptyList());
         }
 
         request.getRequestDispatcher("/WEB-INF/jsp/wallets/list.jsp").forward(request, response);
