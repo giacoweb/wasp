@@ -40,6 +40,13 @@
             return;
         }
 
+        var footer = document.getElementById("tx-footer");
+        var count  = document.getElementById("tx-count");
+        if (footer && count) {
+            count.textContent = "Showing " + recent.length + " of " + all.length + " transactions";
+            footer.style.display = "flex";
+        }
+
         tbody.innerHTML = recent.map(function (t) {
             const isIncome   = t.type === "INCOME";
             const amountHtml = isIncome
