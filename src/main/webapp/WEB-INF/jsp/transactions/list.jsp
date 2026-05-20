@@ -164,7 +164,7 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Description</th>
-                                <th>Category</th>
+                                <th>Type</th>
                                 <th>Wallet</th>
                                 <th class="num">Amount</th>
                                 <th class="actions"></th>

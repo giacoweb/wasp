@@ -1,10 +1,8 @@
 package it.unipd.dei.webapp.servlet.page;
 
 import it.unipd.dei.webapp.model.User;
-import it.unipd.dei.webapp.model.Wallet;
 import it.unipd.dei.webapp.model.WalletSummary;
 import it.unipd.dei.webapp.service.DashboardService;
-import it.unipd.dei.webapp.service.WalletService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import it.unipd.dei.webapp.servlet.AbstractPageServlet;
@@ -23,12 +21,10 @@ public class WalletListServlet extends AbstractPageServlet {
 
     private static final Logger logger = Logger.getLogger(WalletListServlet.class.getName());
 
-    private WalletService walletService;
     private DashboardService dashboardService;
 
     @Override
     public void init() throws ServletException {
-        this.walletService = new WalletService();
         this.dashboardService = new DashboardService();
     }
 
