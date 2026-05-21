@@ -90,6 +90,9 @@ public class ReportCompoundServlet extends AbstractPageServlet{
 
 
             request.setAttribute("compoundList",compoundList);
+            request.setAttribute("initialCapital",initialCapital);
+            request.setAttribute("monthlyContribution",monthlyContribution);
+            request.setAttribute("annualRate",annualRate);
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/compoundreport.jsp").forward(request, response);
 
         }
