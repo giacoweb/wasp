@@ -170,12 +170,14 @@
     function setType(value) {
         formType.value = value;
         document.querySelectorAll(".type-toggle__btn").forEach(function (btn) {
-            btn.classList.toggle("active", btn.dataset.value === value);
+            var isActive = btn.dataset.value === value;
+            btn.classList.toggle("active", isActive);
+            btn.setAttribute("aria-pressed", isActive ? "true" : "false");
         });
     }
 
     function openModal(transaction) {
-        formError.style.display = "none";
+        formError.hidden = true;
         form.reset();
         if (transaction) {
             document.getElementById("modal-title").textContent = "Edit transaction";
@@ -194,10 +196,10 @@
             formDate.value = new Date().toISOString().slice(0, 10);
             setType("INCOME");
         }
-        modalOverlay.style.display = "flex";
+        modalOverlay.hidden = false;
     }
 
-    function closeModal() { modalOverlay.style.display = "none"; }
+    function closeModal() { modalOverlay.hidden = true; }
 
     /* ── public API ───────────────────────────────────────── */
 
@@ -222,8 +224,12 @@
 
     filterTabs.forEach(function (tab) {
         tab.addEventListener("click", function () {
-            filterTabs.forEach(function (t) { t.classList.remove("active"); });
+            filterTabs.forEach(function (t) {
+                t.classList.remove("active");
+                t.setAttribute("aria-pressed", "false");
+            });
             tab.classList.add("active");
+            tab.setAttribute("aria-pressed", "true");
             activeFilter = tab.dataset.filter;
             renderRows();
         });
@@ -233,7 +239,7 @@
 
     form.addEventListener("submit", function (e) {
         e.preventDefault();
-        formError.style.display = "none";
+        formError.hidden = true;
 
         const id        = formId.value;
         const isExpense = formType.value === "EXPENSE";
@@ -258,15 +264,15 @@
         .then(function (data) {
             if (data.error) {
                 formError.textContent   = data.error;
-                formError.style.display = "flex";
+                formError.hidden = false;
                 return;
             }
             closeModal();
             loadTransactions();
         })
         .catch(function () {
-            formError.textContent   = "An unexpected error occurred.";
-            formError.style.display = "flex";
+            formError.textContent = "An unexpected error occurred.";
+            formError.hidden = false;
         });
     });
 

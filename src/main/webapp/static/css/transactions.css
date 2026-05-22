@@ -1,11 +1,5 @@
-/* Breadcrumb */
-.breadcrumb {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-4);
-}
-.breadcrumb a  { color: var(--color-text-muted); text-decoration: none; }
-.breadcrumb span { color: var(--color-text); font-weight: 500; }
+/* KPI section spacing */
+.kpi-section { margin-bottom: var(--space-8); }
 
 /* KPI cards */
 .kpi-icon {
@@ -26,34 +20,10 @@
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
 }
-.kpi-amount--income  { color: var(--color-positive); }
-.kpi-amount--expense { color: var(--color-negative); }
+.kpi-amount--income   { color: var(--color-positive); }
+.kpi-amount--expense  { color: var(--color-negative); }
 .kpi-amount--flow-pos { color: var(--color-primary); }
 .kpi-amount--flow-neg { color: var(--color-negative); }
-
-/* Filter toolbar */
-.tx-toolbar {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    margin-bottom: var(--space-4);
-}
-.filter-tabs { display: flex; gap: var(--space-1); }
-.filter-tab {
-    padding: 6px 16px;
-    border-radius: var(--radius-pill);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: var(--color-text-muted);
-    transition: background var(--transition), color var(--transition);
-    font-family: var(--font-sans);
-}
-.filter-tab.active  { background: var(--color-text); color: #fff; }
-.filter-tab:hover:not(.active) { background: var(--color-neutral-100); }
 
 /* Type toggle (modal) */
 .type-toggle {

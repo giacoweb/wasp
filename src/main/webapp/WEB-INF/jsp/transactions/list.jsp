@@ -44,10 +44,10 @@
             <a href="<%= ctxPath %>/dashboard">FinTrack</a> / <span>Transactions</span>
         </nav>
 
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-3); margin-bottom:var(--space-6);">
+        <div class="page-header">
             <div>
-                <h1 style="margin:0 0 var(--space-1);">Transactions</h1>
-                <p class="muted" style="margin:0;">Track and manage your financial activity.</p>
+                <h1>Transactions</h1>
+                <p class="muted">Track and manage your financial activity.</p>
             </div>
             <button class="btn btn-primary" id="btn-add" <%= (wallets == null || wallets.isEmpty()) ? "disabled" : "" %>>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -56,25 +56,25 @@
         </div>
 
         <% if (wallets == null || wallets.isEmpty()) { %>
-            <div class="card" style="text-align:center; padding:var(--space-10);">
-                <p class="muted" style="margin:0;">No wallets yet. <a href="<%= ctxPath %>/wallets">Create one first.</a></p>
+            <div class="card card--empty">
+                <p class="muted">No wallets yet. <a href="<%= ctxPath %>/wallets">Create one first.</a></p>
             </div>
         <% } else { %>
 
             <!-- KPI Cards (rendered by JS, grouped per currency) -->
-            <div id="kpi-section" style="margin-bottom:var(--space-8);"></div>
+            <div id="kpi-section" class="kpi-section"></div>
 
             <!-- Toolbar + Table -->
-            <div class="card" style="padding:var(--space-5);">
+            <div class="card card--padded">
                 <div class="tx-toolbar">
-                    <div class="form-input-group" style="flex:1; min-width:200px;">
+                    <div class="form-input-group">
                         <svg class="form-input-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                         <input class="form-input" id="search-input" type="search" placeholder="Search transactions...">
                     </div>
                     <div class="filter-tabs">
-                        <button class="filter-tab active" data-filter="ALL">All</button>
-                        <button class="filter-tab" data-filter="INCOME">Income</button>
-                        <button class="filter-tab" data-filter="EXPENSE">Expense</button>
+                        <button class="filter-tab active" data-filter="ALL" aria-pressed="true">All</button>
+                        <button class="filter-tab" data-filter="INCOME" aria-pressed="false">Income</button>
+                        <button class="filter-tab" data-filter="EXPENSE" aria-pressed="false">Expense</button>
                     </div>
                 </div>
 
@@ -102,10 +102,10 @@
 </div>
 
 <!-- Add / Edit Modal -->
-<div id="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.4); z-index:var(--z-modal); align-items:center; justify-content:center;">
-    <div class="card" style="width:100%; max-width:500px; box-shadow:var(--shadow-modal);">
+<div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="card modal-card">
 
-        <div class="card-header" style="margin-bottom:var(--space-5);">
+        <div class="card-header">
             <h2 class="card-title" id="modal-title">Create transaction</h2>
             <button class="btn btn-icon btn-ghost" id="modal-close" type="button">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -119,11 +119,11 @@
             <div class="form-field">
                 <label class="form-label form-required">Type</label>
                 <div class="type-toggle" id="type-toggle">
-                    <button type="button" class="type-toggle__btn active" data-value="INCOME">
+                    <button type="button" class="type-toggle__btn active" data-value="INCOME" aria-pressed="true">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
                         Income
                     </button>
-                    <button type="button" class="type-toggle__btn" data-value="EXPENSE">
+                    <button type="button" class="type-toggle__btn" data-value="EXPENSE" aria-pressed="false">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>
                         Expense
                     </button>
@@ -164,9 +164,9 @@
                 <textarea class="form-textarea" id="form-note" placeholder="Optional details about this transaction"></textarea>
             </div>
 
-            <div id="form-error" class="alert alert-error" style="display:none;"></div>
+            <div id="form-error" class="alert alert-error" hidden></div>
 
-            <div style="display:flex; gap:var(--space-3); justify-content:flex-end;">
+            <div class="modal__footer">
                 <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
                 <button type="submit" class="btn btn-primary" id="form-submit">Create transaction</button>
             </div>
