@@ -186,3 +186,79 @@
 .badge-wallet-bank         { background: #DBEAFE; color: #1E40AF; }
 .badge-wallet-credit-card  { background: #F3E8FF; color: #6B21A8; }
 .badge-wallet-investment   { background: var(--color-primary-tint); color: var(--color-primary); }
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px; height: 22px;
+    flex-shrink: 0;
+}
+.switch__input {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    margin: 0; opacity: 0;
+    cursor: pointer;
+}
+.switch__slider {
+    position: absolute; inset: 0;
+    background: var(--color-neutral-200);
+    border-radius: var(--radius-pill);
+    transition: background var(--transition);
+}
+.switch__slider::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    transition: transform var(--transition);
+}
+.switch__input:checked + .switch__slider { background: var(--color-primary); }
+.switch__input:checked + .switch__slider::after { transform: translateX(18px); }
+.switch__input:focus-visible + .switch__slider {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+.switch__input:disabled + .switch__slider {
+    opacity: 0.5; cursor: not-allowed;
+}
+
+.progress {
+    width: 100%;
+    height: 6px;
+    background: var(--color-neutral-200);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+.progress__bar {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: var(--radius-pill);
+    transition: width var(--transition);
+    width: var(--pct, 0%);
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+}
+.empty-state__icon {
+    width: 64px; height: 64px;
+    margin: 0 auto var(--space-4);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--color-primary-tint);
+    color: var(--color-primary);
+    border-radius: 50%;
+}
+.empty-state__icon svg { width: 28px; height: 28px; }
+.empty-state__title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0 0 var(--space-2);
+}
+.empty-state__desc {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-6);
+}
