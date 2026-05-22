@@ -7,7 +7,6 @@
     User user = (User) session.getAttribute("authenticatedUser");
     List<Wallet> wallets = (List<Wallet>) request.getAttribute("wallets");
     String ctxPath = request.getContextPath();
-    String currency = (wallets != null && !wallets.isEmpty()) ? wallets.get(0).getCurrency() : "";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,33 +61,8 @@
             </div>
         <% } else { %>
 
-            <!-- KPI Cards -->
-            <div class="grid grid--3" style="margin-bottom:var(--space-8);">
-                <div class="card">
-                    <div class="kpi-icon kpi-icon--income">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                    </div>
-                    <div class="card-subtitle">Total Income</div>
-                    <div class="kpi-amount kpi-amount--income" id="kpi-income">—</div>
-                    <p class="muted" style="margin:0; font-size:var(--font-size-xs);">Across all wallets</p>
-                </div>
-                <div class="card">
-                    <div class="kpi-icon kpi-icon--expense">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>
-                    </div>
-                    <div class="card-subtitle">Total Expenses</div>
-                    <div class="kpi-amount kpi-amount--expense" id="kpi-expenses">—</div>
-                    <p class="muted" style="margin:0; font-size:var(--font-size-xs);">Across all wallets</p>
-                </div>
-                <div class="card">
-                    <div class="kpi-icon kpi-icon--flow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                    </div>
-                    <div class="card-subtitle">Net Flow</div>
-                    <div class="kpi-amount" id="kpi-flow">—</div>
-                    <p class="muted" id="kpi-flow-label" style="margin:0; font-size:var(--font-size-xs);">—</p>
-                </div>
-            </div>
+            <!-- KPI Cards (rendered by JS, grouped per currency) -->
+            <div id="kpi-section" style="margin-bottom:var(--space-8);"></div>
 
             <!-- Toolbar + Table -->
             <div class="card" style="padding:var(--space-5);">
@@ -202,11 +176,10 @@
 
 <script>
 window.CTX_PATH   = "<%= ctxPath %>";
-window.CURRENCY   = "<%= HtmlUtil.escape(currency) %>";
 window.WALLET_IDS = [
     <% if (wallets != null) {
         for (int i = 0; i < wallets.size(); i++) { %>
-    { id: "<%= wallets.get(i).getId() %>", name: "<%= HtmlUtil.escape(wallets.get(i).getName()) %>" }<%= i < wallets.size() - 1 ? "," : "" %>
+    { id: "<%= wallets.get(i).getId() %>", name: "<%= HtmlUtil.escape(wallets.get(i).getName()) %>", currency: "<%= HtmlUtil.escape(wallets.get(i).getCurrency()) %>" }<%= i < wallets.size() - 1 ? "," : "" %>
     <% } } %>
 ];
 </script>

@@ -1,9 +1,8 @@
 (function () {
     "use strict";
 
-    const ctx      = window.CTX_PATH   || "";
-    const currency = window.CURRENCY   || "";
-    const wallets  = window.WALLET_IDS || [];
+    const ctx     = window.CTX_PATH   || "";
+    const wallets = window.WALLET_IDS || [];
 
     const tbody      = document.getElementById("transactions-body");
     const btnAdd     = document.getElementById("btn-add");
@@ -24,7 +23,11 @@
     if (!tbody || !wallets.length) return;
 
     const walletMap = {};
-    wallets.forEach(function (w) { walletMap[w.id] = w.name; });
+    const walletCurrencyMap = {};
+    wallets.forEach(function (w) {
+        walletMap[w.id] = w.name;
+        walletCurrencyMap[w.id] = w.currency || "";
+    });
 
     let allTransactions = [];
     let activeFilter    = "ALL";
@@ -41,31 +44,61 @@
         return parseFloat(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function fmtKpi(amount) {
-        const abs = Math.abs(amount);
-        const sign = amount >= 0 ? "+" : "−";
-        return sign + fmt(abs) + " " + currency;
-    }
+    /* ── KPI update (one group of cards per currency) ────────── */
 
-    /* ── KPI update ───────────────────────────────────────── */
+    var SVG_INCOME  = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><line x1='7' y1='17' x2='17' y2='7'/><polyline points='7 7 17 7 17 17'/></svg>";
+    var SVG_EXPENSE = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><line x1='7' y1='7' x2='17' y2='17'/><polyline points='17 7 17 17 7 17'/></svg>";
+    var SVG_FLOW    = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='22 7 13.5 15.5 8.5 10.5 2 17'/><polyline points='16 7 22 7 22 13'/></svg>";
 
     function updateKpis(transactions) {
-        let income = 0, expenses = 0;
-        transactions.forEach(function (t) {
-            const v = parseFloat(t.amount);
-            if (t.type === "INCOME")  income   += v;
-            else                       expenses += v;
+        var byCurrency = {};
+        wallets.forEach(function (w) {
+            var cur = w.currency || "?";
+            if (!byCurrency[cur]) byCurrency[cur] = { income: 0, expenses: 0 };
         });
-        const flow = income - expenses;
+        transactions.forEach(function (t) {
+            var cur = walletCurrencyMap[t.walletId] || "?";
+            if (!byCurrency[cur]) byCurrency[cur] = { income: 0, expenses: 0 };
+            var v = parseFloat(t.amount);
+            if (t.type === "INCOME") byCurrency[cur].income += v;
+            else byCurrency[cur].expenses += v;
+        });
 
-        document.getElementById("kpi-income").textContent   = "+" + fmt(income)   + " " + currency;
-        document.getElementById("kpi-expenses").textContent = "−" + fmt(expenses) + " " + currency;
+        var currencies = Object.keys(byCurrency).sort();
+        var isMulti = currencies.length > 1;
+        var section = document.getElementById("kpi-section");
 
-        const flowEl    = document.getElementById("kpi-flow");
-        const flowLabel = document.getElementById("kpi-flow-label");
-        flowEl.textContent    = fmtKpi(flow);
-        flowEl.className      = "kpi-amount " + (flow >= 0 ? "kpi-amount--flow-pos" : "kpi-amount--flow-neg");
-        flowLabel.textContent = flow >= 0 ? "Healthy positive balance" : "Negative balance";
+        section.innerHTML = currencies.map(function (cur, idx) {
+            var d = byCurrency[cur];
+            var flow = d.income - d.expenses;
+            var flowClass = "kpi-amount " + (flow >= 0 ? "kpi-amount--flow-pos" : "kpi-amount--flow-neg");
+            var flowSign  = flow >= 0 ? "+" : "−";
+            var gapStyle  = isMulti && idx < currencies.length - 1 ? "margin-bottom:var(--space-4);" : "";
+            var header    = isMulti
+                ? "<div style='font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-2);'>" + esc(cur) + "</div>"
+                : "";
+            return header +
+                "<div class='grid grid--3' style='" + gapStyle + "'>" +
+                    "<div class='card'>" +
+                        "<div class='kpi-icon kpi-icon--income'>" + SVG_INCOME + "</div>" +
+                        "<div class='card-subtitle'>Total Income</div>" +
+                        "<div class='kpi-amount kpi-amount--income'>+" + fmt(d.income) + " " + esc(cur) + "</div>" +
+                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>Across all wallets</p>" +
+                    "</div>" +
+                    "<div class='card'>" +
+                        "<div class='kpi-icon kpi-icon--expense'>" + SVG_EXPENSE + "</div>" +
+                        "<div class='card-subtitle'>Total Expenses</div>" +
+                        "<div class='kpi-amount kpi-amount--expense'>−" + fmt(d.expenses) + " " + esc(cur) + "</div>" +
+                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>Across all wallets</p>" +
+                    "</div>" +
+                    "<div class='card'>" +
+                        "<div class='kpi-icon kpi-icon--flow'>" + SVG_FLOW + "</div>" +
+                        "<div class='card-subtitle'>Net Flow</div>" +
+                        "<div class='" + flowClass + "'>" + flowSign + fmt(Math.abs(flow)) + " " + esc(cur) + "</div>" +
+                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>" + (flow >= 0 ? "Healthy positive balance" : "Negative balance") + "</p>" +
+                    "</div>" +
+                "</div>";
+        }).join("");
     }
 
     /* ── table render ─────────────────────────────────────── */
