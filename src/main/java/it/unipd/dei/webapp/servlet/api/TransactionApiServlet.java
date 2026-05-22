@@ -137,6 +137,7 @@ public class TransactionApiServlet extends AbstractApiServlet {
             Transaction updated = transactionService.updateTransaction(
                     id,
                     user.getId(),
+                    getStringOrNull(body, "walletId"),
                     getStringOrNull(body, "amount"),
                     getStringOrNull(body, "category"),
                     getStringOrNull(body, "date"),
