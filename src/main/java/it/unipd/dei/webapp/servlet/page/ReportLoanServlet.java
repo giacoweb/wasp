@@ -89,6 +89,8 @@ public class ReportLoanServlet extends AbstractPageServlet{
             reportDao.updateReportSessionJson(guestToken,rootObject.toString());
 
             request.setAttribute("amortizationList",amortizationList);
+            request.setAttribute("principal",principal);
+            request.setAttribute("annualRate",annualRate);
             request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
         }
