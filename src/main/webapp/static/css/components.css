@@ -67,7 +67,7 @@
    Alerts
    ===================================================== */
 
-.alert {
+.alert:not([hidden]) {
     display: flex; align-items: flex-start; gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
