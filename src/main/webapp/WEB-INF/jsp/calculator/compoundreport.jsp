@@ -118,15 +118,15 @@
           <table class="table table--striped">
               <thead>
               <tr>
-                  <th>Month</th>
-                  <th class="num">Total Payment</th>
+                  <th>Year</th>
+                  <th class="num">Total Value</th>
               </tr>
               </thead>
               <tbody id="amortBody">
               <% for (int i = 0; i < result.size(); i++) {
                   CompoundResult row = result.get(i); %>
               <tr>
-                  <td><%= i %></td>
+                  <td><%= row.getYear() %></td>
                   <td class="num"><%= String.format("€%.2f", row.getTotalValue()) %></td>
               </tr>
               <% } %>
@@ -138,7 +138,7 @@
           </div>
       </div>
 
-      
+
       <div class="center">
           <a class="btn btn-primary" href="<%= ctxPath %>/guest/report">Back to Calculator</a>
       </div>
