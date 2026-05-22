@@ -123,7 +123,7 @@
                             String typeLabel = wallet.getType().name();
                             switch (wallet.getType().name()) {
                                 case "CASH": badgeClass = "badge-wallet-cash"; typeLabel = "Cash"; break;
-                                case "BANK": badgeClass = "badge-wallet-bank"; typeLabel = "Bank"; break;
+                                case "BANK_ACCOUNT": badgeClass = "badge-wallet-bank"; typeLabel = "Bank"; break;
                                 case "CREDIT_CARD": badgeClass = "badge-wallet-credit-card"; typeLabel = "Credit Card"; break;
                                 case "INVESTMENT": badgeClass = "badge-wallet-investment"; typeLabel = "Investment"; break;
                             }

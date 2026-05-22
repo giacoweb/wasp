@@ -37,6 +37,7 @@
 
 /* Modal overlay */
 .modal-overlay {
+    display: flex;
     position: fixed;
     inset: 0;
     background: rgba(15,23,42,0.4);
@@ -71,3 +72,33 @@
 }
 .wallet-type-btn + .wallet-type-btn { border-left: 1px solid var(--color-border); }
 .wallet-type-btn.active { background: var(--color-primary); color: #fff; }
+
+/* Page header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+}
+.page-header h1 { margin: 0 0 var(--space-1); }
+.page-header p  { margin: 0; }
+
+/* Alert spacing */
+.alert { margin-bottom: var(--space-4); }
+
+/* Card with extra padding */
+.card--padded { padding: var(--space-5); }
+
+/* Search input in toolbar */
+.tx-toolbar .form-input-group { flex: 1; min-width: 200px; }
+
+/* Inline form (delete action in table row) */
+.form--inline { display: inline; }
+
+/* Danger-coloured icon */
+.icon--danger { color: var(--color-negative); }
+
+/* Modal card header bottom spacing */
+.modal-card .card-header { margin-bottom: var(--space-5); }

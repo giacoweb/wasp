@@ -11,8 +11,10 @@
             btn.addEventListener("click", function () {
                 container.querySelectorAll(".wallet-type-btn").forEach(function (b) {
                     b.classList.remove("active");
+                    b.setAttribute("aria-pressed", "false");
                 });
                 btn.classList.add("active");
+                btn.setAttribute("aria-pressed", "true");
                 hidden.value = btn.dataset.value;
             });
         });
@@ -23,7 +25,9 @@
         if (!container) return;
         var hidden = document.getElementById(hiddenInputId);
         container.querySelectorAll(".wallet-type-btn").forEach(function (btn) {
-            btn.classList.toggle("active", btn.dataset.value === value);
+            var isActive = btn.dataset.value === value;
+            btn.classList.toggle("active", isActive);
+            btn.setAttribute("aria-pressed", isActive ? "true" : "false");
         });
         hidden.value = value;
     }
@@ -32,12 +36,12 @@
 
     function openOverlay(id) {
         var el = document.getElementById(id);
-        if (el) el.style.display = "flex";
+        if (el) el.hidden = false;
     }
 
     function closeOverlay(id) {
         var el = document.getElementById(id);
-        if (el) el.style.display = "none";
+        if (el) el.hidden = true;
     }
 
     /* ── create modal ────────────────────────────────────────── */
@@ -73,15 +77,27 @@
         if (e.target === this) closeOverlay("edit-modal-overlay");
     });
 
-    window.Wallets = {
-        openEdit: function (id, name, type, currency) {
-            document.getElementById("edit-wallet-id").value = id;
-            document.getElementById("edit-name").value      = name;
-            document.getElementById("edit-currency").value  = currency;
-            setActiveType("#edit-modal-overlay .wallet-type-toggle", "edit-type", type);
-            openOverlay("edit-modal-overlay");
+    function openEdit(id, name, type, currency) {
+        document.getElementById("edit-wallet-id").value = id;
+        document.getElementById("edit-name").value      = name;
+        document.getElementById("edit-currency").value  = currency;
+        setActiveType("#edit-modal-overlay .wallet-type-toggle", "edit-type", type);
+        openOverlay("edit-modal-overlay");
+    }
+
+    document.addEventListener("click", function (e) {
+        var btn = e.target.closest(".js-edit-wallet");
+        if (!btn) return;
+        openEdit(btn.dataset.id, btn.dataset.name, btn.dataset.type, btn.dataset.currency);
+    });
+
+    document.addEventListener("submit", function (e) {
+        var form = e.target.closest(".js-delete-wallet");
+        if (!form) return;
+        if (!confirm("Delete wallet '" + form.dataset.name + "'? This cannot be undone.")) {
+            e.preventDefault();
         }
-    };
+    });
 
     /* ── search + filter ─────────────────────────────────────── */
 
@@ -101,8 +117,12 @@
 
     filterTabs.forEach(function (tab) {
         tab.addEventListener("click", function () {
-            filterTabs.forEach(function (t) { t.classList.remove("active"); });
+            filterTabs.forEach(function (t) {
+                t.classList.remove("active");
+                t.setAttribute("aria-pressed", "false");
+            });
             tab.classList.add("active");
+            tab.setAttribute("aria-pressed", "true");
             activeFilter = tab.dataset.filter;
             applyFilter();
         });

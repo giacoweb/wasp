@@ -81,6 +81,13 @@
 .alert-warning { background: var(--color-warning-tint);  color: #92400E; border-color: #FDE68A; }
 .alert-info    { background: var(--color-info-tint);     color: #1E40AF; border-color: #BFDBFE; }
 
+.modal__footer {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+    margin-top: var(--space-4);
+}
+
 /* =====================================================
    Badges
    ===================================================== */
