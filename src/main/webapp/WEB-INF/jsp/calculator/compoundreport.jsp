@@ -50,6 +50,7 @@
       <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
       <link rel="stylesheet" href="<%= ctxPath %>/static/css/layout.css">
       <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
+      <link rel="stylesheet" href="<%= ctxPath %>/static/css/tables.css">
 
   </head>
   <body>
@@ -110,7 +111,34 @@
           </article>
 
       </div>
+
       <canvas class="mb-12" id="compoundChart"></canvas>
+
+      <div class="table-wrapper mb-10">
+          <table class="table table--striped">
+              <thead>
+              <tr>
+                  <th>Month</th>
+                  <th class="num">Total Payment</th>
+              </tr>
+              </thead>
+              <tbody id="amortBody">
+              <% for (int i = 0; i < result.size(); i++) {
+                  CompoundResult row = result.get(i); %>
+              <tr>
+                  <td><%= i %></td>
+                  <td class="num"><%= String.format("€%.2f", row.getTotalValue()) %></td>
+              </tr>
+              <% } %>
+              </tbody>
+          </table>
+          <div id="pagination" class="table-footer">
+              <span id="pageInfo" class="muted"></span>
+              <div id="pageButtons" class="table-footer--buttons"></div>
+          </div>
+      </div>
+
+      
       <div class="center">
           <a class="btn btn-primary" href="<%= ctxPath %>/guest/report">Back to Calculator</a>
       </div>
@@ -123,7 +151,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-
+  <script src="<%= ctxPath %>/static/js/table-control.js"></script>
 
   <script>
       const ctx = document.getElementById('compoundChart');
