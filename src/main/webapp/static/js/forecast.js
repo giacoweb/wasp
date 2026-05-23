@@ -114,10 +114,20 @@
         renderTable(projection, currency);
     }
 
+    function currencySymbol(code) {
+        switch (code) {
+            case "EUR": return "€";
+            case "USD": return "$";
+            case "GBP": return "£";
+            case "JPY": return "¥";
+            default:    return code + " ";
+        }
+    }
+
     function formatMoney(n, currency) {
         var sign = n < 0 ? "-" : "";
         var abs = Math.abs(n);
-        return sign + currency + " " + abs.toLocaleString("en-US", {
+        return sign + currencySymbol(currency) + abs.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
