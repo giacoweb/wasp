@@ -132,13 +132,16 @@
         var last = projection[projection.length - 1];
         var totalIncome = 0;
         var totalExpense = 0;
+        var totalPac = 0;
         for (var i = 0; i < projection.length; i++) {
             totalIncome += Number(projection[i].income);
-            totalExpense += Number(projection[i].expense) + Number(projection[i].pacContribution);
+            totalExpense += Number(projection[i].expense);
+            totalPac += Number(projection[i].pacContribution);
         }
         setText("kpi-end-balance", formatMoney(Number(last.balance), currency));
         setText("kpi-total-income", formatMoney(totalIncome, currency));
         setText("kpi-total-expenses", formatMoney(totalExpense, currency));
+        setText("kpi-total-pac", formatMoney(totalPac, currency));
     }
 
     function svgEl(tag, attrs) {

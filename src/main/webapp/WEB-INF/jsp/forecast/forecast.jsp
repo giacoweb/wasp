@@ -177,6 +177,21 @@
                         <p class="forecast-kpi__value tabular" id="kpi-total-expenses">&mdash;</p>
                     </div>
                 </article>
+
+                <article class="card forecast-kpi">
+                    <div class="forecast-kpi__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="17 1 21 5 17 9"/>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                            <polyline points="7 23 3 19 7 15"/>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="forecast-kpi__label">Total PAC contributions</p>
+                        <p class="forecast-kpi__value tabular" id="kpi-total-pac">&mdash;</p>
+                    </div>
+                </article>
             </section>
 
             <section class="card forecast-chart-card">
