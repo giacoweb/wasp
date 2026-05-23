@@ -233,7 +233,11 @@
                             <div class="progress__bar" style="--pct: <%= progressPct %>%;"></div>
                         </div>
                         <div class="pac-card__progress-foot">
-                            <span class="pac-card__progress-amount">&euro;<%= savedStr %></span>
+                            <span class="pac-card__progress-amount"
+                                  title="Estimated from monthly amount &times; months since start date. Does not account for pauses or past changes.">
+                                &euro;<%= savedStr %>
+                                <span class="muted">(est.)</span>
+                            </span>
                             <span class="muted">of &euro;<%= targetStr %></span>
                         </div>
                     </div>
