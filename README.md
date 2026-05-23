@@ -17,6 +17,7 @@ It targets two distinct user groups: authenticated users who persist all their f
 
 - [Miro Board - Architecture & Design](https://miro.com/app/board/uXjVGpkBSew=/)
 - [Trello Board - Task Management](https://trello.com/b/HSDd8UqV/wa2526-wasp)
+- [Figma - UI Design](https://www.figma.com/design/56ZiNhFPK5Rhkdfz2DhmK8/wa2526-wasp)
 
 ## Technology Stack
 

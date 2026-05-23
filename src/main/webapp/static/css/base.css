@@ -39,6 +39,7 @@ code, kbd, samp {
 .muted   { color: var(--color-text-muted); }
 .subtle  { color: var(--color-text-subtle); }
 .hidden  { display: none !important; }
+[hidden] { display: none !important; }
 .tabular { font-variant-numeric: tabular-nums; }
 
 :focus-visible {
@@ -46,7 +47,6 @@ code, kbd, samp {
     outline-offset: 2px;
 }
 
-/* Visually hidden but available to assistive tech */
 .sr-only {
     position: absolute; width: 1px; height: 1px;
     padding: 0; margin: -1px; overflow: hidden;
