@@ -37,7 +37,7 @@ public class ReportLoanServlet extends AbstractPageServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.sendRedirect(request.getContextPath() + "/guest/report");
+        request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
     }
 
@@ -97,12 +97,12 @@ public class ReportLoanServlet extends AbstractPageServlet{
         catch(ValidationException e) {
 
             request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
         }
         catch (NumberFormatException e) {
 
             request.setAttribute("errorMessage", "Please enter valid numbers.");
-            request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/jsp/calculator/loanreport.jsp").forward(request, response);
 
         }
         catch(SQLException e) {

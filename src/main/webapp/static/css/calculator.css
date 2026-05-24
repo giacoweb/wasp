@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: minmax(320px, 400px) 1fr;
     gap: var(--space-8);
-    align-items: flex-start;
+    align-items: stretch;
 }
 @media (max-width: 900px) {
     .calc-layout {
@@ -23,6 +23,8 @@
 .text-2xl { font-size: 1.375rem; }
 .text-3xl { font-size: 2.2rem;}
 .text-primary { color: var(--color-primary); }
+.text-warning { color: #d97706; }
+.text-success { color: var(--color-primary); }
 
 .font-normal { font-weight: 400; }
 .font-medium { font-weight: 500; }
@@ -66,6 +68,28 @@
 .mb-10 { margin-bottom: var(--space-10); } /* 2.5rem  */
 .mb-12 { margin-bottom: var(--space-12); } /* 3rem    */
 
+.ml-1 { margin-left: var(--space-1); }
+.ml-2 { margin-left: var(--space-2); }
+.ml-3 { margin-left: var(--space-3); }
+.ml-4 { margin-left: var(--space-4); }
+.ml-5 { margin-left: var(--space-5); }
+.ml-6 { margin-left: var(--space-6); }
+
+.mr-1 { margin-right: var(--space-1); }
+.mr-2 { margin-right: var(--space-2); }
+.mr-3 { margin-right: var(--space-3); }
+.mr-4 { margin-right: var(--space-4); }
+.mr-5 { margin-right: var(--space-5); }
+.mr-6 { margin-right: var(--space-6); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-5 { gap: var(--space-5); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
 
 .form-header-icon {
     display: flex; align-items: center; justify-content: center;
@@ -77,14 +101,9 @@
 .form-header-icon svg { width: 24px; height: 24px; }
 
 .form-field--calc { gap: 6px; }
-.form-field--calc .form-label { font-size: 15px; font-weight: 600; }
+.form-field--calc .form-label { font-size: 14px; font-weight: 500; }
 .form-field--calc .form-help  { font-size: 14px; }
 
-.form-input--calc {
-    height: 48px;
-    font-size: 20px;
-    font-weight: 600;
-}
 
 .form-input-group--prefix-calc .form-input { padding-left: 44px; }
 .form-input-group--suffix-calc .form-input { padding-right: 44px; padding-left: var(--space-3); }
@@ -92,18 +111,12 @@
 .input-prefix-calc,
 .input-suffix-calc {
     position: absolute; top: 50%; transform: translateY(-50%);
-    font-size: 20px; pointer-events: none;
+    font-size: var(--font-size-sm); pointer-events: none;
 }
-.input-prefix-calc { left: 16px; font-weight: 600; color: var(--color-text); }
+.input-prefix-calc { left: 16px; font-weight: 500; color: var(--color-text); }
 .input-suffix-calc { right: 16px; font-weight: 400; color: var(--color-text-muted); }
 
-/* Bottone Calculate */
-.btn-primary--calc {
-    height: 48px; font-size: 16px; font-weight: 600;
-}
-.btn-primary--calc svg {
-    width: 24px; height: 24px; stroke-width: 2.5px;
-}
+
 
 /* --- CARDS E TABELLE --- */
 .badge-icon { padding: 4px; border-radius: var(--radius-sm); }
