@@ -29,6 +29,29 @@
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
 
+.btn-guest-session {
+    border-radius: var(--radius-pill);
+    height: 32px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    gap: 6px;
+}
+.btn-guest-session svg, .btn-guest-session i {
+    width: 14px;
+    height: 14px;
+}
+
+.nav-separator {
+    width: 1px;
+    height: 24px;
+    background: var(--color-border);
+    margin: 0 var(--space-2);
+}
+
+
+
 .center  { text-align: center; }
 
 .m-0 { margin: 0; }
@@ -58,8 +81,8 @@
 .form-field--calc .form-help  { font-size: 14px; }
 
 .form-input--calc {
-    height: 56px;
-    font-size: 24px;
+    height: 48px;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -69,14 +92,14 @@
 .input-prefix-calc,
 .input-suffix-calc {
     position: absolute; top: 50%; transform: translateY(-50%);
-    font-size: 24px; pointer-events: none;
+    font-size: 20px; pointer-events: none;
 }
 .input-prefix-calc { left: 16px; font-weight: 600; color: var(--color-text); }
 .input-suffix-calc { right: 16px; font-weight: 400; color: var(--color-text-muted); }
 
 /* Bottone Calculate */
 .btn-primary--calc {
-    height: 56px; font-size: 16px; font-weight: 600;
+    height: 48px; font-size: 16px; font-weight: 600;
 }
 .btn-primary--calc svg {
     width: 24px; height: 24px; stroke-width: 2.5px;

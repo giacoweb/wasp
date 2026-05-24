@@ -78,10 +78,11 @@
     <a href="<%= ctxPath %>/" class="brand">
         <i data-lucide="triangle"></i> FinTrack
     </a>
-    <nav class="site-header__nav" aria-label="Primary">
-        <button class="btn btn-ghost">
-            <i data-lucide="user"></i> Guest session
+    <nav class="site-header__nav flex-row" aria-label="Primary">
+        <button class="btn btn-ghost btn-guest-session">
+            <i data-lucide="beaker"></i> Guest session
         </button>
+        <div class="nav-separator"></div>
         <a href="<%= ctxPath %>/login" class="btn btn-ghost">Log in</a>
         <a href="<%= ctxPath %>/register" class="btn btn-primary">Create account</a>
     </nav>
