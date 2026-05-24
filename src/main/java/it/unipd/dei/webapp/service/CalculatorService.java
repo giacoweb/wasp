@@ -79,7 +79,7 @@ public class CalculatorService {
 
     public List<CompoundResult> calculateCompound(double initialCapital, double monthlyContribution, double annualRate, int years) throws ValidationException {
 
-        if (initialCapital <=0){
+        if (initialCapital <0){
             throw new ValidationException("The capital need to be greater than 0.");
         }
 
