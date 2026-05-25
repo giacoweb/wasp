@@ -108,47 +108,47 @@
                 </div>
 
                 <% if (request.getAttribute("errorMessage") != null) { %>
-                    <div class="calc-error-alert">
+                    <div class="alert alert-error mb-4">
                         <i data-lucide="alert-circle"></i>
                         <span><%= HtmlUtil.escape((String) request.getAttribute("errorMessage")) %></span>
                     </div>
                 <% } %>
 
                 <form class="form" action="<%= ctxPath %>/report/compound" method="POST">
-                    <div class="form-field form-field--calc">
+                    <div class="form-field">
                         <label class="form-label">Initial amount</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="initialCapital" class="form-input form-input--calc" value="<%= initialCapStr %>" />
+                            <input type="text" name="initialCapital" class="form-input" value="<%= initialCapStr %>" />
                         </div>
                         <span class="form-help">Starting investment</span>
                     </div>
 
-                    <div class="form-field form-field--calc">
+                    <div class="form-field">
                         <label class="form-label">Monthly contribution</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="monthlyContribution" class="form-input form-input--calc" value="<%= monthlyContStr %>" />
+                            <input type="text" name="monthlyContribution" class="form-input" value="<%= monthlyContStr %>" />
                         </div>
                         <span class="form-help">Added every month</span>
                     </div>
 
-                    <div class="form-field form-field--calc">
+                    <div class="form-field">
                         <label class="form-label">Annual return</label>
                         <div class="form-input-group form-input-group--suffix-calc">
-                            <input type="text" name="annualRate" class="form-input form-input--calc" value="<%= annualRateStr %>" />
+                            <input type="text" name="annualRate" class="form-input" value="<%= annualRateStr %>" />
                             <span class="input-suffix-calc">%</span>
                         </div>
                         <span class="form-help">Expected annual return</span>
                     </div>
 
-                    <div class="form-field form-field--calc">
+                    <div class="form-field">
                         <label class="form-label">Duration in years</label>
-                        <input type="text" name="years" class="form-input form-input--calc" value="<%= durationStr %>" />
+                        <input type="text" name="years" class="form-input" value="<%= durationStr %>" />
                         <span class="form-help">Investment horizon</span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block btn-primary--calc" style="margin-top: var(--space-4);">
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: var(--space-4);">
                         <i data-lucide="calculator"></i> Calculate
                     </button>
                 </form>

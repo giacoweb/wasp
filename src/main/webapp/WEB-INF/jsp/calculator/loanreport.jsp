@@ -86,15 +86,15 @@
               <p class="muted text-sm mb-6">Adjust the values to estimate your monthly payment.</p>
 
               <% if (request.getAttribute("errorMessage") != null) { %>
-                  <div class="calc-error-alert mb-6" style="color: #b91c1c; background-color: #fef2f2; border: 1px solid #f87171; padding: 12px; border-radius: 8px; font-size: 0.875rem; display: flex; align-items: center; gap: 8px;">
-                      <i data-lucide="alert-circle" style="width: 18px; height: 18px; flex-shrink: 0;"></i>
+                  <div class="alert alert-error mb-6">
+                      <i data-lucide="alert-circle"></i>
                       <span><%= HtmlUtil.escape((String) request.getAttribute("errorMessage")) %></span>
                   </div>
               <% } %>
 
               <form class="form" action="<%= ctxPath %>/report/loan" method="POST">
                   <div class="grid grid--2 mb-6">
-                      <div class="form-field form-field--calc">
+                      <div class="form-field">
                           <label class="form-label">Loan amount</label>
                           <div class="form-input-group form-input-group--prefix-calc">
                               <span class="input-prefix-calc">€</span>
@@ -102,7 +102,7 @@
                           </div>
                       </div>
 
-                      <div class="form-field form-field--calc">
+                      <div class="form-field">
                           <label class="form-label">Annual interest rate</label>
                           <div class="form-input-group form-input-group--suffix-calc">
                               <input type="text" name="annualRate" class="form-input" value="<%= annualRateStr %>" />
@@ -110,7 +110,7 @@
                           </div>
                       </div>
 
-                      <div class="form-field form-field--calc">
+                      <div class="form-field">
                           <label class="form-label">Loan term</label>
                           <div class="form-input-group form-input-group--suffix-calc">
                               <input type="text" name="months" class="form-input" value="<%= monthsStr %>" style="padding-right: 70px;"/>
@@ -118,7 +118,7 @@
                           </div>
                       </div>
 
-                      <div class="form-field form-field--calc">
+                      <div class="form-field">
                           <label class="form-label">Start month</label>
                           <div class="form-input-group">
                               <input type="text" name="startMonth" class="form-input" value="<%= startMonthStr %>" />
