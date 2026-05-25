@@ -1,3 +1,6 @@
+/* =====================================================
+   Layout & Grid
+   ===================================================== */
 .calc-layout {
     display: grid;
     grid-template-columns: minmax(320px, 400px) 1fr;
@@ -11,17 +14,31 @@
     }
 }
 
-.flex-row { display: flex; align-items: center; }
+.flex-row { display: flex; align-items: center; flex-wrap: wrap; }
 .flex-col { display: flex; flex-direction: column; }
-.gap-1 { gap: var(--space-1); }
-.gap-2 { gap: var(--space-2); }
-.gap-3 { gap: var(--space-3); }
-.gap-6 { gap: var(--space-6); }
 
+.calc-layout .grid--3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+.calc-layout .grid--3 > * {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+.calc-layout .grid--3 h3 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* =====================================================
+   Typography
+   ===================================================== */
 .text-xs { font-size: var(--font-size-xs); }
 .text-sm { font-size: var(--font-size-sm); }
 .text-2xl { font-size: 1.375rem; }
 .text-3xl { font-size: 2.2rem;}
+
 .text-primary { color: var(--color-primary); }
 .text-warning { color: #d97706; }
 .text-success { color: var(--color-primary); }
@@ -31,6 +48,11 @@
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
 
+.center  { text-align: center; }
+
+/* =====================================================
+   Buttons & Navigation
+   ===================================================== */
 .btn-guest-session {
     border-radius: var(--radius-pill);
     height: 32px;
@@ -52,10 +74,9 @@
     margin: 0 var(--space-2);
 }
 
-
-
-.center  { text-align: center; }
-
+/* =====================================================
+   Spacing Utilities
+   ===================================================== */
 .m-0 { margin: 0; }
 .mb-0 { margin-bottom: 0; }
 .mb-1 { margin-bottom: var(--space-1); }   /* 0.25rem */
@@ -82,6 +103,9 @@
 .mr-5 { margin-right: var(--space-5); }
 .mr-6 { margin-right: var(--space-6); }
 
+.pl-6 { padding-left: var(--space-6); }
+.pr-6 { padding-right: var(--space-6); }
+
 .gap-1 { gap: var(--space-1); }
 .gap-2 { gap: var(--space-2); }
 .gap-3 { gap: var(--space-3); }
@@ -90,7 +114,9 @@
 .gap-6 { gap: var(--space-6); }
 .gap-8 { gap: var(--space-8); }
 
-
+/* =====================================================
+   Forms
+   ===================================================== */
 .form-header-icon {
     display: flex; align-items: center; justify-content: center;
     width: 48px; height: 48px;
@@ -99,11 +125,6 @@
     border-radius: var(--radius-lg, 12px);
 }
 .form-header-icon svg { width: 24px; height: 24px; }
-
-.form-field--calc { gap: 6px; }
-.form-field--calc .form-label { font-size: 14px; font-weight: 500; }
-.form-field--calc .form-help  { font-size: 14px; }
-
 
 .form-input-group--prefix-calc .form-input { padding-left: 44px; }
 .form-input-group--suffix-calc .form-input { padding-right: 44px; padding-left: var(--space-3); }
@@ -116,9 +137,9 @@
 .input-prefix-calc { left: 16px; font-weight: 500; color: var(--color-text); }
 .input-suffix-calc { right: 16px; font-weight: 400; color: var(--color-text-muted); }
 
-
-
-/* --- CARDS E TABELLE --- */
+/* =====================================================
+   Cards & Tables
+   ===================================================== */
 .badge-icon { padding: 4px; border-radius: var(--radius-sm); }
 .badge-icon svg { width: 14px; height: 14px; }
 .badge-neutral { background: var(--color-neutral-100); color: var(--color-text); }
@@ -128,8 +149,6 @@
     padding: var(--space-5) var(--space-6);
     border-bottom: 1px solid var(--color-border);
 }
-.pl-6 { padding-left: var(--space-6); }
-.pr-6 { padding-right: var(--space-6); }
 
 .chart-legend {
     display: flex; gap: var(--space-3); font-size: var(--font-size-xs);
@@ -140,22 +159,3 @@
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 .legend-dot--contrib { background: #CBD5E1; }
 .legend-dot--interest { background: var(--color-primary); }
-
-.calc-error-alert {
-    color: #b91c1c;
-    background-color: #fef2f2;
-    border: 1px solid #f87171;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.calc-error-alert i,
-.calc-error-alert svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-}
