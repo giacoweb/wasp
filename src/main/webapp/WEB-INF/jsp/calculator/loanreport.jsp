@@ -223,7 +223,7 @@
                   <tr>
                       <td class="pl-6 muted">#<%= String.format("%02d", row.getMonth()) %></td>
                       <td class="font-semibold"><%= String.format("€%,.2f", row.getTotalPayment()) %></td>
-                      <td class="text-success font-medium"><%= String.format("€%,.2f", row.getPrincipalPaid()) %></td>
+                      <td class="text-primary font-medium"><%= String.format("€%,.2f", row.getPrincipalPaid()) %></td>
                       <td class="text-warning font-medium"><%= String.format("€%,.2f", row.getInterestPaid()) %></td>
                       <td class="pr-6 font-semibold"><%= String.format("€%,.2f", row.getRemainingBalance()) %></td>
                   </tr>
