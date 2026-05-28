@@ -44,6 +44,6 @@ public class GuestReportServlet extends AbstractPageServlet {
         }
 
         request.setAttribute("hasGuestReportData", hasGuestReportData);
-        request.getRequestDispatcher("/WEB-INF/jsp/calculator/calculator.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/jsp/guest/hub.jsp").forward(request, response);
     }
 }

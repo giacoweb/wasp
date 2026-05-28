@@ -1,0 +1,396 @@
+/* =====================================================
+   Guest-session pill in the site header
+   ===================================================== */
+
+.guest-session-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+    height: 34px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: background var(--transition), border-color var(--transition);
+}
+.guest-session-btn:hover { background: var(--color-neutral-100); text-decoration: none; }
+.guest-session-btn svg  { width: 14px; height: 14px; color: var(--color-warning); }
+
+/* =====================================================
+   Hub — heading / subtitle
+   ===================================================== */
+
+.calc-hub__heading {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0 0 var(--space-4);
+}
+
+.calc-hub__sub {
+    font-size: 16px;
+    margin: 0 0 var(--space-8);
+}
+
+/* =====================================================
+   Hub — calculator card (extends .card)
+   ===================================================== */
+
+.calc-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    height: 350px;
+    background: var(--color-surface);
+    transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+.calc-card .feature-title { font-size: 18px; margin-bottom: 20px; }
+.calc-card .feature-desc  { font-size: 14px; }
+.calc-card:hover {
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.10);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+.calc-card.is-featured {
+    border-color: var(--color-primary);
+}
+.calc-card__divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: auto 0 var(--space-4);
+}
+.calc-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: gap var(--transition);
+}
+.calc-card__link:hover { text-decoration: none; gap: var(--space-2); }
+.calc-card__link svg { width: 14px; height: 14px; }
+
+/* =====================================================
+   Hub — fixed "Nothing is saved" footer bar
+   ===================================================== */
+
+.calc-hub__save-bar {
+    position: fixed;
+    bottom: var(--space-6);
+    left: 60px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    z-index: 10;
+}
+.calc-hub__save-bar__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--color-positive-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.calc-hub__save-bar__icon svg { width: 14px; height: 14px; color: var(--color-positive); }
+
+/* =====================================================
+   Calculator page — back link
+   ===================================================== */
+
+.calc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-bottom: var(--space-5);
+    transition: color var(--transition);
+}
+.calc-back:hover { color: var(--color-primary-hover); text-decoration: none; }
+.calc-back svg { width: 14px; height: 14px; }
+
+/* =====================================================
+   KPI strip — 3 cards across the top
+   ===================================================== */
+
+.calc-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+@media (max-width: 640px) {
+    .calc-kpi-strip { grid-template-columns: 1fr; }
+}
+
+.kpi-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.kpi-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.kpi-card__icon svg { width: 18px; height: 18px; }
+
+.kpi-card__icon--teal   { background: var(--color-primary-tint); }
+.kpi-card__icon--teal svg   { color: var(--color-primary); }
+.kpi-card__icon--green  { background: var(--color-positive-tint); }
+.kpi-card__icon--green svg  { color: var(--color-positive); }
+.kpi-card__icon--amber  { background: var(--color-warning-tint); }
+.kpi-card__icon--amber svg  { color: var(--color-warning); }
+.kpi-card__icon--orange { background: #FFF7ED; }
+.kpi-card__icon--orange svg { color: #EA580C; }
+
+.kpi-card__body { min-width: 0; }
+.kpi-card__label   { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: 2px; }
+.kpi-card__value   { font-size: var(--font-size-xl); font-weight: 700; line-height: 1.2;
+                     font-variant-numeric: tabular-nums; color: var(--color-text); }
+.kpi-card__caption { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; }
+
+/* =====================================================
+   2-column calculator split layout
+   ===================================================== */
+
+.calc-split {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: var(--space-5);
+    align-items: stretch;
+}
+.calc-split > div { display: flex; flex-direction: column; }
+.calc-split > div > .card { flex: 1; }
+@media (max-width: 768px) {
+    .calc-split { grid-template-columns: 1fr; }
+}
+
+/* =====================================================
+   Form card header icon (36×36, smaller than .feature-icon)
+   ===================================================== */
+
+.calc-form-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.calc-form-icon svg { width: 18px; height: 18px; color: var(--color-primary); }
+
+/* =====================================================
+   Input with € prefix or % / "months" suffix
+   ===================================================== */
+
+.input-adornment {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-adornment__prefix,
+.input-adornment__suffix {
+    position: absolute;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+    white-space: nowrap;
+}
+.input-adornment__prefix { left: 12px; }
+.input-adornment__suffix { right: 12px; }
+.input-adornment .form-input { width: 100%; }
+.input-adornment--prefix .form-input { padding-left: 28px; }
+.input-adornment--suffix .form-input { padding-right: 50px; }
+
+/* =====================================================
+   Info box (teal — distinct from .alert-info which is blue)
+   ===================================================== */
+
+.calc-info-box {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-primary-tint);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-4);
+}
+.calc-info-box__icon {
+    width: 20px; height: 20px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px; font-weight: 700;
+    margin-top: 1px;
+}
+.calc-info-box__title { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-primary); margin-bottom: 2px; }
+.calc-info-box__text  { font-size: var(--font-size-xs); color: var(--color-text-muted); line-height: 1.5; margin: 0; }
+
+/* =====================================================
+   Payment summary — mini KPI grid inside a card
+   ===================================================== */
+
+.summary-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+}
+@media (max-width: 640px) {
+    .summary-kpis { grid-template-columns: 1fr; }
+}
+
+.summary-kpi {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+}
+.summary-kpi__icon {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: var(--space-2);
+}
+.summary-kpi__icon svg { width: 14px; height: 14px; }
+.summary-kpi__icon--teal  { background: var(--color-primary-tint); }
+.summary-kpi__icon--teal svg  { color: var(--color-primary); }
+.summary-kpi__icon--amber { background: var(--color-warning-tint); }
+.summary-kpi__icon--amber svg { color: var(--color-warning); }
+.summary-kpi__icon--green { background: var(--color-positive-tint); }
+.summary-kpi__icon--green svg { color: var(--color-positive); }
+
+.summary-kpi__header { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+.summary-kpi__label { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.summary-kpi__value { font-size: var(--font-size-xl); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.summary-kpi__value--teal  { color: var(--color-primary); }
+.summary-kpi__value--amber { color: var(--color-warning); }
+.summary-kpi__value--green { color: var(--color-positive); }
+.summary-kpi__sub { font-size: var(--font-size-xs); color: var(--color-text-subtle); margin-top: 2px; }
+
+/* =====================================================
+   Growth projection chart
+   ===================================================== */
+
+.chart-wrap__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+.chart-legend {
+    display: flex; gap: var(--space-4);
+    list-style: none; margin: 0; padding: 0;
+}
+.chart-legend li {
+    display: flex; align-items: center; gap: var(--space-1);
+    font-size: var(--font-size-xs); color: var(--color-text-muted);
+}
+.chart-legend__dot {
+    width: 8px; height: 8px;
+    border-radius: var(--radius-pill); flex-shrink: 0;
+}
+.chart-legend__dot--teal { background: var(--color-primary); }
+.chart-legend__dot--grey { background: var(--color-border-strong); }
+
+.chart-svg-wrap { width: 100%; overflow: hidden; }
+.chart-svg-wrap svg { width: 100%; display: block; }
+
+/* =====================================================
+   Budget breakdown — bars + donut side by side
+   ===================================================== */
+
+.breakdown-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-6);
+    align-items: center;
+}
+@media (max-width: 640px) {
+    .breakdown-inner { grid-template-columns: 1fr; }
+}
+
+/* Progress rows — layout wrapper; bars use existing .progress / .progress__bar */
+.progress-rows { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.progress-row__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-1);
+    gap: var(--space-2);
+}
+.progress-row__label  { font-size: var(--font-size-sm); font-weight: 500; }
+.progress-row__amount { font-size: var(--font-size-sm); font-weight: 600;
+                        font-variant-numeric: tabular-nums; white-space: nowrap; }
+.progress-row__pct    { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+
+/* Override .progress__bar colour per row */
+.progress__bar--red    { background: var(--color-negative); }
+.progress__bar--amber  { background: var(--color-warning); }
+.progress__bar--green  { background: var(--color-positive); }
+
+/* =====================================================
+   Donut chart
+   ===================================================== */
+
+.donut-wrap {
+    position: relative;
+    width: 120px; height: 120px;
+    flex-shrink: 0;
+}
+.donut-wrap svg { width: 100%; height: 100%; display: block; }
+.donut-wrap__label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; pointer-events: none;
+}
+.donut-wrap__pct        { font-size: var(--font-size-lg); font-weight: 700; line-height: 1; }
+.donut-wrap__free-label { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+
+/* =====================================================
+   Category review status colours
+   ===================================================== */
+
+.status-on-track { color: var(--color-positive); font-weight: 500; }
+.status-high     { color: var(--color-negative);  font-weight: 500; }
+.status-great    { color: var(--color-primary);   font-weight: 500; }
+.status-low      { color: var(--color-warning);   font-weight: 500; }
+.status-neutral  { color: var(--color-text-muted); }
+
+/* =====================================================
+   Amortization table column colours
+   ===================================================== */
+
+.col-principal { color: var(--color-primary); font-weight: 500; }
+.col-interest  { color: var(--color-warning);  font-weight: 500; }
