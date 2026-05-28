@@ -64,9 +64,9 @@
   <main class="container container--wide section">
 
       <nav class="flex-row gap-2 mb-6 text-sm">
-          <a href="<%= ctxPath %>/guest/report" class="font-semibold text-primary breadcrumb-link flex-row gap-1">
-              <i data-lucide="arrow-left" class="icon-sm"></i> Back to calculators
-          </a>
+          <a href="<%= ctxPath %>/guest/report" class="muted breadcrumb-link">Calculators</a>
+          <span class="muted">&rsaquo;</span>
+          <strong>Loan amortization</strong>
       </nav>
 
       <header class="mb-10">
@@ -141,38 +141,44 @@
               <p class="muted text-sm mb-8">Estimated from €<%= String.format("%,.0f", principal) %> principal, <%= annualRate %>% APR, and <%= monthsStr %> months.</p>
 
               <div class="grid grid--3 mb-8">
-                  <div class="card">
-                      <div class="flex-row gap-2 mb-4">
+                  <article class="card">
+                      <div class="flex-row gap-2 mb-3 muted text-sm">
                           <div class="badge badge-neutral badge-icon">
                               <i data-lucide="rotate-cw" class="text-primary"></i>
                           </div>
-                          <span class="text-sm font-medium muted">Monthly payment</span>
+                          <span>Monthly payment</span>
                       </div>
-                      <h3 class="text-3xl text-primary font-normal mb-1"><%= String.format("€%,.2f", monthlyPayment) %></h3>
-                      <span class="text-xs muted">Over <%= monthsStr %> months</span>
-                  </div>
+                      <h3 class="text-3xl text-primary font-normal mb-0">
+                          <%= String.format("€%,.2f", monthlyPayment) %>
+                      </h3>
+                      <p class="text-xs muted m-0">Over <%= monthsStr %> months</p>
+                  </article>
 
-                  <div class="card">
-                      <div class="flex-row gap-2 mb-4">
+                  <article class="card">
+                      <div class="flex-row gap-2 mb-3 muted text-sm">
                           <div class="badge badge-wallet-cash badge-icon badge-warning">
                               <i data-lucide="percent" class="text-warning"></i>
                           </div>
-                          <span class="text-sm font-medium muted">Total interest</span>
+                          <span>Total interest</span>
                       </div>
-                      <h3 class="text-3xl font-normal mb-1"><%= String.format("€%,.2f", sumInterest) %></h3>
-                      <span class="text-xs muted"><%= annualRate %>% APR</span>
-                  </div>
+                      <h3 class="text-3xl font-normal mb-0">
+                          <%= String.format("€%,.2f", sumInterest) %>
+                      </h3>
+                      <p class="text-xs muted m-0"><%= annualRate %>% APR</p>
+                  </article>
 
-                  <div class="card">
-                      <div class="flex-row gap-2 mb-4">
+                  <article class="card">
+                      <div class="flex-row gap-2 mb-3 muted text-sm">
                           <div class="badge badge-neutral badge-icon">
                               <div class="legend-dot legend-dot--interest"></div>
                           </div>
-                          <span class="text-sm font-medium muted">Total paid</span>
+                          <span>Total paid</span>
                       </div>
-                      <h3 class="text-3xl font-normal mb-1"><%= String.format("€%,.2f", sumTotal) %></h3>
-                      <span class="text-xs muted">Principal + interest</span>
-                  </div>
+                      <h3 class="text-3xl font-normal mb-0">
+                          <%= String.format("€%,.2f", sumTotal) %>
+                      </h3>
+                      <p class="text-xs muted m-0">Principal + interest</p>
+                  </article>
               </div>
 
               <h4 class="font-semibold mb-2">What this means</h4>
