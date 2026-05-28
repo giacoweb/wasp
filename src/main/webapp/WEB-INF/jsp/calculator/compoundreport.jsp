@@ -91,7 +91,7 @@
 <main class="container container--wide section">
 
     <nav class="flex-row gap-2 mb-6 text-sm">
-        <a href="<%= ctxPath %>/guest/report" class="muted">Calculators</a>
+        <a href="<%= ctxPath %>/guest/report" class="muted breadcrumb-link">Calculators</a>
         <span class="muted">&rsaquo;</span>
         <strong>Compound interest</strong>
     </nav>

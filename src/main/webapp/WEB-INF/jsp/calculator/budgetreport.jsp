@@ -288,7 +288,7 @@
                         </div>
                         <span>Remaining income</span>
                     </div>
-                    <h3 class="text-3xl font-normal mb-1">
+                    <h3 class="text-3xl text-primary font-normal mb-0">
                         <%= String.format("€%,.0f", netBalance) %>
                     </h3>
                     <p class="text-xs muted m-0">After expenses</p>
@@ -302,7 +302,7 @@
                         </div>
                         <span>Savings rate</span>
                     </div>
-                    <h3 class="text-3xl font-normal mb-1">
+                    <h3 class="text-3xl font-normal mb-0">
                         <%= String.format("%.1f%%", savingsRate) %>
                     </h3>
                     <p class="text-xs muted m-0">Of monthly income</p>
@@ -316,7 +316,7 @@
                         </div>
                         <span>Budget health</span>
                     </div>
-                    <h3 class="text-3xl font-normal mb-1">
+                    <h3 class="text-3xl font-normal mb-0">
                         <%= String.format("%.0f%%", budgetHealth) %>
                     </h3>
                     <p class="text-xs m-0 font-medium <%= healthStatusClass %>"><%= healthStatus %></p>
