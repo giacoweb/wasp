@@ -159,3 +159,203 @@
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 .legend-dot--contrib { background: #CBD5E1; }
 .legend-dot--interest { background: var(--color-primary); }
+
+/* =====================================================
+   Calculator Dynamic Rows
+   ===================================================== */
+.calc-dynamic-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+.calc-dynamic-row > .form-input,
+.calc-dynamic-row > .form-select {
+    flex: 2;
+    min-width: 0;
+}
+.calc-dynamic-row > .form-input-group {
+    flex: 1.5;
+    min-width: 0;
+}
+.calc-dynamic-row > .btn {
+    flex-shrink: 0;
+}
+
+/* =====================================================
+   Calculator Empty State
+   ===================================================== */
+.calc-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+    height: 100%;
+    min-height: 400px;
+}
+.calc-empty-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--color-neutral-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-4);
+    color: var(--color-text-muted);
+}
+.calc-empty-icon svg,
+.calc-empty-icon i {
+    width: 32px;
+    height: 32px;
+}
+.calc-empty-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+}
+.calc-empty-text {
+    color: var(--color-text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* =====================================================
+   Budget Analysis Styles
+   ===================================================== */
+.breadcrumb-link {
+    text-decoration: none;
+}
+
+.advice-card {
+    align-items: flex-start;
+    margin-top: var(--space-4);
+}
+
+.advice-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--color-positive-tint, #E6F2F1);
+    color: var(--color-positive, #0F766E);
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+}
+
+.advice-icon i,
+.advice-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.advice-title {
+    color: var(--color-text);
+}
+
+.advice-text {
+    margin-top: var(--space-1);
+}
+
+.badge-warning {
+    background: var(--color-warning-tint);
+    color: var(--color-warning);
+}
+
+.status-text-positive { color: var(--color-positive); }
+.status-text-warning { color: var(--color-warning); }
+.status-text-negative { color: var(--color-negative); }
+.status-text-muted { color: var(--color-text-muted); }
+
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.progress-track {
+    background: var(--color-neutral-100);
+    height: 8px;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    margin: var(--space-2) 0;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: var(--radius-pill);
+}
+
+.progress-bar--negative {
+    background: var(--color-negative);
+}
+
+.progress-bar--warning {
+    background: #FBBF24;
+}
+
+.progress-bar--primary {
+    background: var(--color-primary);
+}
+
+.donut-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-chart-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.donut-chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.donut-val {
+    font-size: 26px;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+.donut-lbl {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: lowercase;
+}
+
+.table-empty-cell {
+    padding: var(--space-6) 0;
+}
+
+.icon-sm {
+    width: 14px;
+    height: 14px;
+}
+
+.form-input-group--suffix-months .form-input {
+    padding-right: 70px;
+}
+
+.mt-4 {
+    margin-top: var(--space-4);
+}
+
+.chart-canvas {
+    max-height: 300px;
+    width: 100%;
+}

@@ -148,18 +148,18 @@
                         <span class="form-help">Investment horizon</span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: var(--space-4);">
+                    <button type="submit" class="btn btn-primary btn-block mt-4">
                         <i data-lucide="calculator"></i> Calculate
                     </button>
                 </form>
             </article>
 
-            <article class="card mt-4 flex-row gap-3" style="align-items: flex-start;">
-                <div class="form-header-icon" style="width: 32px; height: 32px; background: var(--color-primary-tint); color: var(--color-primary); flex-shrink: 0;">
-                    <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+            <article class="card mt-4 flex-row gap-3 advice-card">
+                <div class="form-header-icon advice-icon">
+                    <i data-lucide="info"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm m-0">Compounding effect</h4>
+                    <h4 class="text-sm m-0 advice-title">Compounding effect</h4>
                     <p class="text-sm muted m-0">
                         With regular monthly contributions, your interest starts small but becomes a larger share of the final balance over time.
                     </p>
@@ -225,7 +225,7 @@
                     </div>
                 </div>
                 <div>
-                    <canvas id="compoundChart" style="max-height: 300px; width: 100%;"></canvas>
+                    <canvas id="compoundChart" class="chart-canvas"></canvas>
                 </div>
             </article>
 
@@ -267,12 +267,12 @@
 
             <% } else { %>
             <!-- EMPTY STATE -->
-            <article class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-12) var(--space-6); text-align: center; height: 100%; min-height: 400px;">
-                <div style="width: 64px; height: 64px; background: var(--color-neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); color: var(--color-text-muted);">
-                    <i data-lucide="bar-chart-3" style="width: 32px; height: 32px;"></i>
+            <article class="card calc-empty-state">
+                <div class="calc-empty-icon">
+                    <i data-lucide="bar-chart-3"></i>
                 </div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: var(--space-2);">No projection data</h3>
-                <p style="color: var(--color-text-muted); max-width: 400px; margin: 0 auto;">
+                <h3 class="calc-empty-title">No projection data</h3>
+                <p class="calc-empty-text">
                     Enter your financial details in the form on the left and click <strong>Calculate</strong> to see your compound growth projection and year-by-year breakdown.
                 </p>
             </article>

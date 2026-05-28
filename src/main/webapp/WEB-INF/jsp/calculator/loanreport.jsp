@@ -64,8 +64,8 @@
   <main class="container container--wide section">
 
       <nav class="flex-row gap-2 mb-6 text-sm">
-          <a href="<%= ctxPath %>/guest/report" class="font-semibold text-primary" style="text-decoration: none; display: flex; align-items: center; gap: 4px;">
-              <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back to calculators
+          <a href="<%= ctxPath %>/guest/report" class="font-semibold text-primary breadcrumb-link flex-row gap-1">
+              <i data-lucide="arrow-left" class="icon-sm"></i> Back to calculators
           </a>
       </nav>
 
@@ -74,11 +74,11 @@
           <p class="text-lg muted m-0">Estimate monthly payments, total interest, and the first months of your repayment schedule.</p>
       </header>
 
-      <div class="calc-layout mb-10" style="grid-template-columns: minmax(320px, 450px) 1fr;">
+      <div class="calc-layout mb-10">
           
           <article class="card">
               <div class="flex-row gap-3 mb-2">
-                  <div class="feature-icon m-0" style="width: 40px; height: 40px;">
+                  <div class="form-header-icon">
                       <i data-lucide="grid-3x3"></i>
                   </div>
                   <h2 class="text-2xl font-semibold m-0">Loan details</h2>
@@ -112,8 +112,8 @@
 
                       <div class="form-field">
                           <label class="form-label">Loan term</label>
-                          <div class="form-input-group form-input-group--suffix-calc">
-                              <input type="text" name="months" class="form-input" value="<%= monthsStr %>" style="padding-right: 70px;"/>
+                          <div class="form-input-group form-input-group--suffix-calc form-input-group--suffix-months">
+                              <input type="text" name="months" class="form-input" value="<%= monthsStr %>" />
                               <span class="input-suffix-calc">months</span>
                           </div>
                       </div>
@@ -141,10 +141,10 @@
               <p class="muted text-sm mb-8">Estimated from €<%= String.format("%,.0f", principal) %> principal, <%= annualRate %>% APR, and <%= monthsStr %> months.</p>
 
               <div class="grid grid--3 mb-8">
-                  <div class="card" style="padding: 20px;">
+                  <div class="card">
                       <div class="flex-row gap-2 mb-4">
-                          <div style="background: var(--color-surface); border: 1px solid var(--color-border); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                              <i data-lucide="rotate-cw" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+                          <div class="badge badge-neutral badge-icon">
+                              <i data-lucide="rotate-cw" class="text-primary"></i>
                           </div>
                           <span class="text-sm font-medium muted">Monthly payment</span>
                       </div>
@@ -152,10 +152,10 @@
                       <span class="text-xs muted">Over <%= monthsStr %> months</span>
                   </div>
 
-                  <div class="card" style="padding: 20px;">
+                  <div class="card">
                       <div class="flex-row gap-2 mb-4">
-                          <div style="background: var(--color-warning-tint, #fef3c7); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                              <i data-lucide="percent" style="width: 14px; height: 14px; color: var(--color-warning);"></i>
+                          <div class="badge badge-wallet-cash badge-icon badge-warning">
+                              <i data-lucide="percent" class="text-warning"></i>
                           </div>
                           <span class="text-sm font-medium muted">Total interest</span>
                       </div>
@@ -163,10 +163,10 @@
                       <span class="text-xs muted"><%= annualRate %>% APR</span>
                   </div>
 
-                  <div class="card" style="padding: 20px;">
+                  <div class="card">
                       <div class="flex-row gap-2 mb-4">
-                          <div style="background: var(--color-surface); border: 1px solid var(--color-border); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                              <div style="width: 8px; height: 8px; background: var(--color-primary); border-radius: 50%;"></div>
+                          <div class="badge badge-neutral badge-icon">
+                              <div class="legend-dot legend-dot--interest"></div>
                           </div>
                           <span class="text-sm font-medium muted">Total paid</span>
                       </div>
@@ -180,12 +180,12 @@
           </article>
           <% } else { %>
           <!-- EMPTY STATE -->
-          <article class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-12) var(--space-6); text-align: center; height: 100%; min-height: 400px;">
-              <div style="width: 64px; height: 64px; background: var(--color-neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); color: var(--color-text-muted);">
-                  <i data-lucide="bar-chart-3" style="width: 32px; height: 32px;"></i>
+          <article class="card calc-empty-state">
+              <div class="calc-empty-icon">
+                  <i data-lucide="bar-chart-3"></i>
               </div>
-              <h3 style="font-size: 20px; font-weight: 600; margin-bottom: var(--space-2);">No projection data</h3>
-              <p style="color: var(--color-text-muted); max-width: 400px; margin: 0 auto;">
+              <h3 class="calc-empty-title">No projection data</h3>
+              <p class="calc-empty-text">
                   Enter your loan details in the form on the left and click <strong>Calculate payment</strong> to see your payment summary and amortization schedule.
               </p>
           </article>
@@ -194,32 +194,32 @@
 
       <% if (hasData) { %>
       <article class="card card--table table-paginated-container mb-10" data-per-page="12" data-item-name="months">
-          <div class="card-header-border flex-row" style="justify-content: space-between; padding: 20px 24px;">
+          <div class="card-header-border flex-row justify-between">
               <h3 class="card-title m-0 text-xl font-semibold">Amortization schedule</h3>
-              <button class="btn btn-ghost" style="height: 36px; padding: 0 16px; font-size: 13px;">
-                  <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export CSV
+              <button class="btn btn-ghost btn-sm">
+                  <i data-lucide="download"></i> Export CSV
               </button>
           </div>
           <div class="table-wrapper">
               <table class="table">
                   <thead>
                   <tr>
-                      <th class="pl-6" style="font-size: 11px;">MONTH</th>
-                      <th style="font-size: 11px;">PAYMENT</th>
-                      <th style="font-size: 11px;">PRINCIPAL</th>
-                      <th style="font-size: 11px;">INTEREST</th>
-                      <th class="pr-6" style="font-size: 11px;">REMAINING BALANCE</th>
+                      <th class="pl-6">MONTH</th>
+                      <th>PAYMENT</th>
+                      <th>PRINCIPAL</th>
+                      <th>INTEREST</th>
+                      <th class="pr-6">REMAINING BALANCE</th>
                   </tr>
                   </thead>
                   <tbody class="table-paginate-body">
                   <% for (int i = 0; i < result.size(); i++) {
                       AmortizationRow row = result.get(i); %>
                   <tr>
-                      <td class="pl-6 muted" style="font-size: 13px;">#<%= String.format("%02d", row.getMonth()) %></td>
-                      <td class="font-semibold" style="font-size: 13px;"><%= String.format("€%,.2f", row.getTotalPayment()) %></td>
-                      <td class="text-success font-medium" style="font-size: 13px;"><%= String.format("€%,.2f", row.getPrincipalPaid()) %></td>
-                      <td class="text-warning font-medium" style="font-size: 13px;"><%= String.format("€%,.2f", row.getInterestPaid()) %></td>
-                      <td class="pr-6 font-semibold" style="font-size: 13px;"><%= String.format("€%,.2f", row.getRemainingBalance()) %></td>
+                      <td class="pl-6 muted">#<%= String.format("%02d", row.getMonth()) %></td>
+                      <td class="font-semibold"><%= String.format("€%,.2f", row.getTotalPayment()) %></td>
+                      <td class="text-success font-medium"><%= String.format("€%,.2f", row.getPrincipalPaid()) %></td>
+                      <td class="text-warning font-medium"><%= String.format("€%,.2f", row.getInterestPaid()) %></td>
+                      <td class="pr-6 font-semibold"><%= String.format("€%,.2f", row.getRemainingBalance()) %></td>
                   </tr>
                   <% } %>
                   </tbody>
