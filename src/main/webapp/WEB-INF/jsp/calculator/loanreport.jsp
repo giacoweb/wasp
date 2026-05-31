@@ -76,30 +76,30 @@
 
       <div class="calc-layout mb-10">
           
-          <article class="card">
-              <div class="flex-row gap-3 mb-2">
-                  <div class="form-header-icon">
-                      <i data-lucide="grid-3x3"></i>
+          <aside>
+              <article class="card">
+                  <div class="flex-row gap-3 mb-6">
+                      <div class="form-header-icon">
+                          <i data-lucide="grid-3x3"></i>
+                      </div>
+                      <h2 class="text-2xl font-semibold mb-0">Loan details</h2>
                   </div>
-                  <h2 class="text-2xl font-semibold m-0">Loan details</h2>
-              </div>
-              <p class="muted text-sm mb-6">Adjust the values to estimate your monthly payment.</p>
 
-              <% if (request.getAttribute("errorMessage") != null) { %>
-                  <div class="alert alert-error mb-6">
-                      <i data-lucide="alert-circle"></i>
-                      <span><%= HtmlUtil.escape((String) request.getAttribute("errorMessage")) %></span>
-                  </div>
-              <% } %>
+                  <% if (request.getAttribute("errorMessage") != null) { %>
+                      <div class="alert alert-error mb-4">
+                          <i data-lucide="alert-circle"></i>
+                          <span><%= HtmlUtil.escape((String) request.getAttribute("errorMessage")) %></span>
+                      </div>
+                  <% } %>
 
-              <form class="form" action="<%= ctxPath %>/report/loan" method="POST">
-                  <div class="grid grid--2 mb-6">
+                  <form class="form" action="<%= ctxPath %>/report/loan" method="POST">
                       <div class="form-field">
                           <label class="form-label">Loan amount</label>
                           <div class="form-input-group form-input-group--prefix-calc">
                               <span class="input-prefix-calc">€</span>
                               <input type="text" name="principal" class="form-input" value="<%= principalStr %>" />
                           </div>
+                          <span class="form-help">Total amount borrowed</span>
                       </div>
 
                       <div class="form-field">
@@ -108,32 +108,27 @@
                               <input type="text" name="annualRate" class="form-input" value="<%= annualRateStr %>" />
                               <span class="input-suffix-calc">%</span>
                           </div>
+                          <span class="form-help">Yearly interest percentage</span>
                       </div>
 
                       <div class="form-field">
                           <label class="form-label">Loan term</label>
-                          <div class="form-input-group form-input-group--suffix-calc form-input-group--suffix-months">
-                              <input type="text" name="months" class="form-input" value="<%= monthsStr %>" />
-                              <span class="input-suffix-calc">months</span>
-                          </div>
+                          <input type="text" name="months" class="form-input" value="<%= monthsStr %>" />
+                          <span class="form-help">Duration in months</span>
                       </div>
 
                       <div class="form-field">
                           <label class="form-label">Start month</label>
-                          <div class="form-input-group">
-                              <input type="text" name="startMonth" class="form-input" value="<%= startMonthStr %>" />
-                          </div>
+                          <input type="text" name="startMonth" class="form-input" value="<%= startMonthStr %>" />
+                          <span class="form-help">First month of payment</span>
                       </div>
-                  </div>
 
-                  <div class="flex-row gap-6">
-                      <button type="submit" class="btn btn-primary">
+                      <button type="submit" class="btn btn-primary btn-block mt-4">
                           <i data-lucide="rotate-cw"></i> Calculate payment
                       </button>
-                      <a href="<%= ctxPath %>/report/loan" class="btn btn-ghost">Reset</a>
-                  </div>
-              </form>
-          </article>
+                  </form>
+              </article>
+          </aside>
 
           <% if (hasData) { %>
           <article class="card">
