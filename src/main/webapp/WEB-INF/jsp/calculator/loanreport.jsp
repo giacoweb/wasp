@@ -133,7 +133,7 @@
           <% if (hasData) { %>
           <article class="card">
               <h2 class="text-2xl font-semibold mb-2">Payment summary</h2>
-              <p class="muted text-sm mb-8">Estimated from €<%= String.format("%,.0f", principal) %> principal, <%= annualRate %>% APR, and <%= monthsStr %> months.</p>
+              <p class="muted text-sm mb-8">Estimated from €<%= principal != null ? String.format("%,.0f", principal) : principalStr %> principal, <%= annualRate %>% APR, and <%= monthsStr %> months.</p>
 
               <div class="grid grid--3 mb-8">
                   <article class="card">
