@@ -119,7 +119,20 @@
 
                       <div class="form-field">
                           <label class="form-label">Start month</label>
-                          <input type="text" name="startMonth" class="form-input" value="<%= startMonthStr %>" />
+                          <select name="startMonth" class="form-input">
+                              <option value="January"  <%= "January".equals(startMonthStr)  ? "selected" : "" %>>January</option>
+                              <option value="February" <%= "February".equals(startMonthStr) ? "selected" : "" %>>February</option>
+                              <option value="March"    <%= "March".equals(startMonthStr)    ? "selected" : "" %>>March</option>
+                              <option value="April"    <%= "April".equals(startMonthStr)    ? "selected" : "" %>>April</option>
+                              <option value="May"      <%= "May".equals(startMonthStr)      ? "selected" : "" %>>May</option>
+                              <option value="June"     <%= "June".equals(startMonthStr)     ? "selected" : "" %>>June</option>
+                              <option value="July"     <%= "July".equals(startMonthStr)     ? "selected" : "" %>>July</option>
+                              <option value="August"   <%= "August".equals(startMonthStr)   ? "selected" : "" %>>August</option>
+                              <option value="September"<%= "September".equals(startMonthStr)? "selected" : "" %>>September</option>
+                              <option value="October"  <%= "October".equals(startMonthStr)  ? "selected" : "" %>>October</option>
+                              <option value="November" <%= "November".equals(startMonthStr) ? "selected" : "" %>>November</option>
+                              <option value="December" <%= "December".equals(startMonthStr) ? "selected" : "" %>>December</option>
+                          </select>
                           <span class="form-help">First month of payment</span>
                       </div>
 
