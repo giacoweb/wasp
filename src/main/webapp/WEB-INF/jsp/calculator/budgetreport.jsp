@@ -497,7 +497,7 @@
     document.querySelector('form.form').addEventListener('submit', function(e) {
         this.querySelectorAll('input[name="incomeAmount"], input[name="expenseAmount"], input[name="savingsGoal"]').forEach(input => {
             if (input.value) {
-                input.value = input.value.replace(',', '.').trim();
+                input.value = input.value.replace(/,/g, '.').trim();
             }
         });
     });
