@@ -137,7 +137,7 @@
                       </div>
 
                       <button type="submit" class="btn btn-primary btn-block mt-4">
-                          <i data-lucide="rotate-cw"></i> Calculate payment
+                          <i data-lucide="calculator"></i> Calculate
                       </button>
                   </form>
               </article>
