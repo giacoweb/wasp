@@ -96,7 +96,12 @@
         <strong>Compound interest</strong>
     </nav>
 
-    <div class="calc-layout">
+    <header class="mb-10">
+        <h1 class="text-3xl mb-2">Compound Interest</h1>
+        <p class="text-lg muted m-0">Estimate your future wealth, compound growth, and the power of consistent investing.</p>
+    </header>
+
+    <div class="calc-layout mb-10">
         
         <aside>
             <article class="card">
