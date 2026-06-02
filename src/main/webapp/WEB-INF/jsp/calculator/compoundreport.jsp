@@ -11,7 +11,7 @@
 
     String initialCapStr = initialCapital != null ? String.format(Locale.US, "%.0f", initialCapital) : HtmlUtil.escape(request.getParameter("initialCapital"));
     String monthlyContStr = monthlyContribution != null ? String.format(Locale.US, "%.0f", monthlyContribution) : HtmlUtil.escape(request.getParameter("monthlyContribution"));
-    String annualRateStr = annualRate != null ? String.format(Locale.US, "%.0f", annualRate) : HtmlUtil.escape(request.getParameter("annualRate"));
+    String annualRateStr = annualRate != null ? String.format(Locale.US, "%.2f", annualRate) : HtmlUtil.escape(request.getParameter("annualRate"));
     String durationStr = hasData ? String.valueOf(result.size()) : HtmlUtil.escape(request.getParameter("years"));
 
     String stringResult = "[]";
