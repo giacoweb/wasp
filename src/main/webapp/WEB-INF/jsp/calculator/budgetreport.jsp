@@ -261,9 +261,9 @@
                 <div>
                     <h4 class="text-sm font-semibold m-0 advice-title">Budget health</h4>
                     <p class="text-sm muted m-0 advice-text">
-                        <% if (netBalance >= savingsGoal) { %>
+                        <% if (savingsGoal > 0 && netBalance >= savingsGoal) { %>
                             Your savings goal is realistic and fully met! You have a healthy surplus of €<%= String.format(Locale.US, "%,.0f", netBalance - savingsGoal) %> this month.
-                        <% } else if (netBalance > 0) { %>
+                        <% } else if (savingsGoal > 0 && netBalance > 0) { %>
                             Your savings goal is not fully met. Try reducing your largest expense categories to save €<%= String.format(Locale.US, "%,.0f", savingsGoal - netBalance) %> more.
                         <% } else { %>
                             You are in a budget deficit! Your expenses exceed your monthly income by €<%= String.format(Locale.US, "%,.0f", -netBalance) %>. You need to reduce spending immediately.
