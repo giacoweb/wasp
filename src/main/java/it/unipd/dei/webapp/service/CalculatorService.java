@@ -80,11 +80,11 @@ public class CalculatorService {
     public List<CompoundResult> calculateCompound(double initialCapital, double monthlyContribution, double annualRate, int years) throws ValidationException {
 
         if (initialCapital <0){
-            throw new ValidationException("The capital need to be greater than 0.");
+            throw new ValidationException("Initial capital must be positive.");
         }
 
         if (monthlyContribution < 0) {
-            throw new ValidationException("The monthly contribution need to be positive.");
+            throw new ValidationException("Monthly Contribution must be positive.");
         }
 
         if (annualRate < 0 || annualRate > 100) {
