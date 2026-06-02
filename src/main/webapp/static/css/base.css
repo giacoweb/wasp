@@ -39,6 +39,7 @@ code, kbd, samp {
 .muted   { color: var(--color-text-muted); }
 .subtle  { color: var(--color-text-subtle); }
 .hidden  { display: none !important; }
+[hidden] { display: none !important; }
 .tabular { font-variant-numeric: tabular-nums; }
 
 :focus-visible {

@@ -190,7 +190,7 @@ class TransactionServiceTest {
                 wallet.getId(), user.getId(), "100", "Salary", "2026-01-15", null);
 
         Transaction updated = transactionService.updateTransaction(
-                created.getId(), user.getId(), "-50", "Groceries", "2026-02-01", "Weekly shop");
+                created.getId(), user.getId(), wallet.getId().toString(), "-50", "Groceries", "2026-02-01", "Weekly shop");
 
         assertEquals(TransactionType.EXPENSE, updated.getType());
         assertEquals("Groceries", updated.getCategory());
@@ -209,14 +209,14 @@ class TransactionServiceTest {
 
         assertThrows(UnauthorizedOperationException.class, () ->
                 transactionService.updateTransaction(
-                        created.getId(), other.getId(), "200", "Hack", "2026-01-15", null));
+                        created.getId(), other.getId(), wallet.getId().toString(), "200", "Hack", "2026-01-15", null));
     }
 
     @Test
     void updateNonexistentTransactionThrowsValidation() {
         assertThrows(ValidationException.class, () ->
                 transactionService.updateTransaction(
-                        UUID.randomUUID(), UUID.randomUUID(), "100", "Test", "2026-01-15", null));
+                        UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID().toString(), "100", "Test", "2026-01-15", null));
     }
 
     @Test

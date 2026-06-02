@@ -37,66 +37,9 @@
 <div class="app-shell">
     
     <!-- Sidebar -->
-    <aside class="app-sidebar">
-        <a href="<%= ctxPath %>/dashboard" class="brand">
-            <span class="brand-logo">▲</span> FinTrack
-        </a>
-        
-        <nav style="margin-top: var(--space-8);">
-            <ul class="nav-menu">
-                <li>
-                    <a href="<%= ctxPath %>/dashboard" class="nav-item active">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctxPath %>/wallets" class="nav-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-                        Wallets
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
-                        Transactions
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctxPath %>/pac" class="nav-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                        PAC Plans
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctxPath %>/expenses" class="nav-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                        Recurring Exp.
-                    </a>
-                </li>
-                <li>
-                    <a href="<%= ctxPath %>/report/export" class="nav-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                        Forecast / Reports
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        
-        <div class="user-profile">
-            <div class="user-avatar"><%= user.getName() != null && !user.getName().isEmpty() ? user.getName().substring(0, 1).toUpperCase() : "U" %></div>
-            <div class="user-info">
-                <span class="user-name"><%= HtmlUtil.escape(user.getName()) %> <%= HtmlUtil.escape(user.getSurname()) %></span>
-                <span class="user-email"><%= HtmlUtil.escape(user.getEmail()) %></span>
-            </div>
-            
-            <form action="<%= ctxPath %>/auth/logout" method="post" style="margin-left: auto;">
-                <button type="submit" class="btn btn-icon btn-ghost" title="Logout" style="width: 24px; height: 24px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-                </button>
-            </form>
-        </div>
-    </aside>
+    <jsp:include page="/WEB-INF/jsp/common/_sidebar.jsp">
+        <jsp:param name="navActive" value="dashboard"/>
+    </jsp:include>
 
     <!-- Main Content -->
     <main class="app-main">
@@ -107,8 +50,12 @@
             </div>
         <% } %>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-8);">
             <h1 style="margin: 0;">Hi, <%= HtmlUtil.escape(user.getName()) %> 👋</h1>
+            <a href="<%= ctxPath %>/report/export" class="btn btn-ghost" style="gap:var(--space-2);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download report
+            </a>
         </div>
 
         <% if (summary != null) { %>
@@ -171,12 +118,12 @@
                 <% 
                     List<WalletSummary> wallets = summary.getWallets();
                     if (wallets != null && !wallets.isEmpty()) {
-                        for (WalletSummary wallet : wallets) { 
+                        for (WalletSummary wallet : wallets) {
                             String badgeClass = "badge-primary";
                             String typeLabel = wallet.getType().name();
                             switch (wallet.getType().name()) {
                                 case "CASH": badgeClass = "badge-wallet-cash"; typeLabel = "Cash"; break;
-                                case "BANK": badgeClass = "badge-wallet-bank"; typeLabel = "Bank"; break;
+                                case "BANK_ACCOUNT": badgeClass = "badge-wallet-bank"; typeLabel = "Bank"; break;
                                 case "CREDIT_CARD": badgeClass = "badge-wallet-credit-card"; typeLabel = "Credit Card"; break;
                                 case "INVESTMENT": badgeClass = "badge-wallet-investment"; typeLabel = "Investment"; break;
                             }
@@ -189,7 +136,7 @@
                         <div class="card-title" style="font-size: var(--font-size-base);"><%= HtmlUtil.escape(wallet.getName()) %></div>
                         <div class="card-title" style="font-size: var(--font-size-xl); margin-top: var(--space-2);">
                             <% if (wallet.getBalance().signum() < 0) { %>
-                                <span class="amount-negative" style="color: var(--color-danger);"><%= String.format("%,.2f", wallet.getBalance()) %></span>
+                                <span style="color: var(--color-danger);"><%= String.format("%,.2f", wallet.getBalance()) %></span>
                             <% } else { %>
                                 <%= String.format("%,.2f", wallet.getBalance()) %>
                             <% } %>
@@ -207,7 +154,6 @@
             <!-- Recent Transactions Section -->
             <div class="card-header" style="margin-top: var(--space-10);">
                 <h2 class="card-title">Recent transactions</h2>
-                <a href="#" class="btn btn-link">View all &rarr;</a>
             </div>
 
             <div class="table-wrapper">
@@ -220,20 +166,31 @@
                             <th class="num">Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Placeholder row because backend doesn't provide transactions yet -->
-                        <tr>
-                            <td colspan="4" class="table-empty">
-                                No recent transactions to display (Backend integration pending).
-                            </td>
-                        </tr>
+                    <tbody id="recent-tx-body">
+                        <tr><td colspan="4" class="table-empty">Loading...</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="tx-footer" style="display:none; justify-content:space-between; align-items:center; margin-top:var(--space-4); padding-top:var(--space-3); border-top:1px solid var(--color-border);">
+                <span class="muted" id="tx-count" style="font-size:var(--font-size-sm);"></span>
+                <a href="<%= ctxPath %>/transactions" style="font-size:var(--font-size-sm); color:var(--color-primary); text-decoration:none; font-weight:500;">View all transactions &rarr;</a>
             </div>
 
         <% } %>
     </main>
 </div>
+
+<script>
+window.CTX_PATH = "<%= ctxPath %>";
+window.WALLET_IDS = [
+    <% if (summary != null && summary.getWallets() != null) {
+        List<WalletSummary> ws = summary.getWallets();
+        for (int i = 0; i < ws.size(); i++) { %>
+    { id: "<%= ws.get(i).getId() %>", name: "<%= HtmlUtil.escape(ws.get(i).getName()) %>" }<%= i < ws.size() - 1 ? "," : "" %>
+    <% } } %>
+];
+</script>
+<script src="<%= ctxPath %>/static/js/dashboard.js"></script>
 
 </body>
 </html>

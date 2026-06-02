@@ -35,7 +35,7 @@ public class TransactionDAO extends AbstractDAO implements DAO {
                     "FROM transactions WHERE id = ?";
 
     private static final String UPDATE_SQL =
-            "UPDATE transactions SET type = ?::transaction_type, amount = ?, category = ?, " +
+            "UPDATE transactions SET wallet_id = ?, type = ?::transaction_type, amount = ?, category = ?, " +
                     "transaction_date = ?, note = ? WHERE id = ? " +
                     "RETURNING id, wallet_id, type, amount, category, transaction_date, note, created_at";
 
@@ -125,12 +125,13 @@ public class TransactionDAO extends AbstractDAO implements DAO {
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
 
-            statement.setString(1, transaction.getType().name());
-            statement.setBigDecimal(2, transaction.getAmount());
-            statement.setString(3, transaction.getCategory());
-            statement.setDate(4, Date.valueOf(transaction.getTransactionDate()));
-            statement.setString(5, transaction.getNote());
-            statement.setObject(6, transaction.getId());
+            statement.setObject(1, transaction.getWalletId());
+            statement.setString(2, transaction.getType().name());
+            statement.setBigDecimal(3, transaction.getAmount());
+            statement.setString(4, transaction.getCategory());
+            statement.setDate(5, Date.valueOf(transaction.getTransactionDate()));
+            statement.setString(6, transaction.getNote());
+            statement.setObject(7, transaction.getId());
 
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {

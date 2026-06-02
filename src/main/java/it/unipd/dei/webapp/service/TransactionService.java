@@ -65,6 +65,7 @@ public class TransactionService {
 
     public Transaction updateTransaction(final UUID transactionId,
                                          final UUID userId,
+                                         final String walletIdStr,
                                          final String amountStr,
                                          final String category,
                                          final String dateStr,
@@ -79,12 +80,18 @@ public class TransactionService {
 
         verifyWalletOwnership(existing.getWalletId(), userId);
 
+        UUID newWalletId = walletIdStr != null ? UUID.fromString(walletIdStr) : existing.getWalletId();
+        if (!newWalletId.equals(existing.getWalletId())) {
+            verifyWalletOwnership(newWalletId, userId);
+        }
+
         BigDecimal amount = parseAmount(amountStr);
         TransactionType type = resolveType(amount);
         LocalDate date = parseDate(dateStr);
 
         validateTransactionInput(category);
 
+        existing.setWalletId(newWalletId);
         existing.setType(type);
         existing.setAmount(amount.abs());
         existing.setCategory(category.trim());

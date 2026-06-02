@@ -1,10 +1,3 @@
-/**
- * Client-side validation for the login and register forms.
- * Uses the HTML5 constraint API for built-in checks (required, type=email,
- * minlength) and adds a custom password-strength rule on register.
- *
- * Server-side validation is still authoritative.
- */
 (function () {
     "use strict";
 
@@ -28,10 +21,6 @@
         if (err) err.textContent = "";
     }
 
-    /**
-     * Validates every constraint-API-aware input on `form`. Optionally runs
-     * `customCheck(form)`, which may return `{ input, message }` on failure.
-     */
     function validateForm(form, customCheck) {
         let firstInvalid = null;
 
@@ -56,7 +45,6 @@
         return firstInvalid === null;
     }
 
-    // Live: clear an inline error as soon as the user starts fixing the field.
     document.addEventListener("input", function (e) {
         if (e.target.matches(".form-input")) clearFieldError(e.target);
     });
