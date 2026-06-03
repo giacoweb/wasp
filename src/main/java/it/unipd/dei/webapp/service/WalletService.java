@@ -3,6 +3,7 @@ package it.unipd.dei.webapp.service;
 import it.unipd.dei.webapp.dao.WalletDAO;
 import it.unipd.dei.webapp.model.Wallet;
 import it.unipd.dei.webapp.model.WalletType;
+import it.unipd.dei.webapp.service.exception.SingleCurrencyRequiredException;
 import it.unipd.dei.webapp.service.exception.UnauthorizedOperationException;
 import it.unipd.dei.webapp.service.exception.ValidationException;
 import it.unipd.dei.webapp.service.exception.WalletHasTransactionsException;
@@ -39,6 +40,11 @@ public class WalletService {
 
         WalletType walletType = parseWalletType(type);
 
+        List<Wallet> existing = walletDAO.findByUserId(userId);
+        if (!existing.isEmpty() && !existing.get(0).getCurrency().equals(normalizedCurrency)) {
+            throw new SingleCurrencyRequiredException();
+        }
+
         return walletDAO.create(userId, name, walletType, normalizedCurrency);
     }
 
@@ -63,6 +69,16 @@ public class WalletService {
         }
 
         WalletType walletType = parseWalletType(type);
+
+        boolean currencyChanged = !wallet.getCurrency().equals(normalizedCurrency);
+        if (currencyChanged) {
+            boolean otherWithDifferentCurrency = walletDAO.findByUserId(userId).stream()
+                    .filter(w -> !w.getId().equals(walletId))
+                    .anyMatch(w -> !w.getCurrency().equals(normalizedCurrency));
+            if (otherWithDifferentCurrency) {
+                throw new SingleCurrencyRequiredException();
+            }
+        }
 
         wallet.setName(name);
         wallet.setType(walletType);
