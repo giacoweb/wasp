@@ -1,0 +1,303 @@
+/* =====================================================
+   Layout & Grid
+   ===================================================== */
+.calc-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 400px) 1fr;
+    gap: var(--space-8);
+    align-items: stretch;
+}
+@media (max-width: 900px) {
+    .calc-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+}
+
+/* Constrains the main column to the grid cell height (= aside height) on desktop */
+@media (min-width: 901px) {
+    .calc-layout > .flex-col.calc-column-fill {
+        min-height: 0;
+        height: 0;
+        min-height: 100%;
+        overflow: hidden;
+    }
+}
+
+/* Flex Utilities */
+.flex         { display: flex; }
+.flex-row     { display: flex; align-items: center; flex-wrap: wrap; }
+.flex-col     { display: flex; flex-direction: column; }
+.flex-nowrap  { flex-wrap: nowrap; }
+
+.align-start  { align-items: flex-start; }
+.align-center { align-items: center; }
+
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+.calc-layout .grid--3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+.calc-layout .grid--3 > * {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+.calc-layout .grid--3 h3 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* =====================================================
+   Typography
+   ===================================================== */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-2xl { font-size: 1.375rem; }
+.text-3xl { font-size: 2.2rem;}
+
+.text-primary { color: var(--color-primary); }
+.text-warning { color: #d97706; }
+
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+
+.center  { text-align: center; }
+
+/* =====================================================
+   Buttons & Navigation
+   ===================================================== */
+.btn-guest-session {
+    border-radius: var(--radius-pill);
+    height: 32px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    gap: 6px;
+}
+.btn-guest-session svg, .btn-guest-session i {
+    width: 14px;
+    height: 14px;
+}
+
+.nav-separator {
+    width: 1px;
+    height: 24px;
+    background: var(--color-border);
+    margin: 0 var(--space-2);
+}
+
+/* =====================================================
+   Spacing Utilities
+   ===================================================== */
+.m-0 { margin: 0; }
+.mt-4 { margin-top: var(--space-4); }
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--space-1); }   /* 0.25rem */
+.mb-2 { margin-bottom: var(--space-2); }   /* 0.5rem  */
+.mb-3 { margin-bottom: var(--space-3); }   /* 0.75rem */
+.mb-4 { margin-bottom: var(--space-4); }   /* 1rem    */
+.mb-6 { margin-bottom: var(--space-6); }   /* 1.5rem  */
+.mb-10 { margin-bottom: var(--space-10); } /* 2.5rem  */
+
+.pl-6 { padding-left: var(--space-6); }
+.pr-6 { padding-right: var(--space-6); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-6 { gap: var(--space-6); }
+
+/* =====================================================
+   Forms
+   ===================================================== */
+.form-header-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    background: var(--color-primary-tint, #E6F2F1);
+    color: var(--color-primary, #0F766E);
+    border-radius: var(--radius-lg, 12px);
+}
+.form-header-icon svg { width: 24px; height: 24px; }
+
+.form-input-group--prefix-calc .form-input { padding-left: 44px; }
+.form-input-group--suffix-calc .form-input { padding-right: 44px; padding-left: var(--space-3); }
+
+.input-prefix-calc,
+.input-suffix-calc {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: var(--font-size-sm); pointer-events: none;
+}
+.input-prefix-calc { left: 16px; font-weight: 500; color: var(--color-text); }
+.input-suffix-calc { right: 16px; font-weight: 400; color: var(--color-text-muted); }
+
+/* =====================================================
+   Cards & Tables
+   ===================================================== */
+.badge-icon { padding: 4px; border-radius: var(--radius-sm); }
+.badge-icon svg { width: 14px; height: 14px; }
+.badge-neutral { background: var(--color-neutral-100); color: var(--color-text); }
+
+.card--table { padding: 0; overflow: hidden; }
+.card-header-border {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Table card that fills remaining height in flex-col and scrolls internally */
+.card--table-fill {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.card--table-fill .table-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.chart-legend {
+    display: flex; gap: var(--space-3); font-size: var(--font-size-xs);
+    align-items: center; background: var(--color-surface);
+    border: 1px solid var(--color-border); padding: 4px 12px;
+    border-radius: var(--radius-pill);
+}
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot--contrib { background: #CBD5E1; }
+.legend-dot--interest { background: var(--color-primary); }
+
+/* =====================================================
+   Calculator Dynamic Rows
+   ===================================================== */
+.calc-dynamic-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+.calc-dynamic-row > .form-input,
+.calc-dynamic-row > .form-select {
+    flex: 2;
+    min-width: 0;
+}
+.calc-dynamic-row > .form-input-group {
+    flex: 1.5;
+    min-width: 0;
+}
+.calc-dynamic-row > .btn {
+    flex-shrink: 0;
+}
+
+/* =====================================================
+   Budget Analysis & Advice Styles
+   ===================================================== */
+.advice-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--color-positive-tint, #E6F2F1);
+    color: var(--color-positive, #0F766E);
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+}
+
+.advice-icon i,
+.advice-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.badge-warning {
+    background: var(--color-warning-tint);
+    color: var(--color-warning);
+}
+
+.status-text-positive { color: var(--color-positive); }
+.status-text-warning { color: var(--color-warning); }
+.status-text-negative { color: var(--color-negative); }
+.status-text-muted { color: var(--color-text-muted); }
+
+.progress-track {
+    background: var(--color-neutral-100);
+    height: 8px;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    margin: var(--space-2) 0;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: var(--radius-pill);
+}
+
+.progress-bar--negative {
+    background: var(--color-negative);
+}
+
+.progress-bar--warning {
+    background: #FBBF24;
+}
+
+.progress-bar--primary {
+    background: var(--color-primary);
+}
+
+.donut-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-chart-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.donut-chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.donut-val {
+    font-size: 26px;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+.donut-lbl {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: lowercase;
+}
+
+.table-empty-cell {
+    padding: var(--space-6) 0;
+}
+
+.chart-canvas {
+    max-height: 300px;
+    width: 100%;
+}
