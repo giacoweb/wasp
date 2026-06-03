@@ -49,34 +49,6 @@
         </p>
     </nav>
 
-    <!-- KPI strip — hidden until calculated -->
-    <div class="calc-kpi-strip" id="kpi-strip" hidden>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--teal"><i data-lucide="trending-up"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Future value</div>
-                <div class="kpi-card__value" id="kpi-future-value">&mdash;</div>
-                <div class="kpi-card__caption" id="kpi-future-caption">After X years</div>
-            </div>
-        </div>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--green"><i data-lucide="plus-circle"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Total contributed</div>
-                <div class="kpi-card__value" id="kpi-contributed">&mdash;</div>
-                <div class="kpi-card__caption">Initial + monthly deposits</div>
-            </div>
-        </div>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--amber"><i data-lucide="percent"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Interest earned</div>
-                <div class="kpi-card__value" id="kpi-interest">&mdash;</div>
-                <div class="kpi-card__caption">From compound growth</div>
-            </div>
-        </div>
-    </div>
-
     <div class="calc-split">
 
         <!-- LEFT: Form -->
@@ -148,24 +120,53 @@
             </div>
         </div>
 
-        <!-- RIGHT: Chart — replaced by JS; initial empty state -->
-        <div id="chart-panel">
-            <div class="card card--empty">
-                <div class="empty-state__icon"><i data-lucide="bar-chart-2"></i></div>
-                <p class="empty-state__desc">
-                    Fill in the investment details and click <strong>Calculate</strong> to see the growth projection.
-                </p>
+        <!-- RIGHT: KPI strip + Chart stacked in a column -->
+        <div class="calc-right-col">
+
+            <div class="calc-kpi-strip" id="kpi-strip" hidden>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--teal"><i data-lucide="trending-up"></i></div>
+                        <span class="kpi-card__label">Future value</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-future-value">&mdash;</div>
+                    <div class="kpi-card__caption" id="kpi-future-caption">After X years</div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--green"><i data-lucide="plus-circle"></i></div>
+                        <span class="kpi-card__label">Total contributed</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-contributed">&mdash;</div>
+                    <div class="kpi-card__caption">Initial + monthly deposits</div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--amber"><i data-lucide="percent"></i></div>
+                        <span class="kpi-card__label">Interest earned</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-interest">&mdash;</div>
+                    <div class="kpi-card__caption">From compound growth</div>
+                </div>
             </div>
+
+            <div id="chart-panel">
+                <div class="card card--empty">
+                    <div class="empty-state__icon"><i data-lucide="bar-chart-2"></i></div>
+                    <p class="empty-state__desc">
+                        Fill in the investment details and click <strong>Calculate</strong> to see the growth projection.
+                    </p>
+                </div>
+            </div>
+
         </div>
 
     </div>
 
     <!-- Year-by-year projection table -->
     <div id="projection-section" hidden>
-        <div class="page-header" style="margin-top: var(--space-6);">
-            <h2 class="card-title" style="margin:0;">Year-by-year projection</h2>
-        </div>
-        <div class="card" style="padding:0; overflow:hidden;" id="projection-table">
+        <div class="card" id="projection-table">
+            <div class="projection-title">Year-by-year projection</div>
             <div class="table-wrapper">
                 <table class="table">
                     <thead>

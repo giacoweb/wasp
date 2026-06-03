@@ -141,6 +141,12 @@
 
 .kpi-card {
     display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.kpi-card__header {
+    display: flex;
     align-items: center;
     gap: var(--space-3);
 }
@@ -162,14 +168,11 @@
 .kpi-card__icon--green svg  { color: var(--color-positive); }
 .kpi-card__icon--amber  { background: var(--color-warning-tint); }
 .kpi-card__icon--amber svg  { color: var(--color-warning); }
-.kpi-card__icon--orange { background: #FFF7ED; }
-.kpi-card__icon--orange svg { color: #EA580C; }
 
-.kpi-card__body { min-width: 0; }
-.kpi-card__label   { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: 2px; }
-.kpi-card__value   { font-size: var(--font-size-xl); font-weight: 700; line-height: 1.2;
-                     font-variant-numeric: tabular-nums; color: var(--color-text); }
-.kpi-card__caption { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; }
+.kpi-card__label   { font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: 500; }
+.kpi-card__value   { font-size: var(--font-size-2xl); font-weight: 700; line-height: 1.1;
+                     font-variant-numeric: tabular-nums; color: var(--color-primary); }
+.kpi-card__caption { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 
 /* =====================================================
    2-column calculator split layout
@@ -183,6 +186,8 @@
 }
 .calc-split > div { display: flex; flex-direction: column; }
 .calc-split > div > .card { flex: 1; }
+.calc-right-col { display: flex; flex-direction: column; gap: var(--space-4); }
+.calc-right-col #chart-panel { flex: 1; }
 @media (max-width: 768px) {
     .calc-split { grid-template-columns: 1fr; }
 }
@@ -394,3 +399,60 @@
 
 .col-principal { color: var(--color-primary); font-weight: 500; }
 .col-interest  { color: var(--color-warning);  font-weight: 500; }
+
+/* =====================================================
+   Year-by-year projection table
+   ===================================================== */
+
+#projection-section,
+#review-section {
+    margin-top: 40px;
+}
+
+#projection-table {
+    padding: 0;
+    overflow: hidden;
+}
+
+#projection-table .projection-title {
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+}
+
+#projection-table .table-wrapper {
+    max-height: 248px; /* thead ~44px + 4 rows ~52px each */
+    overflow-y: auto;
+}
+
+#projection-table .table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    z-index: 1;
+}
+
+#projection-table .table tbody td:first-child,
+#review-table .table tbody td:first-child {
+    border-left: 3px solid var(--color-primary);
+    padding-left: calc(var(--space-6) - 3px);
+}
+
+/* =====================================================
+   Category review table
+   ===================================================== */
+
+#review-table {
+    padding: 0;
+    overflow: hidden;
+}
+
+#review-table .projection-title {
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+}

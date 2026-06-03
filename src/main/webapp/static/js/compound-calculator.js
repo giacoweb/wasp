@@ -143,7 +143,7 @@
         container.innerHTML = "";
 
         var wrapper = document.createElement("div");
-        wrapper.className = "chart-wrap";
+        wrapper.className = "card chart-wrap";
 
         // Legend
         var legendHtml =
@@ -244,6 +244,9 @@
         svgWrap.appendChild(svg);
         wrapper.appendChild(svgWrap);
         container.appendChild(wrapper);
+
+        var projSection = document.getElementById("projection-section");
+        if (projSection) container.appendChild(projSection);
     }
 
     function fmtK(v) {

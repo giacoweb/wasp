@@ -48,34 +48,6 @@
         </p>
     </nav>
 
-    <!-- KPI strip — hidden until analyzed -->
-    <div class="calc-kpi-strip" id="kpi-strip" hidden>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--teal"><i data-lucide="trending-up"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Remaining income</div>
-                <div class="kpi-card__value" id="kpi-remaining">&mdash;</div>
-                <div class="kpi-card__caption">After expenses</div>
-            </div>
-        </div>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--green"><i data-lucide="percent"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Savings rate</div>
-                <div class="kpi-card__value" id="kpi-savings-rate">&mdash;</div>
-                <div class="kpi-card__caption">Of monthly income</div>
-            </div>
-        </div>
-        <div class="card kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--orange"><i data-lucide="activity"></i></div>
-            <div class="kpi-card__body">
-                <div class="kpi-card__label">Budget health</div>
-                <div class="kpi-card__value" id="kpi-health">&mdash;</div>
-                <div class="kpi-card__caption" id="kpi-health-label">&mdash;</div>
-            </div>
-        </div>
-    </div>
-
     <div class="calc-split">
 
         <!-- LEFT: Form -->
@@ -148,38 +120,67 @@
             </div>
         </div>
 
-        <!-- RIGHT: Breakdown — replaced by JS; initial empty state -->
-        <div id="breakdown-panel">
-            <div class="card card--empty">
-                <div class="empty-state__icon"><i data-lucide="pie-chart"></i></div>
-                <p class="empty-state__desc">
-                    Fill in your budget numbers and click <strong>Analyze budget</strong> to see the breakdown.
-                </p>
+        <!-- RIGHT: KPI strip + Breakdown + Category review stacked in a column -->
+        <div class="calc-right-col">
+
+            <div class="calc-kpi-strip" id="kpi-strip" hidden>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--teal"><i data-lucide="trending-up"></i></div>
+                        <span class="kpi-card__label">Remaining income</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-remaining">&mdash;</div>
+                    <div class="kpi-card__caption">After expenses</div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--green"><i data-lucide="percent"></i></div>
+                        <span class="kpi-card__label">Savings rate</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-savings-rate">&mdash;</div>
+                    <div class="kpi-card__caption">Of monthly income</div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-card__header">
+                        <div class="kpi-card__icon kpi-card__icon--amber"><i data-lucide="activity"></i></div>
+                        <span class="kpi-card__label">Budget health</span>
+                    </div>
+                    <div class="kpi-card__value" id="kpi-health">&mdash;</div>
+                    <div class="kpi-card__caption" id="kpi-health-label">&mdash;</div>
+                </div>
             </div>
+
+            <div id="breakdown-panel">
+                <div class="card card--empty">
+                    <div class="empty-state__icon"><i data-lucide="pie-chart"></i></div>
+                    <p class="empty-state__desc">
+                        Fill in your budget numbers and click <strong>Analyze budget</strong> to see the breakdown.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Category review table -->
+            <div id="review-section" hidden>
+                <div class="card" id="review-table">
+                    <div class="projection-title">Category review</div>
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="num">Amount</th>
+                                    <th class="num">% of income</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="review-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-    </div>
-
-    <!-- Category review table -->
-    <div id="review-section" hidden>
-        <div class="page-header" style="margin-top: var(--space-6);">
-            <h2 class="card-title" style="margin:0;">Category review</h2>
-        </div>
-        <div class="card" style="padding:0; overflow:hidden;">
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th class="num">Amount</th>
-                            <th class="num">% of income</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="review-body"></tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
 </main>

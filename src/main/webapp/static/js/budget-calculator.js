@@ -189,32 +189,20 @@
         var circ   = 2 * Math.PI * r;
         var stroke = 14;
 
-        // Background ring
+        var freeDash = (freePct / 100) * circ;
+
+        // Used portion — light gray background ring
         var bg = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" ' +
                  'stroke="#E2E8F0" stroke-width="' + stroke + '"/>';
 
-        // Segments (fixed, variable, savings; free = remainder)
-        var segments = [
-            { pct: fixedPct,   color: "#DC2626" }, // red  — fixed
-            { pct: varPct,     color: "#F59E0B" }, // amber — variable
-            { pct: savingsPct, color: "#16A34A" }, // green — savings
-        ];
-
-        var offset = 0; // start at top (rotate -90 handled via transform)
-        var arcs = segments.map(function (seg) {
-            var dash   = (seg.pct / 100) * circ;
-            var gap    = circ - dash;
-            var arc = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" ' +
-                      'stroke="' + seg.color + '" stroke-width="' + stroke + '" ' +
-                      'stroke-dasharray="' + dash + ' ' + gap + '" ' +
-                      'stroke-dashoffset="' + (-offset / 100 * circ) + '" ' +
+        // Free portion — teal arc, starting from 12 o'clock
+        var freeArc = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" ' +
+                      'stroke="#0F766E" stroke-width="' + stroke + '" ' +
+                      'stroke-dasharray="' + freeDash + ' ' + (circ - freeDash) + '" ' +
                       'transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
-            offset += seg.pct;
-            return arc;
-        });
 
         return '<svg viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg">' +
-               bg + arcs.join("") + '</svg>';
+               bg + freeArc + '</svg>';
     }
 
     /* ── Category review table ────────────────────────────── */
