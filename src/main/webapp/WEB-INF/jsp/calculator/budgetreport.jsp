@@ -115,10 +115,8 @@
 
 <main class="container container--wide section">
 
-    <nav class="flex-row gap-2 mb-6 text-sm">
-        <a href="<%= ctxPath %>/guest/report" class="muted breadcrumb-link">Calculators</a>
-        <span class="muted">&rsaquo;</span>
-        <strong>Budget analysis</strong>
+    <nav class="breadcrumb">
+        <a href="<%= ctxPath %>/guest/report">Calculators</a> / <span>Budget analysis</span>
     </nav>
 
     <datalist id="incomeCategories">
@@ -254,13 +252,13 @@
 
             <!-- Budget Health Advice Card -->
             <% if (hasData) { %>
-            <article class="card flex-row gap-3 advice-card">
-                <div class="form-header-icon advice-icon">
+            <article class="card flex align-start gap-3">
+                <div class="advice-icon">
                     <i data-lucide="info"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold m-0 advice-title">Budget health</h4>
-                    <p class="text-sm muted m-0 advice-text">
+                    <h4 class="text-sm font-semibold m-0 mb-1">Budget health</h4>
+                    <p class="text-sm muted m-0">
                         <% if (savingsGoal > 0 && netBalance >= savingsGoal) { %>
                             Your savings goal is realistic and fully met! You have a healthy surplus of €<%= String.format(Locale.US, "%,.0f", netBalance - savingsGoal) %> this month.
                         <% } else if (savingsGoal > 0 && netBalance > 0) { %>
@@ -425,12 +423,12 @@
         </div>
         <% } else { %>
         <!-- EMPTY STATE -->
-        <article class="card calc-empty-state">
-            <div class="calc-empty-icon">
+        <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+            <div class="empty-state__icon">
                 <i data-lucide="bar-chart-3"></i>
             </div>
-            <h3 class="calc-empty-title">No projection data</h3>
-            <p class="calc-empty-text">
+            <h3 class="empty-state__title">No projection data</h3>
+            <p class="empty-state__desc">
                 Enter your financial details in the form on the left and click <strong>Calculate Budget</strong> to see your compound growth projection and year-by-year breakdown.
             </p>
         </article>

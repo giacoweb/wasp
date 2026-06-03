@@ -14,8 +14,28 @@
     }
 }
 
-.flex-row { display: flex; align-items: center; flex-wrap: wrap; }
-.flex-col { display: flex; flex-direction: column; }
+/* Constrains the main column to the grid cell height (= aside height) on desktop */
+@media (min-width: 901px) {
+    .calc-layout > .flex-col.calc-column-fill {
+        min-height: 0;
+        height: 0;
+        min-height: 100%;
+        overflow: hidden;
+    }
+}
+
+/* Flex Utilities */
+.flex         { display: flex; }
+.flex-row     { display: flex; align-items: center; flex-wrap: wrap; }
+.flex-col     { display: flex; flex-direction: column; }
+.flex-nowrap  { flex-wrap: nowrap; }
+
+.align-start  { align-items: flex-start; }
+.align-center { align-items: center; }
+
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-between { justify-content: space-between; }
 
 .calc-layout .grid--3 {
     display: flex;
@@ -76,13 +96,13 @@
    Spacing Utilities
    ===================================================== */
 .m-0 { margin: 0; }
+.mt-4 { margin-top: var(--space-4); }
 .mb-0 { margin-bottom: 0; }
 .mb-1 { margin-bottom: var(--space-1); }   /* 0.25rem */
 .mb-2 { margin-bottom: var(--space-2); }   /* 0.5rem  */
 .mb-3 { margin-bottom: var(--space-3); }   /* 0.75rem */
 .mb-4 { margin-bottom: var(--space-4); }   /* 1rem    */
 .mb-6 { margin-bottom: var(--space-6); }   /* 1.5rem  */
-.mb-8 { margin-bottom: var(--space-8); }   /* 2rem    */
 .mb-10 { margin-bottom: var(--space-10); } /* 2.5rem  */
 
 .pl-6 { padding-left: var(--space-6); }
@@ -91,7 +111,6 @@
 .gap-1 { gap: var(--space-1); }
 .gap-2 { gap: var(--space-2); }
 .gap-3 { gap: var(--space-3); }
-.gap-4 { gap: var(--space-4); }
 .gap-6 { gap: var(--space-6); }
 
 /* =====================================================
@@ -126,8 +145,26 @@
 
 .card--table { padding: 0; overflow: hidden; }
 .card-header-border {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
     padding: var(--space-5) var(--space-6);
     border-bottom: 1px solid var(--color-border);
+}
+
+/* Table card that fills remaining height in flex-col and scrolls internally */
+.card--table-fill {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.card--table-fill .table-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .chart-legend {
@@ -164,58 +201,12 @@
 }
 
 /* =====================================================
-   Calculator Empty State
+   Budget Analysis & Advice Styles
    ===================================================== */
-.calc-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-12) var(--space-6);
-    text-align: center;
-    height: 100%;
-    min-height: 400px;
-}
-.calc-empty-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--color-neutral-100);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-4);
-    color: var(--color-text-muted);
-}
-.calc-empty-icon svg,
-.calc-empty-icon i {
-    width: 32px;
-    height: 32px;
-}
-.calc-empty-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: var(--space-2);
-}
-.calc-empty-text {
-    color: var(--color-text-muted);
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-/* =====================================================
-   Budget Analysis Styles
-   ===================================================== */
-.breadcrumb-link {
-    text-decoration: none;
-}
-
-.advice-card {
-    align-items: flex-start;
-    margin-top: var(--space-4);
-}
-
 .advice-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
     background: var(--color-positive-tint, #E6F2F1);
@@ -230,14 +221,6 @@
     height: 18px;
 }
 
-.advice-title {
-    color: var(--color-text);
-}
-
-.advice-text {
-    margin-top: var(--space-1);
-}
-
 .badge-warning {
     background: var(--color-warning-tint);
     color: var(--color-warning);
@@ -247,14 +230,6 @@
 .status-text-warning { color: var(--color-warning); }
 .status-text-negative { color: var(--color-negative); }
 .status-text-muted { color: var(--color-text-muted); }
-
-.align-center {
-    align-items: center;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
 
 .progress-track {
     background: var(--color-neutral-100);
@@ -320,11 +295,6 @@
 
 .table-empty-cell {
     padding: var(--space-6) 0;
-}
-
-
-.mt-4 {
-    margin-top: var(--space-4);
 }
 
 .chart-canvas {
