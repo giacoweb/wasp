@@ -84,7 +84,7 @@
                           <label class="form-label">Loan amount</label>
                           <div class="form-input-group form-input-group--prefix-calc">
                               <span class="input-prefix-calc">€</span>
-                              <input type="text" name="principal" class="form-input" value="<c:out value='${param.principal}'/>" />
+                              <input type="number" name="principal" class="form-input" step="0.01" min="0.01" required value="<c:out value='${param.principal}'/>" />
                           </div>
                           <span class="form-help">Total amount borrowed</span>
                       </div>
@@ -92,7 +92,7 @@
                       <div class="form-field">
                           <label class="form-label">Annual interest rate</label>
                           <div class="form-input-group form-input-group--suffix-calc">
-                              <input type="text" name="annualRate" class="form-input" value="<c:out value='${param.annualRate}'/>" />
+                              <input type="number" name="annualRate" class="form-input" step="0.1" min="0" max="100" required value="<c:out value='${param.annualRate}'/>" />
                               <span class="input-suffix-calc">%</span>
                           </div>
                           <span class="form-help">Yearly interest percentage</span>
@@ -100,7 +100,7 @@
 
                       <div class="form-field">
                           <label class="form-label">Loan term</label>
-                          <input type="text" name="months" class="form-input" value="<c:out value='${param.months}'/>" />
+                          <input type="number" name="months" class="form-input" step="1" min="1" max="600" required value="<c:out value='${param.months}'/>" />
                           <span class="form-help">Duration in months</span>
                       </div>
 
@@ -218,7 +218,7 @@
 
                   </c:when>
                   <c:otherwise>
-                      <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+                      <article class="card empty-state flex-col align-center justify-center calc-empty-fill">
                           <div class="empty-state__icon">
                               <i data-lucide="bar-chart-3"></i>
                           </div>
@@ -237,9 +237,7 @@
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script src="${ctx}/static/js/table-control.js"></script>
-  <script>
-      lucide.createIcons();
-  </script>
+  <script src="${ctx}/static/js/icons.js"></script>
 
   </body>
 </html>

@@ -174,7 +174,7 @@
                                                 <span class="input-prefix-calc">€</span>
                                                 <input type="text" name="incomeAmount" class="form-input" placeholder="0.00" pattern="^[0-9]+([.,][0-9]+)?$" title="Please enter a valid amount (e.g. 100 or 100.50)" value="<c:out value='${amt}'/>" required>
                                             </div>
-                                            <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="removeRow(this)">
+                                            <button type="button" class="btn btn-ghost btn-icon btn-sm js-remove-budget-row">
                                                 <i data-lucide="trash-2"></i>
                                             </button>
                                         </div>
@@ -187,7 +187,7 @@
                                             <span class="input-prefix-calc">€</span>
                                             <input type="text" name="incomeAmount" class="form-input" placeholder="0.00" pattern="^[0-9]+([.,][0-9]+)?$" title="Please enter a valid amount (e.g. 100 or 100.50)" required>
                                         </div>
-                                        <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="removeRow(this)">
+                                        <button type="button" class="btn btn-ghost btn-icon btn-sm js-remove-budget-row">
                                             <i data-lucide="trash-2"></i>
                                         </button>
                                     </div>
@@ -195,7 +195,7 @@
                             </c:choose>
                         </div>
                         <div class="flex-col mt-2">
-                            <button type="button" class="btn btn-ghost btn-sm btn-block" onclick="addRow('income')">
+                            <button type="button" class="btn btn-ghost btn-sm btn-block" data-add-budget-row="income">
                                 <i data-lucide="plus"></i> Add Income
                             </button>
                         </div>
@@ -229,7 +229,7 @@
                                                 <span class="input-prefix-calc">€</span>
                                                 <input type="text" name="expenseAmount" class="form-input" placeholder="0.00" pattern="^[0-9]+([.,][0-9]+)?$" title="Please enter a valid amount (e.g. 100 or 100.50)" value="<c:out value='${amt}'/>" required>
                                             </div>
-                                            <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="removeRow(this)">
+                                            <button type="button" class="btn btn-ghost btn-icon btn-sm js-remove-budget-row">
                                                 <i data-lucide="trash-2"></i>
                                             </button>
                                         </div>
@@ -242,7 +242,7 @@
                                             <span class="input-prefix-calc">€</span>
                                             <input type="text" name="expenseAmount" class="form-input" placeholder="0.00" pattern="^[0-9]+([.,][0-9]+)?$" title="Please enter a valid amount (e.g. 100 or 100.50)" required>
                                         </div>
-                                        <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="removeRow(this)">
+                                        <button type="button" class="btn btn-ghost btn-icon btn-sm js-remove-budget-row">
                                             <i data-lucide="trash-2"></i>
                                         </button>
                                     </div>
@@ -250,7 +250,7 @@
                             </c:choose>
                         </div>
                         <div class="flex-col mt-2">
-                            <button type="button" class="btn btn-ghost btn-sm btn-block" onclick="addRow('expense')">
+                            <button type="button" class="btn btn-ghost btn-sm btn-block" data-add-budget-row="expense">
                                 <i data-lucide="plus"></i> Add Expense
                             </button>
                         </div>
@@ -346,7 +346,7 @@
                                     <span class="text-sm font-semibold">€<fmt:formatNumber value="${totalExpenses}" minFractionDigits="2" maxFractionDigits="2"/></span>
                                 </div>
                                 <div class="progress-track">
-                                    <div class="progress-bar progress-bar--negative" style="width: ${expensePct}%;"></div>
+                                    <div class="progress-bar progress-bar--negative calc-progress-bar js-progress-bar" data-pct="${expensePct}"></div>
                                 </div>
                                 <span class="text-xs muted"><fmt:formatNumber value="${totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0}" maxFractionDigits="1" minFractionDigits="1"/>% of income</span>
                             </div>
@@ -357,7 +357,7 @@
                                     <span class="text-sm font-semibold">€<fmt:formatNumber value="${netBalance}" minFractionDigits="2" maxFractionDigits="2"/></span>
                                 </div>
                                 <div class="progress-track">
-                                    <div class="progress-bar progress-bar--warning" style="width: ${savingsPct}%;"></div>
+                                    <div class="progress-bar progress-bar--warning calc-progress-bar js-progress-bar" data-pct="${savingsPct}"></div>
                                 </div>
                                 <span class="text-xs muted"><fmt:formatNumber value="${totalIncome > 0 ? (netBalance / totalIncome) * 100 : 0}" maxFractionDigits="1" minFractionDigits="1"/>% of income</span>
                             </div>
@@ -369,7 +369,7 @@
                                         <span class="text-sm font-semibold">€<fmt:formatNumber value="${savingsGoal}" minFractionDigits="2" maxFractionDigits="2"/></span>
                                     </div>
                                     <div class="progress-track">
-                                        <div class="progress-bar progress-bar--primary" style="width: ${goalPct}%;"></div>
+                                        <div class="progress-bar progress-bar--primary calc-progress-bar js-progress-bar" data-pct="${goalPct}"></div>
                                     </div>
                                     <span class="text-xs muted"><fmt:formatNumber value="${totalIncome > 0 ? (savingsGoal / totalIncome) * 100 : 0}" maxFractionDigits="1" minFractionDigits="1"/>% of income</span>
                                 </div>
@@ -378,7 +378,7 @@
 
                         <div class="center donut-wrapper">
                             <div class="donut-chart-container">
-                                <canvas id="budgetDonutChart" width="200" height="200"></canvas>
+                                <canvas id="budgetDonutChart" width="200" height="200" data-expenses="${totalExpenses}" data-savings="${actualSavings}"></canvas>
                                 <div class="donut-chart-center-text">
                                     <span class="donut-val"><fmt:formatNumber value="${donutFreePct}" maxFractionDigits="0"/>%</span>
                                     <span class="donut-lbl">free</span>
@@ -427,7 +427,7 @@
         </c:if>
 
         <c:if test="${not hasData}">
-            <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+            <article class="card empty-state flex-col align-center justify-center calc-empty-fill">
                 <div class="empty-state__icon">
                     <i data-lucide="bar-chart-3"></i>
                 </div>
@@ -447,104 +447,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-
-<script>
-    lucide.createIcons();
-
-    function addRow(type) {
-        const container = document.getElementById(type + '-rows');
-        const row = document.createElement('div');
-        row.className = 'calc-dynamic-row';
-
-        let catName, amtName, catPlaceholder, catList;
-        if (type === 'income') {
-            catName = 'incomeCategory';
-            amtName = 'incomeAmount';
-            catPlaceholder = 'e.g. Salary';
-            catList = 'incomeCategories';
-        } else if (type === 'expense') {
-            catName = 'expenseCategory';
-            amtName = 'expenseAmount';
-            catPlaceholder = 'e.g. Rent, Groceries';
-            catList = 'expenseCategories';
-        }
-
-        row.innerHTML =
-            '<input type="text" name="' + catName + '" class="form-input" placeholder="' + catPlaceholder + '" list="' + catList + '" required>' +
-            '<div class="form-input-group form-input-group--prefix-calc">' +
-                '<span class="input-prefix-calc">€</span>' +
-                '<input type="text" name="' + amtName + '" class="form-input" placeholder="0.00" pattern="^[0-9]+([.,][0-9]+)?$" title="Please enter a valid amount (e.g. 100 or 100.50)" required>' +
-            '</div>' +
-            '<button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="removeRow(this)">' +
-                '<i data-lucide="trash-2"></i>' +
-            '</button>';
-
-        container.appendChild(row);
-        lucide.createIcons();
-    }
-
-    function removeRow(btn) {
-        const row = btn.closest('.calc-dynamic-row');
-        const container = row.parentElement;
-        if (container.querySelectorAll('.calc-dynamic-row').length > 1) {
-            row.remove();
-        } else {
-            row.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-        }
-    }
-
-    document.querySelector('form.form').addEventListener('submit', function(e) {
-        this.querySelectorAll('input[name="incomeAmount"], input[name="expenseAmount"], input[name="savingsGoal"]').forEach(input => {
-            if (input.value) {
-                input.value = input.value.replace(/,/g, '.').trim();
-            }
-        });
-    });
-</script>
-
-<c:if test="${hasData}">
-<script>
-(function() {
-    const ctxEl = document.getElementById('budgetDonutChart').getContext('2d');
-    const expenseVal = ${totalExpenses} || 0;
-    const savingsVal = ${actualSavings} || 0;
-
-    let dataVals = [expenseVal, savingsVal];
-
-    if (expenseVal === 0 && savingsVal === 0) {
-        dataVals = [0, 1];
-    }
-
-    new Chart(ctxEl, {
-        type: 'doughnut',
-        data: {
-            labels: ['Expenses', 'Savings'],
-            datasets: [{
-                data: dataVals,
-                backgroundColor: ['#ccfbf1', '#FDE047'],
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: false,
-            cutout: '75%',
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    enabled: (expenseVal > 0 || savingsVal > 0),
-                    callbacks: {
-                        label: function(context) {
-                            return ' ' + context.label + ': €' + context.raw.toFixed(2);
-                        }
-                    }
-                }
-            }
-        }
-    });
-})();
-</script>
-</c:if>
+<script src="${ctx}/static/js/icons.js"></script>
+<script src="${ctx}/static/js/budget-report.js"></script>
 
 </body>
 </html>

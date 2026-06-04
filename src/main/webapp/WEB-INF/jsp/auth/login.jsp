@@ -21,17 +21,17 @@
 </head>
 <body>
 
-<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+<main class="auth-page">
 
-    <div class="card" style="width: 100%; max-width: 420px;">
+    <div class="card auth-card auth-card--login">
 
-        <header style="margin-bottom: 1.5rem;">
-            <h1 style="font-size: 2rem; margin: 0 0 0.5rem;">Log in</h1>
-            <p class="muted" style="margin: 0;">Welcome back to FinTrack.</p>
+        <header class="auth-header">
+            <h1 class="auth-title">Log in</h1>
+            <p class="muted auth-subtitle">Welcome back to FinTrack.</p>
         </header>
 
         <c:if test="${not empty errorMessage}">
-            <div class="alert alert-error" role="alert" style="margin-bottom: 1rem;">
+            <div class="alert alert-error auth-alert" role="alert">
                 <c:out value="${errorMessage}"/>
             </div>
         </c:if>
@@ -60,7 +60,7 @@
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
         </form>
 
-        <p class="muted" style="text-align: center; margin: 1.5rem 0 0;">
+        <p class="muted auth-switch">
             No account yet?
             <a href="${ctx}/register">Create one</a>
         </p>

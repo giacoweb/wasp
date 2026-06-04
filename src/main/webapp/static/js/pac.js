@@ -3,6 +3,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
 
+        document.querySelectorAll(".js-pac-progress").forEach(function (bar) {
+            bar.style.setProperty("--pct", (bar.dataset.pct || "0") + "%");
+        });
+
         var createModal = document.getElementById("pac-create-modal");
         var editModal   = document.getElementById("pac-edit-modal");
 

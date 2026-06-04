@@ -46,3 +46,22 @@
 .type-toggle__btn + .type-toggle__btn { border-left: 1px solid var(--color-border); }
 .type-toggle__btn.active[data-value="INCOME"]  { background: var(--color-primary);  color: #fff; }
 .type-toggle__btn.active[data-value="EXPENSE"] { background: var(--color-negative); color: #fff; }
+
+.kpi-currency-header {
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-2);
+}
+
+.kpi-currency-grid {
+    margin-bottom: var(--space-4);
+}
+
+.kpi-caption {
+    margin: 0;
+    font-size: var(--font-size-xs);
+}
+
+.icon-negative {
+    color: var(--color-negative);
+}

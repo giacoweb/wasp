@@ -1,8 +1,11 @@
 (function () {
     "use strict";
 
-    const ctx     = window.CTX_PATH   || "";
-    const wallets = window.WALLET_IDS || [];
+    const dataEl  = document.getElementById("transactions-data");
+    const ctx     = dataEl ? dataEl.dataset.contextPath : "";
+    const wallets = Array.prototype.map.call(document.querySelectorAll(".js-transaction-wallet"), function (el) {
+        return { id: el.dataset.id, name: el.dataset.name, currency: el.dataset.currency };
+    });
 
     const tbody      = document.getElementById("transactions-body");
     const btnAdd     = document.getElementById("btn-add");
@@ -73,29 +76,28 @@
             var flow = d.income - d.expenses;
             var flowClass = "kpi-amount " + (flow >= 0 ? "kpi-amount--flow-pos" : "kpi-amount--flow-neg");
             var flowSign  = flow >= 0 ? "+" : "−";
-            var gapStyle  = isMulti && idx < currencies.length - 1 ? "margin-bottom:var(--space-4);" : "";
             var header    = isMulti
-                ? "<div style='font-weight:600;font-size:var(--font-size-sm);margin-bottom:var(--space-2);'>" + esc(cur) + "</div>"
+                ? "<div class='kpi-currency-header'>" + esc(cur) + "</div>"
                 : "";
             return header +
-                "<div class='grid grid--3' style='" + gapStyle + "'>" +
+                "<div class='grid grid--3" + (isMulti && idx < currencies.length - 1 ? " kpi-currency-grid" : "") + "'>" +
                     "<div class='card'>" +
                         "<div class='kpi-icon kpi-icon--income'>" + SVG_INCOME + "</div>" +
                         "<div class='card-subtitle'>Total Income</div>" +
                         "<div class='kpi-amount kpi-amount--income'>+" + fmt(d.income) + " " + esc(cur) + "</div>" +
-                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>Across all wallets</p>" +
+                        "<p class='muted kpi-caption'>Across all wallets</p>" +
                     "</div>" +
                     "<div class='card'>" +
                         "<div class='kpi-icon kpi-icon--expense'>" + SVG_EXPENSE + "</div>" +
                         "<div class='card-subtitle'>Total Expenses</div>" +
                         "<div class='kpi-amount kpi-amount--expense'>−" + fmt(d.expenses) + " " + esc(cur) + "</div>" +
-                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>Across all wallets</p>" +
+                        "<p class='muted kpi-caption'>Across all wallets</p>" +
                     "</div>" +
                     "<div class='card'>" +
                         "<div class='kpi-icon kpi-icon--flow'>" + SVG_FLOW + "</div>" +
                         "<div class='card-subtitle'>Net Flow</div>" +
                         "<div class='" + flowClass + "'>" + flowSign + fmt(Math.abs(flow)) + " " + esc(cur) + "</div>" +
-                        "<p class='muted' style='margin:0;font-size:var(--font-size-xs);'>" + (flow >= 0 ? "Healthy positive balance" : "Negative balance") + "</p>" +
+                        "<p class='muted kpi-caption'>" + (flow >= 0 ? "Healthy positive balance" : "Negative balance") + "</p>" +
                     "</div>" +
                 "</div>";
         }).join("");
@@ -121,14 +123,12 @@
         tbody.innerHTML = rows.map(function (t) {
             const isIncome   = t.type === "INCOME";
             const amountHtml = isIncome
-                ? '<span style="color:var(--color-positive);font-weight:500;">+' + fmt(t.amount) + '</span>'
-                : '<span style="color:var(--color-negative);font-weight:500;">−' + fmt(t.amount) + '</span>';
+                ? '<span class="amount-positive">+' + fmt(t.amount) + '</span>'
+                : '<span class="amount-negative">−' + fmt(t.amount) + '</span>';
             const badge = isIncome
                 ? '<span class="badge badge-income">Income</span>'
                 : '<span class="badge badge-expense">Expense</span>';
             const walletName = walletMap[t.walletId] ? esc(walletMap[t.walletId]) : "—";
-            const safeT = JSON.stringify(t)
-                .replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026");
             return "<tr>" +
                 "<td>" + esc(t.date) + "</td>" +
                 "<td>" + esc(t.category) + "</td>" +
@@ -136,11 +136,11 @@
                 "<td>" + walletName + "</td>" +
                 "<td class='num'>" + amountHtml + "</td>" +
                 "<td class='actions'>" +
-                    "<button class='btn btn-icon btn-ghost btn-sm' title='Edit' onclick='Transactions.edit(" + safeT + ")'>" +
+                    "<button class='btn btn-icon btn-ghost btn-sm js-transaction-edit' title='Edit' data-id='" + esc(t.id) + "'>" +
                         "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg>" +
                     "</button>" +
-                    "<button class='btn btn-icon btn-ghost btn-sm' title='Delete' onclick='Transactions.delete(\"" + esc(t.id) + "\")'>" +
-                        "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' style='color:var(--color-negative)'><polyline points='3 6 5 6 21 6'/><path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/><path d='M10 11v6'/><path d='M14 11v6'/><path d='M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2'/></svg>" +
+                    "<button class='btn btn-icon btn-ghost btn-sm js-transaction-delete' title='Delete' data-id='" + esc(t.id) + "'>" +
+                        "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' class='icon-negative'><polyline points='3 6 5 6 21 6'/><path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/><path d='M10 11v6'/><path d='M14 11v6'/><path d='M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2'/></svg>" +
                     "</button>" +
                 "</td>" +
             "</tr>";
@@ -203,9 +203,7 @@
 
     /* ── public API ───────────────────────────────────────── */
 
-    window.Transactions = {
-        edit: function (t) { openModal(t); },
-        delete: function (id) {
+    function deleteTransaction(id) {
             if (!confirm("Delete this transaction?")) return;
             fetch(ctx + "/api/transactions/" + id, { method: "DELETE", credentials: "same-origin", headers: { "Accept": "application/json" } })
                 .then(function (r) {
@@ -213,8 +211,7 @@
                     else { r.json().then(function (d) { alert(d.error || "Failed to delete."); }); }
                 })
                 .catch(function () { alert("Failed to delete transaction."); });
-        }
-    };
+    }
 
     /* ── events ───────────────────────────────────────────── */
 
@@ -236,6 +233,18 @@
     });
 
     if (searchInput) searchInput.addEventListener("input", renderRows);
+
+    tbody.addEventListener("click", function (event) {
+        var editButton = event.target.closest(".js-transaction-edit");
+        var deleteButton = event.target.closest(".js-transaction-delete");
+        if (editButton) {
+            var editTx = allTransactions.find(function (item) { return item.id === editButton.dataset.id; });
+            if (editTx) openModal(editTx);
+        }
+        if (deleteButton) {
+            deleteTransaction(deleteButton.dataset.id);
+        }
+    });
 
     form.addEventListener("submit", function (e) {
         e.preventDefault();

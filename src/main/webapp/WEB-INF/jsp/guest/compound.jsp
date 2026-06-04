@@ -182,7 +182,7 @@
 </main>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script>window.lucide && lucide.createIcons();</script>
+<script src="${ctx}/static/js/icons.js"></script>
 <script src="${ctx}/static/js/compound-calculator.js"></script>
 </body>
 </html>

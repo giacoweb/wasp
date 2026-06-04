@@ -101,7 +101,7 @@
                         <label class="form-label">Initial amount</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="initialCapital" class="form-input" value="<c:out value='${initialCapStr}'/>" />
+                            <input type="number" name="initialCapital" class="form-input" step="0.01" min="0" required value="<c:out value='${initialCapStr}'/>" />
                         </div>
                         <span class="form-help">Starting investment</span>
                     </div>
@@ -110,7 +110,7 @@
                         <label class="form-label">Monthly contribution</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="monthlyContribution" class="form-input" value="<c:out value='${monthlyContStr}'/>" />
+                            <input type="number" name="monthlyContribution" class="form-input" step="0.01" min="0" required value="<c:out value='${monthlyContStr}'/>" />
                         </div>
                         <span class="form-help">Added every month</span>
                     </div>
@@ -118,7 +118,7 @@
                     <div class="form-field">
                         <label class="form-label">Annual return</label>
                         <div class="form-input-group form-input-group--suffix-calc">
-                            <input type="text" name="annualRate" class="form-input" value="<c:out value='${annualRateStr}'/>" />
+                            <input type="number" name="annualRate" class="form-input" step="0.1" min="0" max="100" required value="<c:out value='${annualRateStr}'/>" />
                             <span class="input-suffix-calc">%</span>
                         </div>
                         <span class="form-help">Expected annual return</span>
@@ -126,7 +126,7 @@
 
                     <div class="form-field">
                         <label class="form-label">Duration in years</label>
-                        <input type="text" name="years" class="form-input" value="<c:out value='${durationStr}'/>" />
+                        <input type="number" name="years" class="form-input" step="1" min="1" max="50" required value="<c:out value='${durationStr}'/>" />
                         <span class="form-help">Investment horizon</span>
                     </div>
 
@@ -208,6 +208,13 @@
                         </div>
                         <div>
                             <canvas id="compoundChart" class="chart-canvas"></canvas>
+                            <div hidden>
+                                <c:set var="ccChart" value="${initialCapital}"/>
+                                <c:forEach var="r" items="${compoundList}">
+                                    <c:set var="ccChart" value="${ccChart + (monthlyContribution * 12)}"/>
+                                    <span class="js-compound-point" data-value="${r.totalValue}" data-contribution="${ccChart}"></span>
+                                </c:forEach>
+                            </div>
                         </div>
                     </article>
 
@@ -247,7 +254,7 @@
                     </article>
                 </c:when>
                 <c:otherwise>
-                    <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+                    <article class="card empty-state flex-col align-center justify-center calc-empty-fill">
                         <div class="empty-state__icon">
                             <i data-lucide="bar-chart-3"></i>
                         </div>
@@ -270,81 +277,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="${ctx}/static/js/table-control.js"></script>
-
-<script>
-    lucide.createIcons();
-</script>
-
-<c:if test="${hasData}">
-<script>
-(function () {
-    const ctxEl = document.getElementById('compoundChart');
-    const DataObject = [
-        <c:forEach var="r" items="${compoundList}" varStatus="s">${r.totalValue}<c:if test="${not s.last}">,</c:if></c:forEach>
-    ];
-    const LabelObject = [
-        <c:forEach var="r" items="${compoundList}" varStatus="s">"Year ${s.index + 1}"<c:if test="${not s.last}">,</c:if></c:forEach>
-    ];
-    const ContributionsObject = [
-        <c:set var="cc2" value="${initialCapital}"/>
-        <c:forEach var="r" items="${compoundList}" varStatus="s"><c:set var="cc2" value="${cc2 + (monthlyContribution * 12)}"/>${cc2}<c:if test="${not s.last}">,</c:if></c:forEach>
-    ];
-
-    new Chart(ctxEl, {
-        type: 'line',
-        data: {
-            labels: LabelObject,
-            datasets: [
-                {
-                    label: 'Contributions',
-                    data: ContributionsObject,
-                    borderColor: '#CBD5E1',
-                    backgroundColor: 'rgba(203, 213, 225, 0.5)',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true,
-                    pointBackgroundColor: '#FFFFFF',
-                    pointBorderColor: '#CBD5E1',
-                    pointHoverBackgroundColor: '#CBD5E1',
-                    pointHoverBorderColor: '#FFFFFF'
-                },
-                {
-                    label: 'Compound Value',
-                    data: DataObject,
-                    borderColor: '#0F766E',
-                    backgroundColor: 'rgba(15, 118, 110, 0.15)',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: '-1',
-                    pointBackgroundColor: '#FFFFFF',
-                    pointBorderColor: '#0F766E',
-                    pointHoverBackgroundColor: '#0F766E',
-                    pointHoverBorderColor: '#FFFFFF'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: {
-                    ticks: { font: { family: "'Inter', sans-serif" }, color: '#64748B' },
-                    grid: { display: false },
-                    border: { color: '#ECECEC' }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: { font: { family: "'Inter', sans-serif" }, color: '#64748B' },
-                    grid: { color: '#ECECEC', drawBorder: false },
-                    border: { display: false }
-                }
-            }
-        }
-    });
-})();
-</script>
-</c:if>
+<script src="${ctx}/static/js/icons.js"></script>
+<script src="${ctx}/static/js/compound-report.js"></script>
 
 </body>
 </html>

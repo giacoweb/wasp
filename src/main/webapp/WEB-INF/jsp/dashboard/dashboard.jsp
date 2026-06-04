@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="me"  value="${sessionScope.authenticatedUser}"/>
 <!DOCTYPE html>
@@ -34,15 +35,15 @@
 
     <main class="app-main">
         <c:if test="${not empty errorMessage}">
-            <div class="alert alert-error" style="margin-bottom: var(--space-4);">
+            <div class="alert alert-error dashboard-alert">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 <c:out value="${errorMessage}"/>
             </div>
         </c:if>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-8);">
-            <h1 style="margin: 0;">Hi, <c:out value="${me.name}"/> 👋</h1>
-            <a href="${ctx}/report/export" class="btn btn-ghost" style="gap:var(--space-2);">
+        <div class="dashboard-header">
+            <h1>Hi, <c:out value="${me.name}"/> 👋</h1>
+            <a href="${ctx}/report/export" class="btn btn-ghost dashboard-report-link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download report
             </a>
@@ -56,18 +57,18 @@
                         <c:forEach var="stats" items="${summary.statsByCurrency}">
                             <div class="card">
                                 <div class="card-subtitle">Total Equity (<c:out value="${stats.currency()}"/>)</div>
-                                <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
+                                <div class="card-title dashboard-kpi-value">
                                     <c:out value="${stats.currency()}"/> <fmt:formatNumber value="${stats.totalEquity()}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
                                 </div>
                                 <span class="badge badge-income">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M5 12l5 5L20 7"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dashboard-check-icon"><path d="M5 12l5 5L20 7"/></svg>
                                     Up to date
                                 </span>
                             </div>
 
                             <div class="card">
                                 <div class="card-subtitle">YTD Expenses (<c:out value="${stats.currency()}"/>)</div>
-                                <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
+                                <div class="card-title dashboard-kpi-value">
                                     <c:out value="${stats.currency()}"/> <fmt:formatNumber value="${stats.ytdExpenses()}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
                                 </div>
                                 <span class="badge badge-expense">YTD</span>
@@ -75,7 +76,7 @@
 
                             <div class="card">
                                 <div class="card-subtitle">YTD Savings (<c:out value="${stats.currency()}"/>)</div>
-                                <div class="card-title" style="font-size: var(--font-size-3xl); margin: var(--space-2) 0;">
+                                <div class="card-title dashboard-kpi-value">
                                     <c:out value="${stats.currency()}"/> <fmt:formatNumber value="${stats.ytdSavings()}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
                                 </div>
                                 <span class="badge badge-income">YTD</span>
@@ -83,12 +84,12 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <div class="card"><p class="muted" style="margin:0;">No financial data yet.</p></div>
+                        <div class="card"><p class="muted dashboard-empty-copy">No financial data yet.</p></div>
                     </c:otherwise>
                 </c:choose>
             </div>
 
-            <div class="card-header" style="margin-top: var(--space-10);">
+            <div class="card-header dashboard-section-header">
                 <h2 class="card-title">Your wallets</h2>
                 <a href="${ctx}/wallets" class="btn btn-primary">+ New wallet</a>
             </div>
@@ -122,15 +123,15 @@
                             </c:choose>
 
                             <div class="card">
-                                <div style="margin-bottom: var(--space-2);">
+                                <div class="dashboard-wallet-meta">
                                     <span class="badge ${badgeClass}">${typeLabel}</span>
-                                    <span class="muted" style="font-size: var(--font-size-xs); margin-left: 4px;"><c:out value="${wallet.currency}"/></span>
+                                    <span class="muted dashboard-wallet-currency"><c:out value="${wallet.currency}"/></span>
                                 </div>
-                                <div class="card-title" style="font-size: var(--font-size-base);"><c:out value="${wallet.name}"/></div>
-                                <div class="card-title" style="font-size: var(--font-size-xl); margin-top: var(--space-2);">
+                                <div class="card-title dashboard-wallet-name"><c:out value="${wallet.name}"/></div>
+                                <div class="card-title dashboard-wallet-balance">
                                     <c:choose>
                                         <c:when test="${wallet.balance.signum() lt 0}">
-                                            <span style="color: var(--color-danger);"><fmt:formatNumber value="${wallet.balance}" type="number" minFractionDigits="2" maxFractionDigits="2"/></span>
+                                            <span class="dashboard-wallet-balance--negative"><fmt:formatNumber value="${wallet.balance}" type="number" minFractionDigits="2" maxFractionDigits="2"/></span>
                                         </c:when>
                                         <c:otherwise>
                                             <fmt:formatNumber value="${wallet.balance}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
@@ -141,14 +142,14 @@
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <div class="card" style="grid-column: 1 / -1; text-align: center;">
+                        <div class="card dashboard-empty-card">
                             <p class="muted">No wallets yet.</p>
                         </div>
                     </c:otherwise>
                 </c:choose>
             </div>
 
-            <div class="card-header" style="margin-top: var(--space-10);">
+            <div class="card-header dashboard-section-header">
                 <h2 class="card-title">Recent transactions</h2>
             </div>
 
@@ -167,25 +168,24 @@
                     </tbody>
                 </table>
             </div>
-            <div id="tx-footer" style="display:none; justify-content:space-between; align-items:center; margin-top:var(--space-4); padding-top:var(--space-3); border-top:1px solid var(--color-border);">
-                <span class="muted" id="tx-count" style="font-size:var(--font-size-sm);"></span>
-                <a href="${ctx}/transactions" style="font-size:var(--font-size-sm); color:var(--color-primary); text-decoration:none; font-weight:500;">View all transactions &rarr;</a>
+            <div id="tx-footer" class="dashboard-tx-footer">
+                <span class="muted dashboard-tx-count" id="tx-count"></span>
+                <a href="${ctx}/transactions" class="dashboard-tx-link">View all transactions &rarr;</a>
             </div>
 
         </c:if>
     </main>
 </div>
 
-<script>
-window.CTX_PATH = "${ctx}";
-window.WALLET_IDS = [
+<div id="dashboard-data" hidden data-context-path="${ctx}">
     <c:if test="${not empty summary.wallets}">
-        <c:forEach var="w" items="${summary.wallets}" varStatus="status">
-    { id: "${w.id}", name: "<c:out value='${w.name}'/>" }<c:if test="${not status.last}">,</c:if>
+        <c:forEach var="w" items="${summary.wallets}">
+            <span class="js-dashboard-wallet"
+                  data-id="${w.id}"
+                  data-name="${fn:escapeXml(w.name)}"></span>
         </c:forEach>
     </c:if>
-];
-</script>
+</div>
 <script src="${ctx}/static/js/dashboard.js"></script>
 
 </body>

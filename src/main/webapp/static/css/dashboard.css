@@ -96,6 +96,13 @@
     text-overflow: ellipsis;
 }
 
+.sidebar-nav { margin-top: var(--space-8); }
+.logout-form { margin-left: auto; }
+.logout-button {
+    width: 24px;
+    height: 24px;
+}
+
 /* Sidebar brand row */
 .sidebar-brand {
     display: flex;
@@ -217,4 +224,57 @@
     .app-shell.sidebar-collapsed .nav-item { justify-content: flex-start; padding: var(--space-2) var(--space-3); }
     .app-shell.sidebar-collapsed .user-profile { justify-content: flex-start; }
     .app-shell.sidebar-collapsed .user-profile form { margin-left: auto; }
+}
+
+.dashboard-alert { margin-bottom: var(--space-4); }
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+}
+.dashboard-header h1 { margin: 0; }
+.dashboard-report-link { gap: var(--space-2); }
+.dashboard-kpi-value {
+    font-size: var(--font-size-3xl);
+    margin: var(--space-2) 0;
+}
+.dashboard-check-icon {
+    width: 16px;
+    height: 16px;
+}
+.dashboard-empty-copy { margin: 0; }
+.dashboard-section-header { margin-top: var(--space-10); }
+.dashboard-wallet-meta { margin-bottom: var(--space-2); }
+.dashboard-wallet-currency {
+    font-size: var(--font-size-xs);
+    margin-left: 4px;
+}
+.dashboard-wallet-name { font-size: var(--font-size-base); }
+.dashboard-wallet-balance {
+    font-size: var(--font-size-xl);
+    margin-top: var(--space-2);
+}
+.dashboard-wallet-balance--negative { color: var(--color-danger); }
+.dashboard-empty-card {
+    grid-column: 1 / -1;
+    text-align: center;
+}
+.dashboard-tx-footer {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+}
+.dashboard-tx-footer.is-visible { display: flex; }
+.dashboard-tx-count { font-size: var(--font-size-sm); }
+.dashboard-tx-link {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
 }

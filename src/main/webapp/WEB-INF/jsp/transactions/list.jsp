@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
@@ -165,14 +166,14 @@
     </div>
 </div>
 
-<script>
-window.CTX_PATH   = "${ctx}";
-window.WALLET_IDS = [
-    <c:forEach var="w" items="${wallets}" varStatus="status">
-    { id: "${w.id}", name: "<c:out value='${w.name}'/>", currency: "<c:out value='${w.currency}'/>" }<c:if test="${not status.last}">,</c:if>
+<div id="transactions-data" hidden data-context-path="${ctx}">
+    <c:forEach var="w" items="${wallets}">
+        <span class="js-transaction-wallet"
+              data-id="${w.id}"
+              data-name="${fn:escapeXml(w.name)}"
+              data-currency="${fn:escapeXml(w.currency)}"></span>
     </c:forEach>
-];
-</script>
+</div>
 <script src="${ctx}/static/js/transactions.js"></script>
 
 </body>

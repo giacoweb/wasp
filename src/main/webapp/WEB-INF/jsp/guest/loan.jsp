@@ -1,11 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<jsp:useBean id="today" class="java.util.Date"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<fmt:formatDate value="${today}" pattern="M"    var="curMonth"/>
-<fmt:formatDate value="${today}" pattern="yyyy" var="curYear"/>
-<c:set var="monthNames" value="${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +39,7 @@
     </nav>
 </header>
 
-<main class="section" style="padding-left: 80px; padding-right: 80px;">
+<main class="section calc-page-section">
 
     <a href="${ctx}/guest/report" class="calc-back">
         <i data-lucide="arrow-left"></i>
@@ -52,15 +47,15 @@
     </a>
 
     <h1>Loan Amortization</h1>
-    <p class="muted" style="margin-bottom: var(--space-6);">
+    <p class="muted calc-page-intro">
         Estimate monthly payments, total interest, and the full repayment schedule.
     </p>
 
     <div class="calc-split">
 
         <div class="card card--padded">
-            <div class="card-header" style="justify-content: flex-start; gap: var(--space-3); align-items: flex-start;">
-                <div class="calc-form-icon" style="flex-shrink:0;">
+            <div class="card-header calc-card-header-start">
+                <div class="calc-form-icon calc-form-icon--fixed">
                     <i data-lucide="table-2"></i>
                 </div>
                 <div>
@@ -106,23 +101,35 @@
 
                     <div class="form-field">
                         <label class="form-label">Start month</label>
-                        <div style="display:flex; gap:var(--space-2);">
-                            <select class="form-select" id="startMonth" style="flex:1;">
-                                <c:forEach var="m" begin="1" end="12">
-                                    <option value="${m}" ${m == curMonth ? 'selected' : ''}>${monthNames[m - 1]}</option>
-                                </c:forEach>
+                        <div class="calc-inline-controls">
+                            <select class="form-select" id="startMonth">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9">Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
                             </select>
-                            <select class="form-select" id="startYear" style="flex:1;">
-                                <c:forEach var="y" begin="${curYear}" end="${curYear + 5}">
-                                    <option value="${y}" ${y == curYear ? 'selected' : ''}>${y}</option>
-                                </c:forEach>
+                            <select class="form-select" id="startYear">
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div style="display:flex; gap:var(--space-3); margin-top:var(--space-2);">
-                    <button type="button" class="btn btn-primary" id="btn-calculate" style="flex:1;">
+                <div class="calc-action-row">
+                    <button type="button" class="btn btn-primary" id="btn-calculate">
                         <i data-lucide="refresh-cw"></i>
                         Calculate payment
                     </button>
@@ -145,10 +152,10 @@
 
     </div>
 
-    <div id="schedule-section" hidden style="margin-top: var(--space-6);">
-        <div class="card" style="padding:0; overflow:hidden;">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding: var(--space-5) var(--space-6);">
-                <h2 class="card-title" style="margin:0;">Amortization schedule</h2>
+    <div id="schedule-section" class="calc-schedule-section" hidden>
+        <div class="card calc-table-card">
+            <div class="calc-table-card__header">
+                <h2 class="card-title calc-table-card__title">Amortization schedule</h2>
                 <button type="button" class="btn btn-ghost btn-sm" id="btn-export-csv">
                     <i data-lucide="download"></i>
                     Export CSV
@@ -174,7 +181,7 @@
 </main>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script>window.lucide && lucide.createIcons();</script>
+<script src="${ctx}/static/js/icons.js"></script>
 <script src="${ctx}/static/js/loan-calculator.js"></script>
 </body>
 </html>

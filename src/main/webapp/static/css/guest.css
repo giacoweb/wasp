@@ -20,6 +20,25 @@
 .guest-session-btn:hover { background: var(--color-neutral-100); text-decoration: none; }
 .guest-session-btn svg  { width: 14px; height: 14px; color: var(--color-warning); }
 
+.guest-page { background: var(--color-bg-alt); }
+
+.calc-hub-section {
+    padding-left: 60px;
+    padding-right: 60px;
+    padding-bottom: calc(var(--space-12) + 48px);
+}
+
+.calc-hub__heading--spacious,
+.calc-hub__sub--spacious {
+    margin-bottom: 80px;
+}
+
+.calc-hub__grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
 /* =====================================================
    Hub — heading / subtitle
    ===================================================== */
@@ -48,6 +67,8 @@
     background: var(--color-surface);
     transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
 }
+.calc-card:hover,
+.calc-card { text-decoration: none; }
 .calc-card .feature-title { font-size: 18px; margin-bottom: 20px; }
 .calc-card .feature-desc  { font-size: 14px; }
 .calc-card:hover {
@@ -124,6 +145,49 @@
 }
 .calc-back:hover { color: var(--color-primary-hover); text-decoration: none; }
 .calc-back svg { width: 14px; height: 14px; }
+
+.calc-page-section {
+    padding-left: 80px;
+    padding-right: 80px;
+}
+.calc-page-intro { margin-bottom: var(--space-6); }
+.calc-card-header-start {
+    justify-content: flex-start;
+    gap: var(--space-3);
+    align-items: flex-start;
+}
+.calc-form-icon--fixed { flex-shrink: 0; }
+.calc-inline-controls {
+    display: flex;
+    gap: var(--space-2);
+}
+.calc-inline-controls > * { flex: 1; }
+.calc-action-row {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+}
+.calc-action-row .btn-primary { flex: 1; }
+.calc-schedule-section { margin-top: var(--space-6); }
+.calc-table-card {
+    padding: 0;
+    overflow: hidden;
+}
+.calc-table-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-5) var(--space-6);
+}
+.calc-table-card__title { margin: 0; }
+
+.progress-row__track {
+    margin-bottom: var(--space-1);
+}
+
+.progress__bar--red { background: var(--color-negative); }
+.progress__bar--amber { background: var(--color-warning); }
+.progress__bar--green { background: var(--color-positive); }
 
 /* =====================================================
    KPI strip — 3 cards across the top

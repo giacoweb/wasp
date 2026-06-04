@@ -171,7 +171,7 @@
                                 <div class="progress" role="progressbar"
                                      aria-valuemin="0" aria-valuemax="100"
                                      aria-valuenow="${view.progressPct}">
-                                    <div class="progress__bar" style="--pct: ${view.progressPct}%;"></div>
+                                    <div class="progress__bar js-pac-progress" data-pct="${view.progressPct}"></div>
                                 </div>
                                 <div class="pac-card__progress-foot">
                                     <span class="pac-card__progress-amount"

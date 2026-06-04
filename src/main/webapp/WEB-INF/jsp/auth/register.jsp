@@ -21,17 +21,17 @@
 </head>
 <body>
 
-<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+<main class="auth-page">
 
-    <div class="card" style="width: 100%; max-width: 460px;">
+    <div class="card auth-card auth-card--register">
 
-        <header style="margin-bottom: 1.5rem;">
-            <h1 style="font-size: 2rem; margin: 0 0 0.5rem;">Create your account</h1>
-            <p class="muted" style="margin: 0;">Start tracking in under a minute.</p>
+        <header class="auth-header">
+            <h1 class="auth-title">Create your account</h1>
+            <p class="muted auth-subtitle">Start tracking in under a minute.</p>
         </header>
 
         <c:if test="${not empty errorMessage}">
-            <div class="alert alert-error" role="alert" style="margin-bottom: 1rem;">
+            <div class="alert alert-error auth-alert" role="alert">
                 <c:out value="${errorMessage}"/>
             </div>
         </c:if>
@@ -82,7 +82,7 @@
             <button type="submit" class="btn btn-primary btn-block">Create account</button>
         </form>
 
-        <p class="muted" style="text-align: center; margin: 1.5rem 0 0;">
+        <p class="muted auth-switch">
             Already have an account?
             <a href="${ctx}/login">Log in</a>
         </p>

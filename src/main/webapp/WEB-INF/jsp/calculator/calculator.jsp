@@ -6,6 +6,8 @@
   <head>
     <jsp:include page="/WEB-INF/jsp/common/_favicon.jsp"/>
     <title>FinTrack</title>
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/calculator.css">
   </head>
   <body>
     <h1>FinTrack - Calculator</h1>
@@ -13,7 +15,7 @@
     <p><strong>Loan Calculator</strong></p>
 
     <c:if test="${not empty errorMessage}">
-        <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+        <div class="calc-error-legacy">
             <c:out value="${errorMessage}"/>
         </div>
     </c:if>
@@ -73,10 +75,10 @@
             <div class="income-row">
                 <input type="text"   name="incomeCategory" placeholder="Category (e.g. Salary)" required>
                 <input type="number" name="incomeAmount"   placeholder="Amount (€)" step="0.01" min="0.01" required>
-                <button type="button" onclick="removeRow(this)">✕</button>
+                <button type="button" class="js-calculator-remove">✕</button>
             </div>
         </div>
-        <button type="button" onclick="addRow('income')">+ Add Income</button>
+        <button type="button" data-calculator-add="income">+ Add Income</button>
         <br><br>
 
         <p>Expense Items</p>
@@ -84,47 +86,14 @@
             <div class="expense-row">
                 <input type="text"   name="expenseCategory" placeholder="Category (e.g. Rent)" required>
                 <input type="number" name="expenseAmount"   placeholder="Amount (€)" step="0.01" min="0.01" required>
-                <button type="button" onclick="removeRow(this)">✕</button>
+                <button type="button" class="js-calculator-remove">✕</button>
             </div>
         </div>
-        <button type="button" onclick="addRow('expense')">+ Add Expense</button>
+        <button type="button" data-calculator-add="expense">+ Add Expense</button>
         <br><br>
         <button type="submit">Calculate Budget</button>
     </form>
-    <script>
-        function addRow(type) {
-            const container = document.getElementById(type + '-rows');
-            const div = document.createElement('div');
-            div.className = type + '-row';
-            const catInput = document.createElement('input');
-            catInput.type = 'text';
-            catInput.name = type + 'Category';
-            catInput.placeholder = 'Category';
-            catInput.required = true;
-            const amtInput = document.createElement('input');
-            amtInput.type = 'number';
-            amtInput.name = type + 'Amount';
-            amtInput.placeholder = 'Amount (€)';
-            amtInput.step = '0.01';
-            amtInput.min = '0.01';
-            amtInput.required = true;
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.textContent = '✕';
-            removeBtn.onclick = function() { removeRow(this); };
-            div.appendChild(catInput);
-            div.appendChild(amtInput);
-            div.appendChild(removeBtn);
-            container.appendChild(div);
-        }
-        function removeRow(btn) {
-            const row = btn.parentElement;
-            const container = row.parentElement;
-            if (container.children.length > 1) {
-                container.removeChild(row);
-            }
-        }
-    </script>
+    <script src="${ctx}/static/js/calculator.js"></script>
 
 
     <br>

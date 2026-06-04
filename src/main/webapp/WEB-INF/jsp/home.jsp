@@ -96,11 +96,7 @@
 </footer>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        if (window.lucide) window.lucide.createIcons();
-    });
-</script>
+<script src="${ctx}/static/js/icons.js"></script>
 
 </body>
 </html>

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="${ctx}/static/css/components.css">
     <link rel="stylesheet" href="${ctx}/static/css/guest.css">
 </head>
-<body style="background: var(--color-bg-alt);">
+<body class="guest-page">
 
 <header class="site-header">
     <a href="${ctx}/" class="brand">
@@ -37,14 +37,14 @@
     </nav>
 </header>
 
-<main class="section" style="padding-left: 60px; padding-right: 60px; padding-bottom: calc(var(--space-12) + 48px);">
+<main class="section calc-hub-section">
 
-    <h1 class="calc-hub__heading" style="margin-bottom: 80px;">Try our calculators &mdash; no account needed.</h1>
-    <p class="calc-hub__sub muted" style="margin-bottom: 80px;">Three quick tools for instant financial clarity. Sign up later to save results.</p>
+    <h1 class="calc-hub__heading calc-hub__heading--spacious">Try our calculators &mdash; no account needed.</h1>
+    <p class="calc-hub__sub calc-hub__sub--spacious muted">Three quick tools for instant financial clarity. Sign up later to save results.</p>
 
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div class="calc-hub__grid">
 
-        <a href="${ctx}/guest/loan" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/loan" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="landmark"></i>
             </div>
@@ -57,7 +57,7 @@
             </span>
         </a>
 
-        <a href="${ctx}/guest/compound" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/compound" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="trending-up"></i>
             </div>
@@ -70,7 +70,7 @@
             </span>
         </a>
 
-        <a href="${ctx}/guest/budget" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/budget" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="minus-square"></i>
             </div>
@@ -95,6 +95,6 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script>window.lucide && lucide.createIcons();</script>
+<script src="${ctx}/static/js/icons.js"></script>
 </body>
 </html>
