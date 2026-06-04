@@ -81,6 +81,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <jsp:include page="/WEB-INF/jsp/common/_favicon.jsp"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FinTrack - Budget Report</title>

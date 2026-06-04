@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <jsp:include page="/WEB-INF/jsp/common/_favicon.jsp"/>
     <title>FinTrack</title>
   </head>
   <body>
