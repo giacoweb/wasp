@@ -1,0 +1,76 @@
+.expenses-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+}
+
+.expenses-kpi {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.expenses-kpi__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.expenses-kpi__icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.expenses-kpi__icon--active {
+    background: var(--color-positive-tint);
+    color: var(--color-positive);
+}
+
+.expenses-kpi__icon--monthly {
+    background: var(--color-negative-tint);
+    color: var(--color-negative);
+}
+
+.expenses-kpi__icon--due {
+    background: var(--color-warning-tint);
+    color: var(--color-warning);
+}
+
+.expenses-kpi__label {
+    margin: 0 0 var(--space-1);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.expenses-kpi__value {
+    margin: 0;
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.expense-due-soon {
+    color: var(--color-warning);
+    font-weight: 600;
+}
+
+.amount-negative {
+    color: var(--color-negative);
+    font-weight: 600;
+}
+
+.badge-muted {
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+    .expenses-kpi-strip {
+        grid-template-columns: 1fr;
+    }
+}

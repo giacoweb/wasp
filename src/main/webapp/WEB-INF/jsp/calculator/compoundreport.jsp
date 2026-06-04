@@ -32,6 +32,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <jsp:include page="/WEB-INF/jsp/common/_favicon.jsp"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FinTrack - Compound Report</title>
@@ -68,10 +69,8 @@
 
 <main class="container container--wide section">
 
-    <nav class="flex-row gap-2 mb-6 text-sm">
-        <a href="${ctx}/guest/report" class="muted breadcrumb-link">Calculators</a>
-        <span class="muted">&rsaquo;</span>
-        <strong>Compound interest</strong>
+    <nav class="breadcrumb">
+        <a href="${ctx}/guest/report">Calculators</a> / <span>Compound interest</span>
     </nav>
 
     <header class="mb-10">
@@ -137,12 +136,12 @@
                 </form>
             </article>
 
-            <article class="card mt-4 flex-row gap-3 advice-card">
-                <div class="form-header-icon advice-icon">
+            <article class="card mt-4 flex align-start gap-3">
+                <div class="advice-icon">
                     <i data-lucide="info"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm m-0 advice-title">Compounding effect</h4>
+                    <h4 class="text-sm m-0 mb-1">Compounding effect</h4>
                     <p class="text-sm muted m-0">
                         With regular monthly contributions, your interest starts small but becomes a larger share of the final balance over time.
                     </p>
@@ -216,29 +215,31 @@
                         <div class="card-header-border">
                             <h3 class="card-title m-0">Year-by-year projection</h3>
                         </div>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th class="pl-6">YEAR</th>
-                                <th>CONTRIBUTED</th>
-                                <th>INTEREST EARNED</th>
-                                <th class="pr-6">BALANCE</th>
-                            </tr>
-                            </thead>
-                            <tbody class="table-paginate-body">
-                                <c:set var="cc" value="${initialCapital}"/>
-                                <c:forEach var="row" items="${compoundList}">
-                                    <c:set var="cc" value="${cc + (monthlyContribution * 12)}"/>
-                                    <c:set var="ci" value="${row.totalValue - cc}"/>
-                                    <tr>
-                                        <td class="pl-6 muted">Year ${row.year}</td>
-                                        <td class="font-medium">€<fmt:formatNumber value="${cc}" maxFractionDigits="0"/></td>
-                                        <td class="text-primary font-medium">€<fmt:formatNumber value="${ci}" maxFractionDigits="0"/></td>
-                                        <td class="pr-6 font-semibold">€<fmt:formatNumber value="${row.totalValue}" maxFractionDigits="0"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="pl-6">YEAR</th>
+                                    <th>CONTRIBUTED</th>
+                                    <th>INTEREST EARNED</th>
+                                    <th class="pr-6">BALANCE</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-paginate-body">
+                                    <c:set var="cc" value="${initialCapital}"/>
+                                    <c:forEach var="row" items="${compoundList}">
+                                        <c:set var="cc" value="${cc + (monthlyContribution * 12)}"/>
+                                        <c:set var="ci" value="${row.totalValue - cc}"/>
+                                        <tr>
+                                            <td class="pl-6 muted">Year ${row.year}</td>
+                                            <td class="font-medium">€<fmt:formatNumber value="${cc}" maxFractionDigits="0"/></td>
+                                            <td class="text-primary font-medium">€<fmt:formatNumber value="${ci}" maxFractionDigits="0"/></td>
+                                            <td class="pr-6 font-semibold">€<fmt:formatNumber value="${row.totalValue}" maxFractionDigits="0"/></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="table-footer">
                             <span class="text-sm muted table-pagination-info"></span>
                             <div class="table-footer--buttons table-pagination-buttons"></div>
@@ -246,12 +247,12 @@
                     </article>
                 </c:when>
                 <c:otherwise>
-                    <article class="card calc-empty-state">
-                        <div class="calc-empty-icon">
+                    <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+                        <div class="empty-state__icon">
                             <i data-lucide="bar-chart-3"></i>
                         </div>
-                        <h3 class="calc-empty-title">No projection data</h3>
-                        <p class="calc-empty-text">
+                        <h3 class="empty-state__title">No projection data</h3>
+                        <p class="empty-state__desc">
                             Enter your financial details in the form on the left and click <strong>Calculate</strong> to see your compound growth projection and year-by-year breakdown.
                         </p>
                     </article>

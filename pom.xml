@@ -16,6 +16,9 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <test.db.url>jdbc:postgresql://localhost:5432/fintrack</test.db.url>
+    <test.db.username>postgres</test.db.username>
+    <test.db.password></test.db.password>
   </properties>
 
   <dependencies>
@@ -67,5 +70,19 @@
 
   <build>
     <finalName>FinTrack</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <systemPropertyVariables>
+            <test.db.url>${test.db.url}</test.db.url>
+            <test.db.username>${test.db.username}</test.db.username>
+            <test.db.password>${test.db.password}</test.db.password>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

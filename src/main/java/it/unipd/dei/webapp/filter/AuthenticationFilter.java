@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 @WebFilter(filterName = "AuthenticationFilter", urlPatterns = {
         "/dashboard",
         "/transactions/*",
+        "/expenses",
+        "/expenses/*",
         "/wallets",
         "/wallets/*",
         "/pac",

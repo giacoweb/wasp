@@ -17,6 +17,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <jsp:include page="/WEB-INF/jsp/common/_favicon.jsp"/>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>FinTrack - Loan Amortization</title>
@@ -51,10 +52,8 @@
 
   <main class="container container--wide section">
 
-      <nav class="flex-row gap-2 mb-6 text-sm">
-          <a href="${ctx}/guest/report" class="muted breadcrumb-link">Calculators</a>
-          <span class="muted">&rsaquo;</span>
-          <strong>Loan amortization</strong>
+      <nav class="breadcrumb">
+          <a href="${ctx}/guest/report">Calculators</a> / <span>Loan amortization</span>
       </nav>
 
       <header class="mb-10">
@@ -120,26 +119,30 @@
                       </button>
                   </form>
               </article>
+
+              <article class="card mt-4 flex align-start gap-3">
+                  <div class="advice-icon">
+                      <i data-lucide="info"></i>
+                  </div>
+                  <div>
+                      <h4 class="text-sm m-0 mb-1">How amortization works</h4>
+                      <p class="text-sm muted m-0">
+                          Early payments cover mostly interest. Over time, more goes toward principal as the remaining balance shrinks.
+                      </p>
+                  </div>
+              </article>
           </aside>
 
-          <c:choose>
-              <c:when test="${hasData}">
-                  <article class="card">
-                      <h2 class="text-2xl font-semibold mb-2">Payment summary</h2>
-                      <p class="muted text-sm mb-8">
-                          Estimated from
-                          €<c:choose>
-                              <c:when test="${not empty principal}"><fmt:formatNumber value="${principal}" maxFractionDigits="0"/></c:when>
-                              <c:otherwise><c:out value="${param.principal}"/></c:otherwise>
-                          </c:choose>
-                          principal, ${annualRate}% APR, and <c:out value="${param.months}"/> months.
-                      </p>
+          <div class="flex-col gap-6 calc-column-fill">
 
-                      <div class="grid grid--3 mb-8">
+              <c:choose>
+                  <c:when test="${hasData}">
+
+                      <div class="grid grid--3">
                           <article class="card">
                               <div class="flex-row gap-2 mb-3 muted text-sm">
-                                  <div class="badge badge-neutral badge-icon">
-                                      <i data-lucide="rotate-cw" class="text-primary"></i>
+                                  <div class="badge badge-primary badge-icon">
+                                      <i data-lucide="rotate-cw"></i>
                                   </div>
                                   <span>Monthly payment</span>
                               </div>
@@ -151,8 +154,8 @@
 
                           <article class="card">
                               <div class="flex-row gap-2 mb-3 muted text-sm">
-                                  <div class="badge badge-wallet-cash badge-icon badge-warning">
-                                      <i data-lucide="percent" class="text-warning"></i>
+                                  <div class="badge badge-neutral badge-icon">
+                                      <i data-lucide="percent"></i>
                                   </div>
                                   <span>Total interest</span>
                               </div>
@@ -165,7 +168,7 @@
                           <article class="card">
                               <div class="flex-row gap-2 mb-3 muted text-sm">
                                   <div class="badge badge-neutral badge-icon">
-                                      <div class="legend-dot legend-dot--interest"></div>
+                                      <i data-lucide="landmark"></i>
                                   </div>
                                   <span>Total paid</span>
                               </div>
@@ -176,62 +179,59 @@
                           </article>
                       </div>
 
-                      <h4 class="font-semibold mb-2">What this means</h4>
-                      <p class="muted text-sm m-0">Most of the first payments go partly toward interest, then gradually shift toward principal as the remaining balance decreases.</p>
-                  </article>
-              </c:when>
-              <c:otherwise>
-                  <article class="card calc-empty-state">
-                      <div class="calc-empty-icon">
-                          <i data-lucide="bar-chart-3"></i>
-                      </div>
-                      <h3 class="calc-empty-title">No projection data</h3>
-                      <p class="calc-empty-text">
-                          Enter your loan details in the form on the left and click <strong>Calculate payment</strong> to see your payment summary and amortization schedule.
-                      </p>
-                  </article>
-              </c:otherwise>
-          </c:choose>
-      </div>
+                      <article class="card card--table card--table-fill table-paginated-container" data-per-page="10" data-item-name="months">
+                          <div class="card-header-border">
+                              <h3 class="card-title m-0">Amortization schedule</h3>
+                              <button class="btn btn-ghost btn-sm">
+                                  <i data-lucide="download"></i> Export CSV
+                              </button>
+                          </div>
+                          <div class="table-wrapper">
+                              <table class="table">
+                                  <thead>
+                                  <tr>
+                                      <th class="pl-6">MONTH</th>
+                                      <th>PAYMENT</th>
+                                      <th>PRINCIPAL</th>
+                                      <th>INTEREST</th>
+                                      <th class="pr-6">REMAINING BALANCE</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody class="table-paginate-body">
+                                      <c:forEach var="row" items="${amortizationList}">
+                                          <tr>
+                                              <td class="pl-6 muted">#<fmt:formatNumber value="${row.month}" minIntegerDigits="2"/></td>
+                                              <td class="font-semibold">€<fmt:formatNumber value="${row.totalPayment}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                              <td class="text-primary font-medium">€<fmt:formatNumber value="${row.principalPaid}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                              <td class="text-warning font-medium">€<fmt:formatNumber value="${row.interestPaid}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                              <td class="pr-6 font-semibold">€<fmt:formatNumber value="${row.remainingBalance}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                          </tr>
+                                      </c:forEach>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <div class="table-footer">
+                              <span class="text-sm muted table-pagination-info"></span>
+                              <div class="table-footer--buttons table-pagination-buttons"></div>
+                          </div>
+                      </article>
 
-      <c:if test="${hasData}">
-          <article class="card card--table table-paginated-container mb-10" data-per-page="12" data-item-name="months">
-              <div class="card-header-border flex-row justify-between">
-                  <h3 class="card-title m-0 text-xl font-semibold">Amortization schedule</h3>
-                  <button class="btn btn-ghost btn-sm">
-                      <i data-lucide="download"></i> Export CSV
-                  </button>
-              </div>
-              <div class="table-wrapper">
-                  <table class="table">
-                      <thead>
-                      <tr>
-                          <th class="pl-6">MONTH</th>
-                          <th>PAYMENT</th>
-                          <th>PRINCIPAL</th>
-                          <th>INTEREST</th>
-                          <th class="pr-6">REMAINING BALANCE</th>
-                      </tr>
-                      </thead>
-                      <tbody class="table-paginate-body">
-                          <c:forEach var="row" items="${amortizationList}">
-                              <tr>
-                                  <td class="pl-6 muted">#<fmt:formatNumber value="${row.month}" minIntegerDigits="2"/></td>
-                                  <td class="font-semibold">€<fmt:formatNumber value="${row.totalPayment}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                                  <td class="text-primary font-medium">€<fmt:formatNumber value="${row.principalPaid}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                                  <td class="text-warning font-medium">€<fmt:formatNumber value="${row.interestPaid}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                                  <td class="pr-6 font-semibold">€<fmt:formatNumber value="${row.remainingBalance}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                              </tr>
-                          </c:forEach>
-                      </tbody>
-                  </table>
-              </div>
-              <div class="table-footer">
-                  <span class="text-sm muted table-pagination-info"></span>
-                  <div class="table-footer--buttons table-pagination-buttons"></div>
-              </div>
-          </article>
-      </c:if>
+                  </c:when>
+                  <c:otherwise>
+                      <article class="card empty-state flex-col align-center justify-center" style="min-height: 400px; height: 100%;">
+                          <div class="empty-state__icon">
+                              <i data-lucide="bar-chart-3"></i>
+                          </div>
+                          <h3 class="empty-state__title">No projection data</h3>
+                          <p class="empty-state__desc">
+                              Enter your loan details in the form on the left and click <strong>Calculate</strong> to see your payment summary and amortization schedule.
+                          </p>
+                      </article>
+                  </c:otherwise>
+              </c:choose>
+
+          </div>
+      </div>
 
   </main>
 
