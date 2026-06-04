@@ -5,6 +5,11 @@
     var lastSchedule = [];
 
     document.addEventListener("DOMContentLoaded", function () {
+        var now = new Date();
+        var startMonth = document.getElementById("startMonth");
+        var startYear = document.getElementById("startYear");
+        if (startMonth) startMonth.value = String(now.getMonth() + 1);
+        if (startYear) startYear.value = String(now.getFullYear());
         document.getElementById("btn-calculate").addEventListener("click", onCalculate);
         document.getElementById("btn-reset").addEventListener("click", onReset);
         document.getElementById("btn-export-csv").addEventListener("click", onExportCsv);
@@ -120,7 +125,7 @@
         var html =
             '<div class="card card--padded">' +
               '<div class="card-title">Payment summary</div>' +
-              '<div class="card-subtitle" style="margin-bottom:40px;">' + escHtml(caption) + '</div>' +
+              '<div class="card-subtitle loan-summary-caption">' + escHtml(caption) + '</div>' +
               '<div class="summary-kpis">' +
 
                 // Monthly payment
@@ -161,9 +166,9 @@
 
               '</div>' + // /.summary-kpis
 
-              '<hr style="border:none;border-top:1px solid var(--color-border);margin:20px 0;">' +
-              '<h4 style="margin:0 0 var(--space-2);">What this means</h4>' +
-              '<p class="muted" style="margin:0;">' + what + '</p>' +
+              '<hr class="loan-summary-divider">' +
+              '<h4 class="loan-summary-heading">What this means</h4>' +
+              '<p class="muted loan-summary-copy">' + what + '</p>' +
             '</div>';
 
         document.getElementById("results-panel").innerHTML = html;
@@ -183,7 +188,7 @@
 
             rows.push(
                 '<tr>' +
-                  '<td>#' + pad2(row.month) + ' &nbsp;<span class="muted" style="font-size:0.75rem">' + label + '</span></td>' +
+                  '<td>#' + pad2(row.month) + ' &nbsp;<span class="muted loan-schedule-date">' + label + '</span></td>' +
                   '<td class="num">' + fmt(row.payment) + '</td>' +
                   '<td class="num col-principal">' + fmt(row.principal) + '</td>' +
                   '<td class="num col-interest">'   + fmt(row.interest)  + '</td>' +

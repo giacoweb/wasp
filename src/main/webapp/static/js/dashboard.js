@@ -1,8 +1,11 @@
 (function () {
     "use strict";
 
-    const ctx     = window.CTX_PATH  || "";
-    const wallets = window.WALLET_IDS || [];
+    const dataEl  = document.getElementById("dashboard-data");
+    const ctx     = dataEl ? dataEl.dataset.contextPath : "";
+    const wallets = Array.prototype.map.call(document.querySelectorAll(".js-dashboard-wallet"), function (el) {
+        return { id: el.dataset.id, name: el.dataset.name };
+    });
     const tbody   = document.getElementById("recent-tx-body");
     const LIMIT   = 5;
 
@@ -25,7 +28,7 @@
     wallets.forEach(function (w) { walletMap[w.id] = w.name; });
 
     Promise.all(wallets.map(function (w) {
-        return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin" })
+        return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin", headers: { "Accept": "application/json" } })
             .then(function (r) { return r.json(); })
             .then(function (data) { return Array.isArray(data) ? data : []; })
             .catch(function () { return []; });
@@ -44,14 +47,14 @@
         var count  = document.getElementById("tx-count");
         if (footer && count) {
             count.textContent = "Showing " + recent.length + " of " + all.length + " transactions";
-            footer.style.display = "flex";
+            footer.classList.add("is-visible");
         }
 
         tbody.innerHTML = recent.map(function (t) {
             const isIncome   = t.type === "INCOME";
             const amountHtml = isIncome
-                ? '<span style="color:var(--color-positive);font-weight:500;">+' + fmt(t.amount) + '</span>'
-                : '<span style="color:var(--color-negative);font-weight:500;">−' + fmt(t.amount) + '</span>';
+                ? '<span class="amount-positive">+' + fmt(t.amount) + '</span>'
+                : '<span class="amount-negative">−' + fmt(t.amount) + '</span>';
             const walletName = walletMap[t.walletId] ? esc(walletMap[t.walletId]) : "—";
             return "<tr>" +
                 "<td>" + esc(t.date) + "</td>" +

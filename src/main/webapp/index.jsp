@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,19 +12,19 @@
 
         <p>Choose how you want to continue:</p>
 
-        <form action="<%= request.getContextPath() %>/login" method="get">
+        <form action="${ctx}/login" method="get">
             <button type="submit">Log in</button>
         </form>
 
         <br>
 
-        <form action="<%= request.getContextPath() %>/register" method="get">
+        <form action="${ctx}/register" method="get">
             <button type="submit">Register</button>
         </form>
 
         <br>
 
-        <form action="<%= request.getContextPath() %>/guest/report" method="get">
+        <form action="${ctx}/guest/report" method="get">
             <button type="submit">Continue as Guest</button>
         </form>
     </body>

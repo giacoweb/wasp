@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    String ctx = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,39 +14,37 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctx %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/guest.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/guest.css">
 </head>
-<body style="background: var(--color-bg-alt);">
+<body class="guest-page">
 
 <header class="site-header">
-    <a href="<%= ctx %>/" class="brand">
+    <a href="${ctx}/" class="brand">
         <i data-lucide="triangle"></i>
         FinTrack
     </a>
     <nav class="site-header__nav" aria-label="Primary">
-        <a href="<%= ctx %>/guest/report" class="guest-session-btn">
+        <a href="${ctx}/guest/report" class="guest-session-btn">
             <i data-lucide="alert-triangle"></i>
             Guest session
         </a>
-        <a href="<%= ctx %>/login"    class="btn btn-ghost">Log in</a>
-        <a href="<%= ctx %>/register" class="btn btn-primary">Create account</a>
+        <a href="${ctx}/login"    class="btn btn-ghost">Log in</a>
+        <a href="${ctx}/register" class="btn btn-primary">Create account</a>
     </nav>
 </header>
 
-<%-- section gives top/bottom padding; side padding matches former .container --%>
-<main class="section" style="padding-left: 60px; padding-right: 60px; padding-bottom: calc(var(--space-12) + 48px);">
+<main class="section calc-hub-section">
 
-    <h1 class="calc-hub__heading" style="margin-bottom: 80px;">Try our calculators &mdash; no account needed.</h1>
-    <p class="calc-hub__sub muted" style="margin-bottom: 80px;">Three quick tools for instant financial clarity. Sign up later to save results.</p>
+    <h1 class="calc-hub__heading calc-hub__heading--spacious">Try our calculators &mdash; no account needed.</h1>
+    <p class="calc-hub__sub calc-hub__sub--spacious muted">Three quick tools for instant financial clarity. Sign up later to save results.</p>
 
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div class="calc-hub__grid">
 
-        <!-- Loan Amortization -->
-        <a href="<%= ctx %>/guest/loan" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/loan" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="landmark"></i>
             </div>
@@ -60,8 +57,7 @@
             </span>
         </a>
 
-        <!-- Compound Interest -->
-        <a href="<%= ctx %>/guest/compound" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/compound" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="trending-up"></i>
             </div>
@@ -74,8 +70,7 @@
             </span>
         </a>
 
-        <!-- Budget Analysis -->
-        <a href="<%= ctx %>/guest/budget" class="card calc-card" style="text-decoration:none;">
+        <a href="${ctx}/guest/budget" class="card calc-card">
             <div class="feature-icon">
                 <i data-lucide="minus-square"></i>
             </div>
@@ -100,6 +95,6 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script>window.lucide && lucide.createIcons();</script>
+<script src="${ctx}/static/js/icons.js"></script>
 </body>
 </html>

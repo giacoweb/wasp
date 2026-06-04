@@ -1,4 +1,4 @@
 db.url=jdbc:postgresql://localhost:5432/fintrack_db
 db.username=postgres
-db.password=Schiacciata03
+db.password=change_me
 db.driver=org.postgresql.Driver

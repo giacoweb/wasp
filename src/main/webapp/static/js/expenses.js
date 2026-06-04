@@ -192,7 +192,7 @@
         function loadExpenses() {
             clearPageError();
             tbody.innerHTML = '<tr><td colspan="7" class="table-empty">Loading...</td></tr>';
-            fetch(ctx + "/api/expenses", { credentials: "same-origin" })
+            fetch(ctx + "/api/expenses", { credentials: "same-origin", headers: { "Accept": "application/json" } })
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (!Array.isArray(data)) {
@@ -292,7 +292,7 @@
             fetch(id ? ctx + "/api/expenses/" + id : ctx + "/api/expenses", {
                 method: id ? "PUT" : "POST",
                 credentials: "same-origin",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "Accept": "application/json" },
                 body: JSON.stringify(body)
             })
                 .then(function (response) { return response.json(); })
@@ -320,7 +320,8 @@
         function toggleExpense(id) {
             fetch(ctx + "/api/expenses/" + id + "/toggle", {
                 method: "POST",
-                credentials: "same-origin"
+                credentials: "same-origin",
+                headers: { "Accept": "application/json" }
             })
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
@@ -342,7 +343,8 @@
 
             fetch(ctx + "/api/expenses/" + id, {
                 method: "DELETE",
-                credentials: "same-origin"
+                credentials: "same-origin",
+                headers: { "Accept": "application/json" }
             })
                 .then(function (response) {
                     if (response.status === 204) {

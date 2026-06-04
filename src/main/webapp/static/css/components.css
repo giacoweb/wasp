@@ -181,6 +181,16 @@
 .badge-income   { background: var(--color-positive-tint); color: #166534; }
 .badge-expense  { background: var(--color-negative-tint); color: #991B1B; }
 
+.amount-positive {
+    color: var(--color-positive);
+    font-weight: 500;
+}
+
+.amount-negative {
+    color: var(--color-negative);
+    font-weight: 500;
+}
+
 .badge-wallet-cash         { background: #FEF3C7; color: #92400E; }
 .badge-wallet-bank         { background: #DBEAFE; color: #1E40AF; }
 .badge-wallet-credit-card  { background: #F3E8FF; color: #6B21A8; }

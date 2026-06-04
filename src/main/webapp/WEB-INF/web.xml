@@ -7,6 +7,9 @@
 
   <display-name>FinTrack</display-name>
 
+  <request-character-encoding>UTF-8</request-character-encoding>
+  <response-character-encoding>UTF-8</response-character-encoding>
+
   <listener>
     <listener-class>it.unipd.dei.webapp.util.DBConnectionContextListener</listener-class>
   </listener>

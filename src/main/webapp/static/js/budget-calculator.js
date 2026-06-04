@@ -161,6 +161,9 @@
             '</div>';
 
         container.innerHTML = html;
+        container.querySelectorAll(".js-budget-progress").forEach(function (bar) {
+            bar.style.setProperty("--pct", (bar.dataset.pct || "0") + "%");
+        });
     }
 
     function progressRow(label, amount, pct, color) {
@@ -172,8 +175,8 @@
               '<span class="progress-row__label">' + label + '</span>' +
               '<span class="progress-row__amount">' + amount + '</span>' +
             '</div>' +
-            '<div class="progress" style="margin-bottom:var(--space-1);">' +
-              '<div class="progress__bar progress__bar--' + color + '" style="--pct:' + fillPct + '%;width:var(--pct)"></div>' +
+            '<div class="progress progress-row__track">' +
+              '<div class="progress__bar progress__bar--' + color + ' js-budget-progress" data-pct="' + fillPct + '"></div>' +
             '</div>' +
             '<div class="progress-row__pct">' + Math.round(pct) + '%</div>' +
         '</div>';

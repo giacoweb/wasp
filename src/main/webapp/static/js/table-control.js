@@ -31,14 +31,14 @@ document.addEventListener("DOMContentLoaded", function() {
             prev.textContent = '‹ Prev';
             prev.className = 'btn btn-ghost btn-sm'; 
             prev.disabled = page === 1;
-            prev.onclick = () => { page--; showPage(); };
+            prev.addEventListener('click', () => { page--; showPage(); });
             buttonsContainer.appendChild(prev);
 
             for (let p = 1; p <= pages; p++) {
                 const btn = document.createElement('button');
                 btn.textContent = p;
                 btn.className = p === page ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
-                btn.onclick = () => { page = p; showPage(); };
+                btn.addEventListener('click', () => { page = p; showPage(); });
                 buttonsContainer.appendChild(btn);
             }
 
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
             next.textContent = 'Next ›';
             next.className = 'btn btn-ghost btn-sm';
             next.disabled = page === pages;
-            next.onclick = () => { page++; showPage(); };
+            next.addEventListener('click', () => { page++; showPage(); });
             buttonsContainer.appendChild(next);
         }
 

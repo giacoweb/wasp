@@ -1,9 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="it.unipd.dei.webapp.model.User" %>
-<%
-    User user = (User) session.getAttribute("authenticatedUser");
-    String ctxPath = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +14,16 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tables.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forms.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/dashboard.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forecast.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tables.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forms.css">
+    <link rel="stylesheet" href="${ctx}/static/css/dashboard.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forecast.css">
 </head>
-<body data-context-path="<%= ctxPath %>">
+<body data-context-path="${ctx}">
 
 <div class="app-shell">
 
@@ -37,7 +34,7 @@
     <main class="app-main">
 
         <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="<%= ctxPath %>/dashboard">FinTrack</a> / <span>Forecast</span>
+            <a href="${ctx}/dashboard">FinTrack</a> / <span>Forecast</span>
         </nav>
 
         <header class="page-header">
@@ -235,7 +232,7 @@
     </main>
 </div>
 
-<script src="<%= ctxPath %>/static/js/forecast.js"></script>
+<script src="${ctx}/static/js/forecast.js"></script>
 
 </body>
 </html>
