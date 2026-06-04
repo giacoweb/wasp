@@ -1,9 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
-<%
-    String errorMessage = (String) request.getAttribute("errorMessage");
-    String ctxPath = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,10 +13,10 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forms.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forms.css">
 </head>
 <body>
 
@@ -32,21 +29,21 @@
             <p class="muted" style="margin: 0;">Start tracking in under a minute.</p>
         </header>
 
-        <% if (errorMessage != null) { %>
+        <c:if test="${not empty errorMessage}">
             <div class="alert alert-error" role="alert" style="margin-bottom: 1rem;">
-                <%= HtmlUtil.escape(errorMessage) %>
+                <c:out value="${errorMessage}"/>
             </div>
-        <% } %>
+        </c:if>
 
         <form id="register-form" class="form"
-              action="<%= ctxPath %>/auth/register" method="post" novalidate>
+              action="${ctx}/auth/register" method="post" novalidate>
 
             <div class="form-grid-2">
                 <div class="form-field">
                     <label class="form-label form-required" for="register-name">Name</label>
                     <input class="form-input" id="register-name" type="text" name="name"
                            required maxlength="100"
-                           value="<%= HtmlUtil.escape(request.getAttribute("name")) %>"
+                           value="<c:out value='${name}'/>"
                            autocomplete="given-name">
                     <span class="form-error"></span>
                 </div>
@@ -54,7 +51,7 @@
                     <label class="form-label form-required" for="register-surname">Surname</label>
                     <input class="form-input" id="register-surname" type="text" name="surname"
                            required maxlength="100"
-                           value="<%= HtmlUtil.escape(request.getAttribute("surname")) %>"
+                           value="<c:out value='${surname}'/>"
                            autocomplete="family-name">
                     <span class="form-error"></span>
                 </div>
@@ -64,7 +61,7 @@
                 <label class="form-label form-required" for="register-email">Email</label>
                 <input class="form-input" id="register-email" type="email" name="email"
                        required maxlength="255"
-                       value="<%= HtmlUtil.escape(request.getAttribute("email")) %>"
+                       value="<c:out value='${email}'/>"
                        placeholder="you@email.com"
                        autocomplete="email">
                 <span class="form-error"></span>
@@ -86,13 +83,13 @@
 
         <p class="muted" style="text-align: center; margin: 1.5rem 0 0;">
             Already have an account?
-            <a href="<%= ctxPath %>/login">Log in</a>
+            <a href="${ctx}/login">Log in</a>
         </p>
     </div>
 
 </main>
 
-<script src="<%= ctxPath %>/static/js/auth.js"></script>
+<script src="${ctx}/static/js/auth.js"></script>
 
 </body>
 </html>

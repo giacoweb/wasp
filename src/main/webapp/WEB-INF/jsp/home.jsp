@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    String ctxPath = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,21 +13,21 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
 </head>
 <body>
 
 <header class="site-header">
-    <a href="<%= ctxPath %>/" class="brand">
+    <a href="${ctx}/" class="brand">
         <i data-lucide="triangle"></i>
         FinTrack
     </a>
     <nav class="site-header__nav" aria-label="Primary">
-        <a href="<%= ctxPath %>/login" class="btn btn-ghost">Log in</a>
-        <a href="<%= ctxPath %>/register" class="btn btn-primary">Get started</a>
+        <a href="${ctx}/login" class="btn btn-ghost">Log in</a>
+        <a href="${ctx}/register" class="btn btn-primary">Get started</a>
     </nav>
 </header>
 
@@ -49,11 +48,11 @@
         </p>
 
         <div class="hero__actions">
-            <a href="<%= ctxPath %>/register" class="btn btn-primary btn-lg">
+            <a href="${ctx}/register" class="btn btn-primary btn-lg">
                 Create free account
                 <i data-lucide="arrow-right"></i>
             </a>
-            <a href="<%= ctxPath %>/guest/report" class="btn btn-ghost btn-lg">
+            <a href="${ctx}/guest/report" class="btn btn-ghost btn-lg">
                 <i data-lucide="calculator"></i>
                 Continue as guest
             </a>

@@ -1,55 +1,33 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    String ctxPath = request.getContextPath();
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="hasData" value="${not empty compoundList}"/>
 
-    List<CompoundResult> result = (List<CompoundResult>) request.getAttribute("compoundList");
-    boolean hasData = (result != null && !result.isEmpty());
+<c:if test="${hasData}">
+    <c:set var="resultSize" value="${fn:length(compoundList)}"/>
+    <c:set var="futureValue" value="${compoundList[resultSize - 1].totalValue}"/>
+    <c:set var="totalContributed" value="${initialCapital + (monthlyContribution * 12 * resultSize)}"/>
+    <c:set var="interestEarned" value="${futureValue - totalContributed}"/>
+</c:if>
 
-    Double initialCapital = (Double) request.getAttribute("initialCapital");
-    Double monthlyContribution = (Double) request.getAttribute("monthlyContribution");
-    Double annualRate = (Double) request.getAttribute("annualRate");
-
-    String initialCapStr = initialCapital != null ? String.format(Locale.US, "%.0f", initialCapital) : HtmlUtil.escape(request.getParameter("initialCapital"));
-    String monthlyContStr = monthlyContribution != null ? String.format(Locale.US, "%.0f", monthlyContribution) : HtmlUtil.escape(request.getParameter("monthlyContribution"));
-    String annualRateStr = annualRate != null ? String.format(Locale.US, "%.2f", annualRate) : HtmlUtil.escape(request.getParameter("annualRate"));
-    String durationStr = hasData ? String.valueOf(result.size()) : HtmlUtil.escape(request.getParameter("years"));
-
-    String stringResult = "[]";
-    String stringYear = "[]";
-    String stringContributions = "[]";
-    double futureValue = 0.0;
-    double totalContributed = 0.0;
-    double interestEarned = 0.0;
-
-    if (hasData) {
-        stringResult = "[";
-        stringYear = "[";
-        stringContributions = "[";
-        double currentContributed = initialCapital;
-        for( int i = 0; i < result.size(); i++) {
-            currentContributed += (monthlyContribution * 12);
-            if (i== result.size()-1) {
-                stringResult += result.get(i).getTotalValue();
-                stringYear += "\"Year " + (i+1)+"\"";
-                stringContributions += currentContributed;
-            } else {
-                stringResult += result.get(i).getTotalValue()+",";
-                stringYear += "\"Year " + (i+1) + "\",";
-                stringContributions += currentContributed + ",";
-            }
-        }
-        stringResult+="]";
-        stringYear+="]";
-        stringContributions+="]";
-
-        futureValue = result.get(result.size()-1).getTotalValue().doubleValue();
-        totalContributed = initialCapital + (monthlyContribution * 12 * result.size());
-        interestEarned = futureValue - totalContributed;
-    }
-%>
-<%@ page import="java.util.*" %>
-<%@ page import="it.unipd.dei.webapp.model.CompoundResult" %>
-<%@ page import="it.unipd.dei.webapp.util.HtmlUtil" %>
+<c:choose>
+    <c:when test="${not empty initialCapital}"><c:set var="initialCapStr"><fmt:formatNumber value="${initialCapital}" maxFractionDigits="0" groupingUsed="false"/></c:set></c:when>
+    <c:otherwise><c:set var="initialCapStr" value="${param.initialCapital}"/></c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${not empty monthlyContribution}"><c:set var="monthlyContStr"><fmt:formatNumber value="${monthlyContribution}" maxFractionDigits="0" groupingUsed="false"/></c:set></c:when>
+    <c:otherwise><c:set var="monthlyContStr" value="${param.monthlyContribution}"/></c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${not empty annualRate}"><c:set var="annualRateStr"><fmt:formatNumber value="${annualRate}" maxFractionDigits="2" groupingUsed="false"/></c:set></c:when>
+    <c:otherwise><c:set var="annualRateStr" value="${param.annualRate}"/></c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${hasData}"><c:set var="durationStr" value="${resultSize}"/></c:when>
+    <c:otherwise><c:set var="durationStr" value="${param.years}"/></c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>
@@ -62,20 +40,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/tables.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/forms.css">
-    <link rel="stylesheet" href="<%= ctxPath %>/static/css/calculator.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tables.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forms.css">
+    <link rel="stylesheet" href="${ctx}/static/css/calculator.css">
 
 
 </head>
 <body>
 
 <header class="site-header">
-    <a href="<%= ctxPath %>/" class="brand">
+    <a href="${ctx}/" class="brand">
         <i data-lucide="triangle"></i> FinTrack
     </a>
     <nav class="site-header__nav flex-row" aria-label="Primary">
@@ -83,15 +61,15 @@
             <i data-lucide="beaker"></i> Guest session
         </button>
         <div class="nav-separator"></div>
-        <a href="<%= ctxPath %>/login" class="btn btn-ghost">Log in</a>
-        <a href="<%= ctxPath %>/register" class="btn btn-primary">Create account</a>
+        <a href="${ctx}/login" class="btn btn-ghost">Log in</a>
+        <a href="${ctx}/register" class="btn btn-primary">Create account</a>
     </nav>
 </header>
 
 <main class="container container--wide section">
 
     <nav class="flex-row gap-2 mb-6 text-sm">
-        <a href="<%= ctxPath %>/guest/report" class="muted breadcrumb-link">Calculators</a>
+        <a href="${ctx}/guest/report" class="muted breadcrumb-link">Calculators</a>
         <span class="muted">&rsaquo;</span>
         <strong>Compound interest</strong>
     </nav>
@@ -102,7 +80,7 @@
     </header>
 
     <div class="calc-layout mb-10">
-        
+
         <aside>
             <article class="card">
                 <div class="flex-row gap-3 mb-6">
@@ -112,19 +90,19 @@
                     <h2 class="text-2xl font-semibold mb-0">Compound interest</h2>
                 </div>
 
-                <% if (request.getAttribute("errorMessage") != null) { %>
+                <c:if test="${not empty errorMessage}">
                     <div class="alert alert-error mb-4">
                         <i data-lucide="alert-circle"></i>
-                        <span><%= HtmlUtil.escape((String) request.getAttribute("errorMessage")) %></span>
+                        <span><c:out value="${errorMessage}"/></span>
                     </div>
-                <% } %>
+                </c:if>
 
-                <form class="form" action="<%= ctxPath %>/report/compound" method="POST">
+                <form class="form" action="${ctx}/report/compound" method="POST">
                     <div class="form-field">
                         <label class="form-label">Initial amount</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="initialCapital" class="form-input" value="<%= initialCapStr %>" />
+                            <input type="text" name="initialCapital" class="form-input" value="<c:out value='${initialCapStr}'/>" />
                         </div>
                         <span class="form-help">Starting investment</span>
                     </div>
@@ -133,7 +111,7 @@
                         <label class="form-label">Monthly contribution</label>
                         <div class="form-input-group form-input-group--prefix-calc">
                             <span class="input-prefix-calc">€</span>
-                            <input type="text" name="monthlyContribution" class="form-input" value="<%= monthlyContStr %>" />
+                            <input type="text" name="monthlyContribution" class="form-input" value="<c:out value='${monthlyContStr}'/>" />
                         </div>
                         <span class="form-help">Added every month</span>
                     </div>
@@ -141,7 +119,7 @@
                     <div class="form-field">
                         <label class="form-label">Annual return</label>
                         <div class="form-input-group form-input-group--suffix-calc">
-                            <input type="text" name="annualRate" class="form-input" value="<%= annualRateStr %>" />
+                            <input type="text" name="annualRate" class="form-input" value="<c:out value='${annualRateStr}'/>" />
                             <span class="input-suffix-calc">%</span>
                         </div>
                         <span class="form-help">Expected annual return</span>
@@ -149,7 +127,7 @@
 
                     <div class="form-field">
                         <label class="form-label">Duration in years</label>
-                        <input type="text" name="years" class="form-input" value="<%= durationStr %>" />
+                        <input type="text" name="years" class="form-input" value="<c:out value='${durationStr}'/>" />
                         <span class="form-help">Investment horizon</span>
                     </div>
 
@@ -172,116 +150,113 @@
             </article>
         </aside>
 
-        <!-- MAIN CONTENT -->
         <div class="flex-col gap-6">
 
-            <% if (hasData) { %>
-            <div class="grid grid--3">
-                <article class="card">
-                    <div class="flex-row gap-2 mb-3 muted text-sm">
-                        <div class="badge badge-primary badge-icon">
-                            <i data-lucide="arrow-up-right"></i>
+            <c:choose>
+                <c:when test="${hasData}">
+                    <div class="grid grid--3">
+                        <article class="card">
+                            <div class="flex-row gap-2 mb-3 muted text-sm">
+                                <div class="badge badge-primary badge-icon">
+                                    <i data-lucide="arrow-up-right"></i>
+                                </div>
+                                <span>Future value</span>
+                            </div>
+                            <h3 class="text-3xl text-primary font-normal mb-0">
+                                €<fmt:formatNumber value="${futureValue}" maxFractionDigits="0"/>
+                            </h3>
+                            <p class="text-xs muted m-0">After ${resultSize} years</p>
+                        </article>
+
+                        <article class="card">
+                            <div class="flex-row gap-2 mb-3 muted text-sm">
+                                <div class="badge badge-neutral badge-icon">
+                                    <i data-lucide="plus"></i>
+                                </div>
+                                <span>Total contributed</span>
+                            </div>
+                            <h3 class="text-3xl font-normal mb-0">
+                                €<fmt:formatNumber value="${totalContributed}" maxFractionDigits="0"/>
+                            </h3>
+                            <p class="text-xs muted m-0">Initial + monthly deposits</p>
+                        </article>
+
+                        <article class="card">
+                            <div class="flex-row gap-2 mb-3 muted text-sm">
+                                <div class="badge badge-income badge-icon">
+                                    <i data-lucide="percent"></i>
+                                </div>
+                                <span>Interest earned</span>
+                            </div>
+                            <h3 class="text-3xl font-normal mb-0">
+                                €<fmt:formatNumber value="${interestEarned}" maxFractionDigits="0"/>
+                            </h3>
+                            <p class="text-xs muted m-0">From compound growth</p>
+                        </article>
+                    </div>
+
+                    <article class="card">
+                        <div class="card-header mb-6">
+                            <h3 class="card-title m-0">Growth projection</h3>
+                            <div class="chart-legend">
+                                <span class="flex-row gap-1">
+                                    <span class="legend-dot legend-dot--contrib"></span> Contributions
+                                </span>
+                                <span class="flex-row gap-1">
+                                    <span class="legend-dot legend-dot--interest"></span> Interest
+                                </span>
+                            </div>
                         </div>
-                        <span>Future value</span>
-                    </div>
-                    <h3 class="text-3xl text-primary font-normal mb-0">
-                        <%= String.format("€%,.0f", futureValue) %>
-                    </h3>
-                    <p class="text-xs muted m-0">After <%= result.size() %> years</p>
-                </article>
-
-                <article class="card">
-                    <div class="flex-row gap-2 mb-3 muted text-sm">
-                        <div class="badge badge-neutral badge-icon">
-                            <i data-lucide="plus"></i>
+                        <div>
+                            <canvas id="compoundChart" class="chart-canvas"></canvas>
                         </div>
-                        <span>Total contributed</span>
-                    </div>
-                    <h3 class="text-3xl font-normal mb-0">
-                        <%= String.format("€%,.0f", totalContributed) %>
-                    </h3>
-                    <p class="text-xs muted m-0">Initial + monthly deposits</p>
-                </article>
+                    </article>
 
-                <article class="card">
-                    <div class="flex-row gap-2 mb-3 muted text-sm">
-                        <div class="badge badge-income badge-icon">
-                            <i data-lucide="percent"></i>
+                    <article class="card card--table table-paginated-container" data-per-page="12" data-item-name="years">
+                        <div class="card-header-border">
+                            <h3 class="card-title m-0">Year-by-year projection</h3>
                         </div>
-                        <span>Interest earned</span>
-                    </div>
-                    <h3 class="text-3xl font-normal mb-0">
-                        <%= String.format("€%,.0f", interestEarned) %>
-                    </h3>
-                    <p class="text-xs muted m-0">From compound growth</p>
-                </article>
-            </div>
-
-            <article class="card">
-                <div class="card-header mb-6">
-                    <h3 class="card-title m-0">Growth projection</h3>
-                    <div class="chart-legend">
-                          <span class="flex-row gap-1">
-                              <span class="legend-dot legend-dot--contrib"></span> Contributions
-                          </span>
-                        <span class="flex-row gap-1">
-                              <span class="legend-dot legend-dot--interest"></span> Interest
-                          </span>
-                    </div>
-                </div>
-                <div>
-                    <canvas id="compoundChart" class="chart-canvas"></canvas>
-                </div>
-            </article>
-
-            <article class="card card--table table-paginated-container" data-per-page="12" data-item-name="years">
-                <div class="card-header-border">
-                    <h3 class="card-title m-0">Year-by-year projection</h3>
-                </div>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th class="pl-6">YEAR</th>
-                        <th>CONTRIBUTED</th>
-                        <th>INTEREST EARNED</th>
-                        <th class="pr-6">BALANCE</th>
-                    </tr>
-                    </thead>
-                    <tbody class="table-paginate-body">
-                    <%
-                        double currentContributed = initialCapital;
-                        for (int i = 0; i < result.size(); i++) {
-                            CompoundResult row = result.get(i);
-                            currentContributed += (monthlyContribution * 12);
-                            double currentInterest = row.getTotalValue().doubleValue() - currentContributed;
-                    %>
-                    <tr>
-                        <td class="pl-6 muted">Year <%= row.getYear() %></td>
-                        <td class="font-medium"><%= String.format("€%,.0f", currentContributed) %></td>
-                        <td class="text-primary font-medium"><%= String.format("€%,.0f", currentInterest) %></td>
-                        <td class="pr-6 font-semibold"><%= String.format("€%,.0f", row.getTotalValue().doubleValue()) %></td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                </table>
-                <div class="table-footer">
-                    <span class="text-sm muted table-pagination-info"></span>
-                    <div class="table-footer--buttons table-pagination-buttons"></div>
-                </div>
-            </article>
-
-            <% } else { %>
-            <!-- EMPTY STATE -->
-            <article class="card calc-empty-state">
-                <div class="calc-empty-icon">
-                    <i data-lucide="bar-chart-3"></i>
-                </div>
-                <h3 class="calc-empty-title">No projection data</h3>
-                <p class="calc-empty-text">
-                    Enter your financial details in the form on the left and click <strong>Calculate</strong> to see your compound growth projection and year-by-year breakdown.
-                </p>
-            </article>
-            <% } %>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="pl-6">YEAR</th>
+                                <th>CONTRIBUTED</th>
+                                <th>INTEREST EARNED</th>
+                                <th class="pr-6">BALANCE</th>
+                            </tr>
+                            </thead>
+                            <tbody class="table-paginate-body">
+                                <c:set var="cc" value="${initialCapital}"/>
+                                <c:forEach var="row" items="${compoundList}">
+                                    <c:set var="cc" value="${cc + (monthlyContribution * 12)}"/>
+                                    <c:set var="ci" value="${row.totalValue - cc}"/>
+                                    <tr>
+                                        <td class="pl-6 muted">Year ${row.year}</td>
+                                        <td class="font-medium">€<fmt:formatNumber value="${cc}" maxFractionDigits="0"/></td>
+                                        <td class="text-primary font-medium">€<fmt:formatNumber value="${ci}" maxFractionDigits="0"/></td>
+                                        <td class="pr-6 font-semibold">€<fmt:formatNumber value="${row.totalValue}" maxFractionDigits="0"/></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <div class="table-footer">
+                            <span class="text-sm muted table-pagination-info"></span>
+                            <div class="table-footer--buttons table-pagination-buttons"></div>
+                        </div>
+                    </article>
+                </c:when>
+                <c:otherwise>
+                    <article class="card calc-empty-state">
+                        <div class="calc-empty-icon">
+                            <i data-lucide="bar-chart-3"></i>
+                        </div>
+                        <h3 class="calc-empty-title">No projection data</h3>
+                        <p class="calc-empty-text">
+                            Enter your financial details in the form on the left and click <strong>Calculate</strong> to see your compound growth projection and year-by-year breakdown.
+                        </p>
+                    </article>
+                </c:otherwise>
+            </c:choose>
 
         </div>
     </div>
@@ -293,18 +268,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<script src="<%= ctxPath %>/static/js/table-control.js"></script>
+<script src="${ctx}/static/js/table-control.js"></script>
 
 <script>
     lucide.createIcons();
+</script>
 
-    <% if (hasData) { %>
-    const ctx = document.getElementById('compoundChart');
-    const DataObject = JSON.parse('<%= stringResult %>');
-    const ContributionsObject = JSON.parse('<%= stringContributions %>');
-    const LabelObject = JSON.parse('<%= stringYear %>');
+<c:if test="${hasData}">
+<script>
+(function () {
+    const ctxEl = document.getElementById('compoundChart');
+    const DataObject = [
+        <c:forEach var="r" items="${compoundList}" varStatus="s">${r.totalValue}<c:if test="${not s.last}">,</c:if></c:forEach>
+    ];
+    const LabelObject = [
+        <c:forEach var="r" items="${compoundList}" varStatus="s">"Year ${s.index + 1}"<c:if test="${not s.last}">,</c:if></c:forEach>
+    ];
+    const ContributionsObject = [
+        <c:set var="cc2" value="${initialCapital}"/>
+        <c:forEach var="r" items="${compoundList}" varStatus="s"><c:set var="cc2" value="${cc2 + (monthlyContribution * 12)}"/>${cc2}<c:if test="${not s.last}">,</c:if></c:forEach>
+    ];
 
-    new Chart(ctx, {
+    new Chart(ctxEl, {
         type: 'line',
         data: {
             labels: LabelObject,
@@ -340,9 +325,7 @@
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
+            plugins: { legend: { display: false } },
             scales: {
                 x: {
                     ticks: { font: { family: "'Inter', sans-serif" }, color: '#64748B' },
@@ -358,8 +341,9 @@
             }
         }
     });
-    <% } %>
+})();
 </script>
+</c:if>
 
 </body>
 </html>
