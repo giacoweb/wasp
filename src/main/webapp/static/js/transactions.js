@@ -152,7 +152,7 @@
     function loadTransactions() {
         tbody.innerHTML = '<tr><td colspan="6" class="table-empty">Loading...</td></tr>';
         Promise.all(wallets.map(function (w) {
-            return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin" })
+            return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin", headers: { "Accept": "application/json" } })
                 .then(function (r) { return r.json(); })
                 .then(function (data) { return Array.isArray(data) ? data : []; })
                 .catch(function () { return []; });
@@ -207,7 +207,7 @@
         edit: function (t) { openModal(t); },
         delete: function (id) {
             if (!confirm("Delete this transaction?")) return;
-            fetch(ctx + "/api/transactions/" + id, { method: "DELETE", credentials: "same-origin" })
+            fetch(ctx + "/api/transactions/" + id, { method: "DELETE", credentials: "same-origin", headers: { "Accept": "application/json" } })
                 .then(function (r) {
                     if (r.status === 204) { loadTransactions(); }
                     else { r.json().then(function (d) { alert(d.error || "Failed to delete."); }); }
@@ -257,7 +257,7 @@
         fetch(id ? ctx + "/api/transactions/" + id : ctx + "/api/transactions", {
             method:      id ? "PUT" : "POST",
             credentials: "same-origin",
-            headers:     { "Content-Type": "application/json" },
+            headers:     { "Content-Type": "application/json", "Accept": "application/json" },
             body:        JSON.stringify(body)
         })
         .then(function (r) { return r.json(); })

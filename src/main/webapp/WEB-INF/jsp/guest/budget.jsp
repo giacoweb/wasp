@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    String ctx = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,28 +14,28 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctx %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/forms.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/tables.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/guest.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forms.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tables.css">
+    <link rel="stylesheet" href="${ctx}/static/css/guest.css">
 </head>
-<body data-context-path="<%= ctx %>">
+<body data-context-path="${ctx}">
 
 <header class="site-header">
-    <a href="<%= ctx %>/" class="brand">
+    <a href="${ctx}/" class="brand">
         <i data-lucide="triangle"></i>
         FinTrack
     </a>
     <nav class="site-header__nav" aria-label="Primary">
-        <a href="<%= ctx %>/guest/report" class="guest-session-btn">
+        <a href="${ctx}/guest/report" class="guest-session-btn">
             <i data-lucide="alert-triangle"></i>
             Guest session
         </a>
-        <a href="<%= ctx %>/login"    class="btn btn-ghost">Log in</a>
-        <a href="<%= ctx %>/register" class="btn btn-primary">Create account</a>
+        <a href="${ctx}/login"    class="btn btn-ghost">Log in</a>
+        <a href="${ctx}/register" class="btn btn-primary">Create account</a>
     </nav>
 </header>
 
@@ -44,14 +43,13 @@
 
     <nav aria-label="breadcrumb">
         <p class="breadcrumb">
-            <a href="<%= ctx %>/guest/report">Calculators</a>
+            <a href="${ctx}/guest/report">Calculators</a>
             <span>&rsaquo; Budget analysis</span>
         </p>
     </nav>
 
     <div class="calc-split">
 
-        <!-- LEFT: Form -->
         <div class="card card--padded">
             <div class="card-header">
                 <div class="calc-form-icon"><i data-lucide="minus-square"></i></div>
@@ -65,7 +63,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="monthlyIncome"
-                               min="1" step="100" placeholder="3200" value="3200">
+                               min="1" step="100" required placeholder="3200" value="3200">
                     </div>
                     <span class="form-help">Total net income</span>
                     <span class="form-error" id="err-income"></span>
@@ -76,7 +74,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="fixedExpenses"
-                               min="0" step="50" placeholder="1450" value="1450">
+                               min="0" step="50" required placeholder="1450" value="1450">
                     </div>
                     <span class="form-help">Rent, bills, subscriptions</span>
                     <span class="form-error" id="err-fixed"></span>
@@ -87,7 +85,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="variableExpenses"
-                               min="0" step="50" placeholder="820" value="820">
+                               min="0" step="50" required placeholder="820" value="820">
                     </div>
                     <span class="form-help">Food, transport, shopping</span>
                     <span class="form-error" id="err-variable"></span>
@@ -98,7 +96,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="savingsGoal"
-                               min="0" step="50" placeholder="500" value="500">
+                               min="0" step="50" required placeholder="500" value="500">
                     </div>
                     <span class="form-help">Target monthly savings</span>
                     <span class="form-error" id="err-savings"></span>
@@ -109,7 +107,6 @@
                     Analyze budget
                 </button>
 
-                <%-- Info box revealed after analysis --%>
                 <div class="calc-info-box" id="info-box" hidden>
                     <div class="calc-info-box__icon">i</div>
                     <div>
@@ -121,7 +118,6 @@
             </div>
         </div>
 
-        <!-- RIGHT: KPI strip + Breakdown + Category review stacked in a column -->
         <div class="calc-right-col">
 
             <div class="calc-kpi-strip" id="kpi-strip" hidden>
@@ -160,7 +156,6 @@
                 </div>
             </div>
 
-            <!-- Category review table -->
             <div id="review-section" hidden>
                 <div class="card" id="review-table">
                     <div class="projection-title">Category review</div>
@@ -188,6 +183,6 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>window.lucide && lucide.createIcons();</script>
-<script src="<%= ctx %>/static/js/budget-calculator.js"></script>
+<script src="${ctx}/static/js/budget-calculator.js"></script>
 </body>
 </html>

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    String ctx = request.getContextPath();
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,44 +14,42 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="<%= ctx %>/static/css/tokens.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/base.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/layout.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/components.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/forms.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/tables.css">
-    <link rel="stylesheet" href="<%= ctx %>/static/css/guest.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tokens.css">
+    <link rel="stylesheet" href="${ctx}/static/css/base.css">
+    <link rel="stylesheet" href="${ctx}/static/css/layout.css">
+    <link rel="stylesheet" href="${ctx}/static/css/components.css">
+    <link rel="stylesheet" href="${ctx}/static/css/forms.css">
+    <link rel="stylesheet" href="${ctx}/static/css/tables.css">
+    <link rel="stylesheet" href="${ctx}/static/css/guest.css">
 </head>
-<body data-context-path="<%= ctx %>">
+<body data-context-path="${ctx}">
 
 <header class="site-header">
-    <a href="<%= ctx %>/" class="brand">
+    <a href="${ctx}/" class="brand">
         <i data-lucide="triangle"></i>
         FinTrack
     </a>
     <nav class="site-header__nav" aria-label="Primary">
-        <a href="<%= ctx %>/guest/report" class="guest-session-btn">
+        <a href="${ctx}/guest/report" class="guest-session-btn">
             <i data-lucide="alert-triangle"></i>
             Guest session
         </a>
-        <a href="<%= ctx %>/login"    class="btn btn-ghost">Log in</a>
-        <a href="<%= ctx %>/register" class="btn btn-primary">Create account</a>
+        <a href="${ctx}/login"    class="btn btn-ghost">Log in</a>
+        <a href="${ctx}/register" class="btn btn-primary">Create account</a>
     </nav>
 </header>
 
 <main class="container section">
 
-    <%-- .breadcrumb already defined in components.css --%>
     <nav aria-label="breadcrumb">
         <p class="breadcrumb">
-            <a href="<%= ctx %>/guest/report">Calculators</a>
+            <a href="${ctx}/guest/report">Calculators</a>
             <span>&rsaquo; Compound interest</span>
         </p>
     </nav>
 
     <div class="calc-split">
 
-        <!-- LEFT: Form -->
         <div class="card card--padded">
             <div class="card-header">
                 <div class="calc-form-icon"><i data-lucide="trending-up"></i></div>
@@ -66,7 +63,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="initialAmount"
-                               min="1" step="100" placeholder="10000" value="10000">
+                               min="1" step="100" required placeholder="10000" value="10000">
                     </div>
                     <span class="form-help">Starting investment</span>
                     <span class="form-error" id="err-initial"></span>
@@ -77,7 +74,7 @@
                     <div class="input-adornment input-adornment--prefix">
                         <span class="input-adornment__prefix">&euro;</span>
                         <input class="form-input" type="number" id="monthlyContrib"
-                               min="0" step="10" placeholder="250" value="250">
+                               min="0" step="10" required placeholder="250" value="250">
                     </div>
                     <span class="form-help">Added every month</span>
                     <span class="form-error" id="err-monthly"></span>
@@ -87,7 +84,7 @@
                     <label class="form-label" for="annualReturn">Annual return</label>
                     <div class="input-adornment input-adornment--suffix">
                         <input class="form-input" type="number" id="annualReturn"
-                               min="0" max="100" step="0.1" placeholder="7" value="7">
+                               min="0" max="100" step="0.1" required placeholder="7" value="7">
                         <span class="input-adornment__suffix">%</span>
                     </div>
                     <span class="form-help">Expected annual return</span>
@@ -97,7 +94,7 @@
                 <div class="form-field" id="field-years">
                     <label class="form-label" for="durationYears">Duration in years</label>
                     <input class="form-input" type="number" id="durationYears"
-                           min="1" max="50" step="1" placeholder="10" value="10">
+                           min="1" max="50" step="1" required placeholder="10" value="10">
                     <span class="form-help">Investment horizon</span>
                     <span class="form-error" id="err-years"></span>
                 </div>
@@ -121,7 +118,6 @@
             </div>
         </div>
 
-        <!-- RIGHT: KPI strip + Chart stacked in a column -->
         <div class="calc-right-col">
 
             <div class="calc-kpi-strip" id="kpi-strip" hidden>
@@ -164,7 +160,6 @@
 
     </div>
 
-    <!-- Year-by-year projection table -->
     <div id="projection-section" hidden>
         <div class="card" id="projection-table">
             <div class="projection-title">Year-by-year projection</div>
@@ -188,6 +183,6 @@
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>window.lucide && lucide.createIcons();</script>
-<script src="<%= ctx %>/static/js/compound-calculator.js"></script>
+<script src="${ctx}/static/js/compound-calculator.js"></script>
 </body>
 </html>

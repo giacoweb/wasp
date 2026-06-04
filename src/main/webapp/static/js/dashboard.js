@@ -25,7 +25,7 @@
     wallets.forEach(function (w) { walletMap[w.id] = w.name; });
 
     Promise.all(wallets.map(function (w) {
-        return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin" })
+        return fetch(ctx + "/api/transactions?walletId=" + w.id, { credentials: "same-origin", headers: { "Accept": "application/json" } })
             .then(function (r) { return r.json(); })
             .then(function (data) { return Array.isArray(data) ? data : []; })
             .catch(function () { return []; });
